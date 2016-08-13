@@ -1,6 +1,7 @@
 # hascalator #
 
-![Logo](img/logo.png)
+![Logo](img/logo.png)  
+
 (Logo design by *Sandro Stucky* - retrivied from the Martin Odersky's talk _The Evolution of Scala_, 2015).
 
 [![Build Status](https://travis-ci.org/CarloMicieli/hascalator.png?branch=master)](https://travis-ci.org/CarloMicieli/hascalator)
@@ -12,12 +13,12 @@ Given the differences between Scala and Haskell, this is not complete nor an exa
 
 The library is currently implementing the following types:
 
-    * `Data.List`
-    * `Data.Maybe`
+* `Data.List`
+* `Data.Maybe`
 
 The following typeclasses are now implemented:
 
-    * `Show`
+* `Show`
 
 
 ## References ##
