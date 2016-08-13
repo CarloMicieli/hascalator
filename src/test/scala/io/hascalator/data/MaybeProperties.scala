@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package io.hascalator
+package io.hascalator.data
 
-import org.scalatest.{ Matchers, PropSpecLike }
-import org.scalatest.prop.Checkers
+import io.hascalator.AbstractPropertySpec
+import org.scalacheck.Prop.{ forAll, AnyOperators }
 
-trait AbstractPropertySpec extends PropSpecLike with Checkers with Matchers {
+class MaybeProperties extends AbstractPropertySpec {
+  property("Maybe.map: identity law") {
+    check(forAll { (o: Maybe[Int]) =>
+      o.map(identity) ?= o
+    })
+  }
+
+  property("Maybe.map: composition law") {
+    check(forAll { (o: Maybe[Int]) =>
+      val f: Int => Int = _ * 2
+      val g: Int => Int = _ + 42
+
+      o.map(f compose g) ?= o.map(g).map(f)
+    })
+  }
 }
