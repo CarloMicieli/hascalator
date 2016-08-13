@@ -2,7 +2,6 @@
 
 ![Logo](img/logo.png)
 
-
 [![Build Status](https://travis-ci.org/CarloMicieli/hascalator.png?branch=master)](https://travis-ci.org/CarloMicieli/hascalator)
 [![Coverage Status](https://coveralls.io/repos/CarloMicieli/hascalator/badge.svg?branch=master&service=github)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
 
