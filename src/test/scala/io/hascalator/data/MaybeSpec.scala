@@ -16,11 +16,11 @@
 
 package io.hascalator.data
 
-import io.hascalator.AbstractTestSpec
+import io.hascalator.{ AbstractTestSpec, ApplicationException }
 import Maybe._
 import io.hascalator.typeclasses.Show
 
-class MaybeSpec extends AbstractTestSpec {
+class MaybeSpec extends AbstractTestSpec with MaybeValues {
   describe("Maybe") {
     describe("show") {
       it("should be an instance of the Show typeclass") {
@@ -49,6 +49,18 @@ class MaybeSpec extends AbstractTestSpec {
 
       it("should return back a none applying a function to none values") {
         none[Int].flatMap(x => just(x * 2)) shouldBe none
+      }
+    }
+
+    describe("get") {
+      it("should return the wrapped value for just") {
+        just42.get shouldBe 42
+      }
+
+      it("should throw an exception for none values") {
+        the[ApplicationException] thrownBy {
+          noneInt.get
+        } should have message "*** Exception: 'Maybe.get: a value doesn't exist'"
       }
     }
 
@@ -85,5 +97,78 @@ class MaybeSpec extends AbstractTestSpec {
         none[Int].filter(_ % 2 == 0) shouldBe none
       }
     }
+
+    describe("isEmpty") {
+      it("should return false for none values") {
+        noneInt.isEmpty shouldBe true
+        noneString.isEmpty shouldBe true
+      }
+
+      it("should return false for just values") {
+        just42.isEmpty shouldBe false
+        justOne.isEmpty shouldBe false
+      }
+    }
+
+    describe("foreach") {
+      it("should never run the side effect for none values") {
+        var res = 0
+        noneString.foreach(x => res = res + 1)
+        res shouldBe 0
+      }
+
+      it("should run the side effect once for just values") {
+        var res = 0
+        just42.foreach(x => res = res + 1)
+        res shouldBe 1
+      }
+    }
+
+    describe("mapOrElse") {
+      it("should apply the function to just values") {
+        just42.mapOrElse(_ * 2)(just(-1)) shouldBe just(84)
+      }
+
+      it("should return the orElse for none values") {
+        noneInt.mapOrElse(_ * 2)(just(-1)) shouldBe just(-1)
+      }
+    }
+
+    describe("fold") {
+      it("should apply the function to just values") {
+        just42.fold(_ * 2)(-1) shouldBe 84
+      }
+
+      it("should return the orElse for none values") {
+        noneInt.fold(_ * 2)(-1) shouldBe -1
+      }
+    }
+
+    describe("toList") {
+      it("should return the empty list for none values") {
+        noneInt.toList shouldBe List.empty[Int]
+      }
+
+      it("should return the singleton list for just values") {
+        just42.toList shouldBe List(42)
+      }
+    }
+
+    describe("catMaybes") {
+      it("should return the empty list if the original list contains only none values") {
+        catMaybes(List(noneInt, noneInt, noneInt)) shouldBe List.empty[Int]
+      }
+
+      it("should return the list with the just values") {
+        catMaybes(List(just42, none, none, just42, none)) shouldBe List(42, 42)
+      }
+    }
   }
+}
+
+trait MaybeValues {
+  val just42: Maybe[Int] = just(42)
+  val justOne: Maybe[String] = just("one")
+  val noneInt: Maybe[Int] = none
+  val noneString: Maybe[String] = none
 }

@@ -116,7 +116,7 @@ sealed trait Maybe[+A] extends Product with Serializable {
     if (isDefined) f(get) else None
 
   /**
-    * It is applying the function `f` the the contained value if this is a `Just`, simply returns
+    * Apply the function `f` to the contained value if this is a `Just`, simply returns
     * `orElse` otherwise.
     * @param f the function to apply
     * @param orElse the value returned if this is a `None`
