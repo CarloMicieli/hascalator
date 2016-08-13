@@ -17,6 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
+import io.hascalator.typeclasses.Show
 
 /**
   * A list is either empty, or a constructed list with a `head` and a `tail`.
@@ -485,6 +486,10 @@ object List {
 
   def unapplySeq[A](xs: List[A]): Option[Seq[A]] = {
     Some(xs.foldRight(Seq.empty[A])((x, sq) => x +: sq))
+  }
+
+  implicit def toShowList[A: Show]: Show[List[A]] = new Show[List[A]] {
+    override def show(x: List[A]): String = Show[A].showList(x)
   }
 }
 

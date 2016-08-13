@@ -17,9 +17,17 @@
 package io.hascalator.data
 
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
+import io.hascalator.typeclasses.Show
 
 class ListSpec extends AbstractTestSpec with SampleLists {
   describe("A list") {
+    describe("Show") {
+      it("should make an instance") {
+        import Show.ops._
+        List(1, 2, 23, 4).show shouldBe "[1, 2, 23, 4]"
+      }
+    }
+
     describe("Patter match") {
       it("should match the empty list") {
         val res = emptyList match {

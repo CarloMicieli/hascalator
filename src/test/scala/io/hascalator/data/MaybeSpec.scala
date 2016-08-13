@@ -18,9 +18,18 @@ package io.hascalator.data
 
 import io.hascalator.AbstractTestSpec
 import Maybe._
+import io.hascalator.typeclasses.Show
 
 class MaybeSpec extends AbstractTestSpec {
   describe("Maybe") {
+    describe("show") {
+      it("should be an instance of the Show typeclass") {
+        import Show.ops._
+        just(42).show shouldBe "Just(42)"
+        none[Int].show shouldBe "None"
+      }
+    }
+
     describe("map") {
       it("should apply a function to Some values") {
         just(21).map(_ * 2) shouldBe just(42)
