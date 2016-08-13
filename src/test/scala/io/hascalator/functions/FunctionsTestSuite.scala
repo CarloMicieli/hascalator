@@ -34,6 +34,7 @@ class FunctionsTestSuite extends AbstractTestSuite {
   "flip(f)" should "flip the function arguments" in {
     val sum: (Int, String) => String = (n, s) => s"$s($n)"
     flip(sum)("Hello", 42) shouldBe sum(42, "Hello")
+    sum.flip("Hello", 42) shouldBe sum(42, "Hello")
   }
 
   "flip(flip(f))" should "produce the original function" in {

@@ -53,6 +53,10 @@ package object functions {
   def error[A](msg: String): A = {
     throw new ApplicationException(s"*** Exception: '$msg'")
   }
+
+  implicit class Function2Flip[A, B, C](val f: (A, B) => C) extends AnyVal {
+    def flip: (B, A) => C = functions.flip(f)
+  }
 }
 
 final class ApplicationException(msg: String) extends Exception(msg)
