@@ -57,7 +57,9 @@ lazy val scalaProject = (project in file("."))
   .enablePlugins(GitBranchPrompt)
 
 initialCommands := """|import io.hascalator._
+                      |import io.hascalator.data._
                       |import io.hascalator.functions._
+                      |import io.hascalator.typeclasses._
                       |""".stripMargin
 
 // Header settings

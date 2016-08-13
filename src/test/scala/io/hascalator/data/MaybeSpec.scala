@@ -25,7 +25,8 @@ class MaybeSpec extends AbstractTestSpec {
     describe("show") {
       it("should be an instance of the Show typeclass") {
         import Show.ops._
-        just(42).show shouldBe "Just(42)"
+        just("42").show shouldBe """Just("42")"""
+        just('A').show shouldBe "Just('A')"
         none[Int].show shouldBe "None"
       }
     }

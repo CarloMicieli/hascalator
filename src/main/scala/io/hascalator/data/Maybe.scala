@@ -198,7 +198,9 @@ object Maybe {
   }
 
   implicit def toShowMaybe[A: Show]: Show[Maybe[A]] = new Show[Maybe[A]] {
-    override def show(x: Maybe[A]): String = x.toString
+    override def show(x: Maybe[A]): String = {
+      x.map(v => implicitly[Show[A]].show(v)).toString
+    }
   }
 }
 
