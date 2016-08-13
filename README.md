@@ -6,6 +6,7 @@
 
 [![Build Status](https://travis-ci.org/CarloMicieli/hascalator.png?branch=master)](https://travis-ci.org/CarloMicieli/hascalator)
 [![Coverage Status](https://coveralls.io/repos/github/CarloMicieli/hascalator/badge.svg?branch=master)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
+[![Dependencies](https://app.updateimpact.com/badge/763721648812724224/hascalator.svg?config=compile)](https://app.updateimpact.com/latest/763721648812724224/hascalator)
 
 This project is just "for fun". There are way better implementations for immutable data structures and typeclasses.
 
