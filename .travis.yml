@@ -8,5 +8,5 @@ script:
   - sbt clean coverage test &&
     sbt coverageAggregate
 after_success:
-  - sbt coveralls &&
-    sbt updateImpactSubmit
+  - sbt coveralls
+  - sbt updateImpactSubmit
