@@ -1,9 +1,29 @@
 # hascalator #
 
 ![Logo](img/logo.png)
+(Logo design by *Sandro Stucky* - retrivied from the Martin Odersky's talk _The Evolution of Scala_, 2015).
 
 [![Build Status](https://travis-ci.org/CarloMicieli/hascalator.png?branch=master)](https://travis-ci.org/CarloMicieli/hascalator)
-[![Coverage Status](https://coveralls.io/repos/CarloMicieli/hascalator/badge.svg?branch=master&service=github)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/CarloMicieli/hascalator/badge.svg?branch=master)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
+
+This project is just "for fun". There are way better implementations for immutable data structures and typeclasses.
+
+Given the differences between Scala and Haskell, this is not complete nor an exact copy of the Haskell prelude. Almost everywhere the _dot notation_ has been preferred (ie `type.function`). Moreover, in order to help the Scala type inference the order of function parameters has been changed to improve the API usage.
+
+The library is currently implementing the following types:
+
+    * `Data.List`
+    * `Data.Maybe`
+
+The following typeclasses are now implemented:
+
+    * `Show`
+
+
+## References ##
+
+* Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
+* Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
 
 ## Contribution policy ##
 
