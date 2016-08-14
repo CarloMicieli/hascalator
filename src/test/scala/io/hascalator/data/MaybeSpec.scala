@@ -22,6 +22,24 @@ import io.hascalator.typeclasses.Show
 
 class MaybeSpec extends AbstractTestSpec with MaybeValues {
   describe("Maybe") {
+    describe("pattern matching") {
+      it("should be possible to match the just values") {
+        val res = just42 match {
+          case Just(v) => v
+          case None    => "not-found"
+        }
+        res shouldBe 42
+      }
+
+      it("should be possible to match the none values") {
+        val res = noneInt match {
+          case None    => -1
+          case Just(v) => v
+        }
+        res shouldBe -1
+      }
+    }
+
     describe("show") {
       it("should be an instance of the Show typeclass") {
         import Show.ops._

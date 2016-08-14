@@ -21,6 +21,24 @@ import Either._
 
 class EitherSpec extends AbstractTestSpec with EitherValues {
   describe("Either") {
+    describe("pattern matching") {
+      it("should be possible to match the left values") {
+        val res = leftOne match {
+          case Left(v)  => v
+          case Right(_) => "not-found"
+        }
+        res shouldBe "one"
+      }
+
+      it("should be possible to match the right values") {
+        val res = right42 match {
+          case Left(_)  => -1
+          case Right(v) => v
+        }
+        res shouldBe 42
+      }
+    }
+
     describe("isLeft") {
       it("should return false for right values") {
         right42.isLeft shouldBe false
