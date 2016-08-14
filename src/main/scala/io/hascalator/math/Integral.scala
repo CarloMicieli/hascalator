@@ -78,47 +78,45 @@ object Integral {
     }
   }
 
-  private type Fun[A] = (A, A) => A
-  def apply[A](z: A, o: A)(fAdd: Fun[A], fMul: Fun[A], fDiv: Fun[A], fMod: Fun[A])(fNegate: A => A)(fSignum: A => A): Integral[A] = new Integral[A] {
+  implicit val int2Integral: Integral[Int] = new Integral[Int] {
+    override def add(x: Int, y: Int): Int = x + y
+    override def mul(x: Int, y: Int): Int = x * y
+    override def div(a: Int, b: Int): Int = a / b
+    override def mod(a: Int, b: Int): Int = {
+      val res = a % b
+      if (res < 0) res + b else res
+    }
 
-    override val zero: A = z
-    override val one: A = o
-
-    override def div(a: A, b: A): A = fDiv(a, b)
-    override def mod(a: A, b: A): A = fMod(a, b)
-    override def add(x: A, y: A): A = fAdd(x, y)
-    override def mul(x: A, y: A): A = fMul(x, y)
-    override def negate(x: A): A = fNegate(x)
-    override def signum(x: A): A = fSignum(x)
-  }
-
-  implicit val intToIntegral: Integral[Int] = {
-    def signum(x: Int): Int = x match {
+    override def negate(x: Int): Int = -x
+    override def fromInteger(n: Int): Int = n
+    override def signum(x: Int): Int = x match {
       case 0          => 0
       case _ if x < 0 => -1
       case _ if x > 0 => 1
     }
 
-    def mod(x: Int, y: Int): Int = {
-      val res = x % y
-      if (res < 0) res + y else res
-    }
-
-    Integral(0, 1)(_ + _, _ * _, _ / _, mod)(x => -x)(signum)
+    override def show(x: Int): String = x.toString
+    override def eq(lhs: Int, rhs: Int): Boolean = lhs equals rhs
   }
 
-  implicit val longToIntegral: Integral[Long] = {
-    def signum(x: Long): Long = x match {
+  implicit val long2Integral: Integral[Long] = new Integral[Long] {
+    override def add(x: Long, y: Long): Long = x + y
+    override def mul(x: Long, y: Long): Long = x * y
+    override def div(a: Long, b: Long): Long = a / b
+    override def mod(a: Long, b: Long): Long = {
+      val res = a % b
+      if (res < 0) res + b else res
+    }
+
+    override def negate(x: Long): Long = -x
+    override def fromInteger(n: Int): Long = n.toLong
+    override def signum(x: Long): Long = x match {
       case 0          => 0
       case _ if x < 0 => -1
       case _ if x > 0 => 1
     }
 
-    def mod(x: Long, y: Long): Long = {
-      val res = x % y
-      if (res < 0) res + y else res
-    }
-
-    Integral(0L, 1L)(_ + _, _ * _, _ / _, mod)(x => -x)(signum)
+    override def show(x: Long): String = x.toString
+    override def eq(lhs: Long, rhs: Long): Boolean = lhs equals rhs
   }
 }

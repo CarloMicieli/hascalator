@@ -25,7 +25,7 @@ import scala.language.implicitConversions
 @implicitNotFound("The type ${A} was not made an instance of the Fractional type class")
 trait Fractional[A] extends Num[A] {
   def div(x: A, y: A): A
-  def recip(x: A): A = div(one, x)
+  def recip(x: A): A = div(fromInteger(1), x)
 }
 
 object Fractional {
@@ -52,41 +52,25 @@ object Fractional {
     }
   }
 
-  implicit val floatToFractional: Fractional[Float] = new Fractional[Float] {
-    override def div(x: Float, y: Float): Float = x / y
-
-    override def mul(x: Float, y: Float): Float = x * y
-
-    override def negate(x: Float): Float = -x
-
-    override def signum(x: Float): Float = x match {
-      case 0.0f          => 0.0f
-      case _ if x > 0.0f => 1.0f
-      case _ if x < 0.0f => -1.0f
-    }
-
+  implicit val float2Fractional: Fractional[Float] = new Fractional[Float] {
+    override def show(x: Float): String = x.toString
     override def add(x: Float, y: Float): Float = x + y
-
-    override val one: Float = 1.0f
-    override val zero: Float = 0.0f
+    override def div(x: Float, y: Float): Float = x / y
+    override def mul(x: Float, y: Float): Float = x * y
+    override def negate(x: Float): Float = -x
+    override def fromInteger(n: Int): Float = n.toFloat
+    override def signum(x: Float): Float = x.signum.toFloat
+    override def eq(lhs: Float, rhs: Float): Boolean = lhs equals rhs
   }
 
-  implicit val doubleToFractional: Fractional[Double] = new Fractional[Double] {
-    override def div(x: Double, y: Double): Double = x / y
-
-    override def mul(x: Double, y: Double): Double = x * y
-
-    override def negate(x: Double): Double = -x
-
-    override def signum(x: Double): Double = x match {
-      case 0.0          => 0.0
-      case _ if x > 0.0 => 1.0
-      case _ if x < 0.0 => -1.0
-    }
-
+  implicit val double2Fractional: Fractional[Double] = new Fractional[Double] {
+    override def show(x: Double): String = x.toString
     override def add(x: Double, y: Double): Double = x + y
-
-    override val zero: Double = 0.0
-    override val one: Double = 1.0
+    override def div(x: Double, y: Double): Double = x / y
+    override def mul(x: Double, y: Double): Double = x * y
+    override def negate(x: Double): Double = -x
+    override def fromInteger(n: Int): Double = n.toDouble
+    override def signum(x: Double): Double = x.signum.toDouble
+    override def eq(lhs: Double, rhs: Double): Boolean = lhs equals rhs
   }
 }

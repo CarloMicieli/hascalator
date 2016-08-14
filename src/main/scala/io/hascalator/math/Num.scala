@@ -16,6 +16,8 @@
 
 package io.hascalator.math
 
+import io.hascalator.typeclasses.{ Eq, Show }
+
 import scala.language.implicitConversions
 import scala.annotation.implicitNotFound
 
@@ -24,10 +26,17 @@ import scala.annotation.implicitNotFound
   * @tparam A
   */
 @implicitNotFound("The type ${A} was not made instance of the Num type class")
-trait Num[A] {
+trait Num[A] extends Eq[A] with Show[A] {
 
-  val zero: A
-  val one: A
+  /**
+    * Conversion from an `Int`. An integer literal represents the application of the
+    * function fromInteger to the appropriate value of type `Int`, so such literals
+    * have type `A`, where `A` is an instance of the `Num` typeclass.
+    *
+    * @param n the `Int` value to convert
+    * @return a new value of type `A`
+    */
+  def fromInteger(n: Int): A
 
   /**
     * The sum operation
@@ -114,7 +123,7 @@ trait AdditionLaws {
   def associativityLaw[A: Num](a: A, b: A, c: A): Boolean = ((a + b) + c) == (a + (b + c))
 
   def identityElement[A: Num](a: A): Boolean = {
-    val id = implicitly[Num[A]].zero
+    val id = implicitly[Num[A]].fromInteger(0)
     a + id == id + a
   }
 }

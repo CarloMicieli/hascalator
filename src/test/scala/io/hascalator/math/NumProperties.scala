@@ -24,8 +24,7 @@ class NumProperties extends AbstractPropertySpec with AdditionLaws {
     check(forAll { (x: Int, y: Int) =>
       val num = Num[Int]
 
-      num.zero === 0
-      num.one === 1
+      num.fromInteger(x) === x
       num.add(x, y) === x + y
       num.sub(x, y) === x - y
       num.mul(x, y) === x * y
@@ -38,8 +37,6 @@ class NumProperties extends AbstractPropertySpec with AdditionLaws {
     check(forAll { (x: Long, y: Long) =>
       val num = Num[Long]
 
-      num.zero === 0L
-      num.one === 1L
       num.add(x, y) === x + y
       num.sub(x, y) === x - y
       num.mul(x, y) === x * y
@@ -52,8 +49,6 @@ class NumProperties extends AbstractPropertySpec with AdditionLaws {
     check(forAll { (x: Float, y: Float) =>
       val num = Num[Float]
 
-      num.zero === 0.0f
-      num.one === 1.0f
       num.add(x, y) === x + y
       num.sub(x, y) === x - y
       num.mul(x, y) === x * y
@@ -66,8 +61,6 @@ class NumProperties extends AbstractPropertySpec with AdditionLaws {
     check(forAll { (x: Double, y: Double) =>
       val num = Num[Double]
 
-      num.zero === 0.0
-      num.one === 1.0
       num.add(x, y) === x + y
       num.sub(x, y) === x - y
       num.mul(x, y) === x * y

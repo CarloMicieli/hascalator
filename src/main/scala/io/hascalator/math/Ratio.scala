@@ -29,7 +29,7 @@ class Ratio[A: Integral] protected (n: A, d: A) {
   private val I = implicitly[Integral[A]]
   private val g = gcd(n, d)
 
-  def this(n: A) = this(n, implicitly[Integral[A]].one)
+  def this(n: A) = this(n, implicitly[Integral[A]].fromInteger(1))
 
   /**
     * Extract the numerator of the ratio in reduced form: the numerator and denominator
@@ -64,7 +64,7 @@ class Ratio[A: Integral] protected (n: A, d: A) {
   }
 
   override def toString: String = {
-    if (d == I.one) {
+    if (d == I.fromInteger(1)) {
       n.toString
     } else {
       s"$n/$d"
@@ -86,7 +86,7 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 
   @annotation.tailrec
   private def gcd(a: A, b: A): A = {
-    if (b == I.zero) {
+    if (b == I.fromInteger(0)) {
       a
     } else {
       gcd(b, I.mod(a, b))
@@ -95,12 +95,15 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 }
 
 object Ratio {
-  def apply[A](n: A)(implicit I: Integral[A]): Ratio[A] = apply(n, I.one)
+  def apply[A](n: A)(implicit I: Integral[A]): Ratio[A] = {
+    apply(n, I.fromInteger(1))
+  }
 
   def apply[A](n: A, d: A)(implicit I: Integral[A]): Ratio[A] = {
-    require(d != I.zero)
+    require(d != I.fromInteger(0))
     if (n == d) {
-      new Ratio(I.one, I.one)
+      val one = I.fromInteger(1)
+      new Ratio(one, one)
     } else {
       new Ratio(n, d)
     }

@@ -24,8 +24,7 @@ class IntegralProperties extends AbstractPropertySpec with AdditionLaws {
     check(forAll { (x: Int, y: Int) =>
       val num = Integral[Int]
 
-      num.zero === 0
-      num.one === 1
+      num.fromInteger(x) === x
       num.add(x, y) === x + y
       num.sub(x, y) === x - y
       num.mul(x, y) === x * y
