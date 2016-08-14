@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
-import io.hascalator.typeclasses.Show
+import io.hascalator.typeclasses.{ Eq, Show }
 
 /**
   * The `Maybe` type encapsulates an optional value. A value of type `Maybe[A]`
@@ -197,11 +197,12 @@ object Maybe {
     for { Just(x) <- xs } yield x
   }
 
-  implicit def toShowMaybe[A: Show]: Show[Maybe[A]] = new Show[Maybe[A]] {
-    override def show(x: Maybe[A]): String = {
+  implicit def toShowMaybe[A: Show]: Show[Maybe[A]] = Show {
+    (x: Maybe[A]) =>
       x.map(v => implicitly[Show[A]].show(v)).toString
-    }
   }
+
+  implicit def toEqMaybe[A: Eq]: Eq[Maybe[A]] = Eq(_ equals _)
 }
 
 private[this] case class Just[A](get: A) extends Maybe[A] {

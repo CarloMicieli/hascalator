@@ -17,8 +17,10 @@
 package io.hascalator.typeclasses
 
 import io.hascalator.AbstractPropertySpec
+import io.hascalator.data.List
 import Show.ops._
-import org.scalacheck.Prop.forAll
+import org.scalacheck.Gen
+import org.scalacheck.Prop.{ AnyOperators, forAll }
 
 class ShowProperties extends AbstractPropertySpec {
   property("Boolean is made instance of the Show type class") {
@@ -35,6 +37,12 @@ class ShowProperties extends AbstractPropertySpec {
 
   property("Longs are made instance of the Show type class") {
     check(forAll { (n: Long) =>
+      n.show === n.toString
+    })
+  }
+
+  property("Shorts are made instance of the Show type class") {
+    check(forAll { (n: Short) =>
       n.show === n.toString
     })
   }
@@ -66,6 +74,12 @@ class ShowProperties extends AbstractPropertySpec {
   property("Chars are made instance of the Show type class") {
     check(forAll { (c: Char) =>
       c.show === s"'$c'"
+    })
+  }
+
+  property("List of Chars are made instance of the Show type class") {
+    check(forAll(Gen.alphaChar, Gen.alphaChar, Gen.alphaChar) { (a: Char, b: Char, c: Char) =>
+      Show[Char].showList(List(a, b, c)) ?= s""""$a$b$c""""
     })
   }
 }

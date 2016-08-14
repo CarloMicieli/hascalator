@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
-import io.hascalator.typeclasses.Show
+import io.hascalator.typeclasses.{ Eq, Show }
 
 /**
   * The `Either` type represents values with two possibilities: a value of type `Either[A,B]` is
@@ -217,13 +217,16 @@ object Either {
     */
   def right[A, B](v: B): Either[A, B] = Right(v)
 
-  implicit def toShowEither[A: Show, B: Show]: Show[Either[A, B]] = new Show[Either[A, B]] {
-    override def show(x: Either[A, B]): String = {
-      val l = (a: A) => s"Left(${implicitly[Show[A]].show(a)})"
-      val r = (b: B) => s"Right(${implicitly[Show[B]].show(b)})"
-      x.map2(l)(r)
-    }
+  implicit def toShowEither[A: Show, B: Show]: Show[Either[A, B]] = Show {
+    (x: Either[A, B]) =>
+      {
+        val l = (a: A) => s"Left(${implicitly[Show[A]].show(a)})"
+        val r = (b: B) => s"Right(${implicitly[Show[B]].show(b)})"
+        x.map2(l)(r)
+      }
   }
+
+  implicit def toEqEither[A: Eq]: Eq[Maybe[A]] = Eq(_ equals _)
 }
 
 private[this] case class Left[A, B](value: A) extends Either[A, B] {

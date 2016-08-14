@@ -1,0 +1,108 @@
+/*
+ * Copyright 2016 Carlo Micieli
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.hascalator.typeclasses
+
+import scala.annotation.implicitNotFound
+import scala.language.implicitConversions
+
+/**
+  * Eq is used for types that support equality and inequality testing.
+  * The functions its members implement are `eq` and `neq`.
+  *
+  * @tparam A
+  */
+@implicitNotFound("The type ${A} was not made an instance of the Eq type class")
+trait Eq[A] {
+  /**
+    * Checks whether lhs and rhs are equals
+    * @param lhs the first value
+    * @param rhs the second value
+    * @return `true` if they are equals; `false` otherwise
+    */
+  def eq(lhs: A, rhs: A): Boolean
+
+  /**
+    * Checks whether lhs and rhs are different
+    * @param lhs the first value
+    * @param rhs the second value
+    * @return `true` if they are equals; `false` otherwise
+    */
+  def neq(lhs: A, rhs: A): Boolean = !eq(lhs, rhs)
+}
+
+object Eq {
+  def apply[A](implicit ev: Eq[A]) = ev
+
+  trait EqOps[A] {
+    def self: A
+    def eqInstance: Eq[A]
+    def ===(that: A): Boolean = eqInstance.eq(self, that)
+    def =/=(that: A): Boolean = eqInstance.neq(self, that)
+  }
+
+  object ops {
+    implicit def toEqOp[A](x: A)(implicit ev: Eq[A]) = new EqOps[A] {
+      override def self: A = x
+      override def eqInstance: Eq[A] = ev
+    }
+  }
+
+  def apply[A](comp: (A, A) => Boolean): Eq[A] = new Eq[A] {
+    override def eq(lhs: A, rhs: A): Boolean = comp(lhs, rhs)
+  }
+
+  implicit val floatEq: Eq[Float] = apply(_ equals _)
+  implicit val doubleEq: Eq[Double] = apply(_ equals _)
+  implicit val shortEq: Eq[Short] = apply(_ equals _)
+  implicit val byteEq: Eq[Byte] = apply(_ equals _)
+  implicit val intEq: Eq[Int] = apply(_ equals _)
+  implicit val longEq: Eq[Long] = apply(_ equals _)
+
+  implicit val booleanEq: Eq[Boolean] = apply(_ equals _)
+
+  implicit val charEq: Eq[Char] = apply(_ equals _)
+  implicit val stringEq: Eq[String] = apply(_ equals _)
+}
+
+/**
+  * Laws Eq instances should have are the following:
+  * - Reflexivity: x == x should always be True.
+  * - Symmetry: x == y iff y == x.
+  * - Transitivity: If x == y and y == z, then x == z.
+  * - Substitution: If x == y, then f x == f y for all f.
+  */
+trait EqLaws {
+  def reflexivityLaw[A: Eq](x: A): Boolean = {
+    Eq[A].eq(x, x)
+  }
+
+  def symmetryLaw[A: Eq](x: A, y: A): Boolean = {
+    Eq[A].eq(x, y) == Eq[A].eq(y, x)
+  }
+
+  def transitivityLaw[A: Eq](x: A, y: A, z: A): Boolean = {
+    if (Eq[A].eq(x, y) && Eq[A].eq(y, z)) {
+      Eq[A].eq(x, z)
+    } else {
+      true
+    }
+  }
+
+  def substitutionLaw[A: Eq](x: A, y: A)(f: A => A): Boolean = {
+    Eq[A].eq(x, y) == Eq[A].eq(f(x), f(y))
+  }
+}

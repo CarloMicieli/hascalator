@@ -33,6 +33,10 @@ trait Show[A] {
 object Show {
   def apply[A](implicit S: Show[A]): Show[A] = S
 
+  def apply[A](toStr: A => String): Show[A] = new Show[A] {
+    override def show(x: A): String = toStr(x)
+  }
+
   trait ShowOps[A] {
     def self: A
     def showInstance: Show[A]
@@ -46,17 +50,14 @@ object Show {
     }
   }
 
-  private def newInstance[A](toStr: A => String): Show[A] = new Show[A] {
-    override def show(x: A): String = toStr(x)
-  }
-
-  implicit val booleanShow: Show[Boolean] = newInstance(_.toString)
-  implicit val byteShow: Show[Byte] = newInstance(_.toString)
-  implicit val intShow: Show[Int] = newInstance(_.toString)
-  implicit val longShow: Show[Long] = newInstance(_.toString)
-  implicit val floatShow: Show[Float] = newInstance(_.toString)
-  implicit val doubleShow: Show[Double] = newInstance(_.toString)
-  implicit val stringShow: Show[String] = newInstance(x => s""""$x"""")
+  implicit val booleanShow: Show[Boolean] = apply(_.toString)
+  implicit val byteShow: Show[Byte] = apply(_.toString)
+  implicit val intShow: Show[Int] = apply(_.toString)
+  implicit val shortShow: Show[Short] = apply(_.toString)
+  implicit val longShow: Show[Long] = apply(_.toString)
+  implicit val floatShow: Show[Float] = apply(_.toString)
+  implicit val doubleShow: Show[Double] = apply(_.toString)
+  implicit val stringShow: Show[String] = apply(x => s""""$x"""")
 
   implicit val charShow: Show[Char] = new Show[Char] {
     override def show(x: Char): String = s"'$x'"

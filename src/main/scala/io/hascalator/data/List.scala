@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
-import io.hascalator.typeclasses.Show
+import io.hascalator.typeclasses.{ Eq, Show }
 
 /**
   * A list is either empty, or a constructed list with a `head` and a `tail`.
@@ -488,9 +488,11 @@ object List {
     Some(xs.foldRight(Seq.empty[A])((x, sq) => x +: sq))
   }
 
-  implicit def toShowList[A: Show]: Show[List[A]] = new Show[List[A]] {
-    override def show(x: List[A]): String = Show[A].showList(x)
+  implicit def toShowList[A: Show]: Show[List[A]] = Show {
+    (x: List[A]) => Show[A].showList(x)
   }
+
+  implicit def toEqList[A: Eq]: Eq[List[A]] = Eq(_ equals _)
 }
 
 private[this] case class Cons[A](head: A, tail: List[A]) extends List[A] {
