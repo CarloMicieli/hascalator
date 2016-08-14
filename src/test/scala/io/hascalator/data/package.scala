@@ -22,6 +22,13 @@ import org.scalatest.enablers.Length
 import scala.language.implicitConversions
 
 package object data {
+
+  implicit def arbitraryEither[A, B](implicit a: Arbitrary[A], b: Arbitrary[B]): Arbitrary[Either[A, B]] = Arbitrary {
+    def genLeft: Gen[Either[A, B]] = for { x <- a.arbitrary } yield Either.left(x)
+    def genRight: Gen[Either[A, B]] = for { x <- b.arbitrary } yield Either.right(x)
+    Gen.oneOf(genLeft, genRight)
+  }
+
   implicit def arbitraryMaybe[T](implicit a: Arbitrary[T]): Arbitrary[Maybe[T]] = Arbitrary {
     val genNone: Gen[Maybe[T]] = Gen.const(Maybe.none[T])
 
