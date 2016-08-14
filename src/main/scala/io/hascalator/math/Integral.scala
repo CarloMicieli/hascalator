@@ -66,7 +66,7 @@ object Integral {
     def +(other: A): A = integralInstance.add(self, other)
     def -(other: A): A = integralInstance.sub(self, other)
     def *(other: A): A = integralInstance.mul(self, other)
-    def div(other: A): A = integralInstance.div(self, other)
+    def /(other: A): A = integralInstance.div(self, other)
     def mod(other: A): A = integralInstance.mod(self, other)
     def divMod(other: A): (A, A) = integralInstance.divMod(self, other)
   }

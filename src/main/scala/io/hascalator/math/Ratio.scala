@@ -45,22 +45,34 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 
   def +(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      new Ratio(I.add(I.mul(a, d), I.mul(b, c)), I.mul(b, d))
+      {
+        import Integral.ops._
+        new Ratio((a * d) + (b * c), b * d)
+      }
   }
 
   def -(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      new Ratio(I.sub(I.mul(a, d), I.mul(b, c)), I.mul(b, d))
+      {
+        import Integral.ops._
+        new Ratio((a * d) - (b * c), b * d)
+      }
   }
 
   def *(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      new Ratio(I.mul(a, c), I.mul(b, d))
+      {
+        import Integral.ops._
+        new Ratio(a * c, b * d)
+      }
   }
 
   def /(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      new Ratio(I.mul(a, d), I.mul(b, c))
+      {
+        import Integral.ops._
+        new Ratio(a * d, b * c)
+      }
   }
 
   override def toString: String = {
@@ -78,6 +90,11 @@ class Ratio[A: Integral] protected (n: A, d: A) {
       case _ =>
         false
     }
+  }
+
+  override def hashCode(): Int = {
+    //TODO: to be implemented
+    super.hashCode()
   }
 
   private def compute(that: Ratio[A])(f: (A, A, A, A) => Ratio[A]): Ratio[A] = {
