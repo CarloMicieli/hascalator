@@ -18,7 +18,7 @@ package io.hascalator.data
 
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
 import Maybe._
-import io.hascalator.typeclasses.Show
+import io.hascalator.typeclasses.{ Show, Eq, Ord, Ordering }
 
 class MaybeSpec extends AbstractTestSpec with MaybeValues {
   describe("Maybe") {
@@ -181,11 +181,33 @@ class MaybeSpec extends AbstractTestSpec with MaybeValues {
         catMaybes(List(just42, none, none, just42, none)) shouldBe List(42, 42)
       }
     }
+
+    describe("Eq[Maybe]") {
+      it("should be instance of the typeclass") {
+        val eqInstance = implicitly[Eq[Maybe[Int]]]
+        eqInstance.eq(just42, just42) shouldBe true
+        eqInstance.eq(noneInt, noneInt) shouldBe true
+        eqInstance.eq(just42, noneInt) shouldBe false
+        eqInstance.eq(noneInt, just42) shouldBe false
+      }
+    }
+
+    describe("Ord[Maybe]") {
+      it("should be instance of the typeclass") {
+        val ordInstance = implicitly[Ord[Maybe[Int]]]
+        ordInstance.compare(just42, just42) shouldBe Ordering.EQ
+        ordInstance.compare(noneInt, noneInt) shouldBe Ordering.EQ
+        ordInstance.compare(just42, noneInt) shouldBe Ordering.GT
+        ordInstance.compare(noneInt, just42) shouldBe Ordering.LT
+        ordInstance.compare(just41, just42) shouldBe Ordering.LT
+      }
+    }
   }
 }
 
 trait MaybeValues {
   val just42: Maybe[Int] = just(42)
+  val just41: Maybe[Int] = just(41)
   val justOne: Maybe[String] = just("one")
   val noneInt: Maybe[Int] = none
   val noneString: Maybe[String] = none

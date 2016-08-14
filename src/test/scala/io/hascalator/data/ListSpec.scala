@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
-import io.hascalator.typeclasses.Show
+import io.hascalator.typeclasses.{ Eq, Ord, Ordering, Show }
 
 class ListSpec extends AbstractTestSpec with SampleLists {
   describe("A list") {
@@ -474,6 +474,28 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should interperse a value between list elements") {
         val l = List('a', 'b', 'c', 'd', 'e').intersperse('-')
         l shouldBe List('a', '-', 'b', '-', 'c', '-', 'd', '-', 'e')
+      }
+    }
+
+    describe("Eq[List]") {
+      it("should be instance of the typeclass") {
+        val eqInstance = implicitly[Eq[List[Int]]]
+        eqInstance.eq(emptyList, emptyList) shouldBe true
+        eqInstance.eq(emptyList, numbersList) shouldBe false
+        eqInstance.eq(numbersList, emptyList) shouldBe false
+        eqInstance.eq(numbersList, numbersList) shouldBe true
+      }
+    }
+
+    describe("Ord[List]") {
+      it("should be instance of the typeclass") {
+        val ordInstance = implicitly[Ord[List[Int]]]
+        ordInstance.compare(emptyList, emptyList) shouldBe Ordering.EQ
+        ordInstance.compare(numbersList, numbersList) shouldBe Ordering.EQ
+        ordInstance.compare(emptyList, numbersList) shouldBe Ordering.LT
+        ordInstance.compare(numbersList, emptyList) shouldBe Ordering.GT
+        ordInstance.compare(numbersList, randomList) shouldBe Ordering.LT
+        ordInstance.compare(randomList, numbersList) shouldBe Ordering.GT
       }
     }
   }

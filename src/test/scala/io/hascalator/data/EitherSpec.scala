@@ -18,6 +18,7 @@ package io.hascalator.data
 
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
 import Either._
+import io.hascalator.typeclasses.{ Eq, Ord, Ordering }
 
 class EitherSpec extends AbstractTestSpec with EitherValues {
   describe("Either") {
@@ -182,11 +183,35 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
       }
     }
 
-    describe("show") {
-      it("should be an instance of the Show typeclass") {
+    describe("Show[Either]") {
+      it("should be an instance of the typeclass") {
         import io.hascalator.typeclasses.Show.ops._
         leftOne.show shouldBe """Left("one")"""
         right42.show shouldBe "Right(42)"
+      }
+    }
+
+    describe("Eq[Either]") {
+      it("should be an instance of the typeclass") {
+        val eqInstance = implicitly[Eq[Either[String, Int]]]
+
+        eqInstance.eq(leftOne, leftOne) shouldBe true
+        eqInstance.eq(right42, right42) shouldBe true
+        eqInstance.eq(right42, leftOne) shouldBe false
+        eqInstance.eq(leftOne, right42) shouldBe false
+      }
+    }
+
+    describe("Ord[Either]") {
+      it("should be an instance of the typeclass") {
+        val ordInstance = implicitly[Ord[Either[String, Int]]]
+
+        ordInstance.compare(leftOne, leftOne) shouldBe Ordering.EQ
+        ordInstance.compare(leftTwo, leftOne) shouldBe Ordering.GT
+        ordInstance.compare(right42, right42) shouldBe Ordering.EQ
+        ordInstance.compare(right41, right42) shouldBe Ordering.LT
+        ordInstance.compare(right42, leftOne) shouldBe Ordering.GT
+        ordInstance.compare(leftOne, right42) shouldBe Ordering.LT
       }
     }
   }
@@ -194,5 +219,7 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
 
 trait EitherValues {
   val leftOne: Either[String, Int] = Either.left("one")
+  val leftTwo: Either[String, Int] = Either.left("two")
   val right42: Either[String, Int] = Either.right(42)
+  val right41: Either[String, Int] = Either.right(41)
 }

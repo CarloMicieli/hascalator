@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
-import io.hascalator.typeclasses.{ Eq, Show }
+import io.hascalator.typeclasses.{ Ord, Show, Ordering }
 
 /**
   * The `Either` type represents values with two possibilities: a value of type `Either[A,B]` is
@@ -201,6 +201,7 @@ sealed trait Either[+A, +B] {
 object Either {
   /**
     * Build a new ''Left'' value.
+    *
     * @param v the wrapped value
     * @tparam A the ''Left'' data type
     * @tparam B the ''Right'' data type
@@ -210,6 +211,7 @@ object Either {
 
   /**
     * Build a new ''Right'' value.
+    *
     * @param v the wrapped value
     * @tparam A the ''Left'' data type
     * @tparam B the ''Right'' data type
@@ -226,7 +228,19 @@ object Either {
       }
   }
 
-  implicit def toEqEither[A: Eq]: Eq[Maybe[A]] = Eq(_ equals _)
+  implicit def toOrdEither[A, B](implicit ordA: Ord[A], ordB: Ord[B]): Ord[Either[A, B]] = {
+    val cmp: (Either[A, B], Either[A, B]) => Ordering = (x, y) =>
+      {
+        (x, y) match {
+          case (Right(a), Right(b)) => ordB.compare(a, b)
+          case (Left(_), Right(_))  => Ordering.LT
+          case (Right(_), Left(_))  => Ordering.GT
+          case (Left(a), Left(b))   => ordA.compare(a, b)
+        }
+      }
+
+    Ord(cmp)
+  }
 }
 
 private[this] case class Left[A, B](value: A) extends Either[A, B] {

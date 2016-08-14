@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
-import io.hascalator.typeclasses.{ Eq, Show }
+import io.hascalator.typeclasses.{ Ord, Ordering, Show }
 
 /**
   * A list is either empty, or a constructed list with a `head` and a `tail`.
@@ -492,7 +492,25 @@ object List {
     (x: List[A]) => Show[A].showList(x)
   }
 
-  implicit def toEqList[A: Eq]: Eq[List[A]] = Eq(_ equals _)
+  implicit def toOrdList[A: Ord](implicit ordA: Ord[A]): Ord[List[A]] = {
+    @annotation.tailrec
+    def compareLists(xs: List[A], ys: List[A]): Ordering = {
+      (xs, ys) match {
+        case (Nil, Nil)    => Ordering.EQ
+        case (Nil, _ +: _) => Ordering.LT
+        case (_ +: _, Nil) => Ordering.GT
+        case (x +: x1, y +: y1) =>
+          val cmp = ordA.compare(x, y)
+          if (cmp == Ordering.EQ) {
+            compareLists(x1, y1)
+          } else {
+            cmp
+          }
+      }
+    }
+
+    Ord(compareLists _)
+  }
 }
 
 private[this] case class Cons[A](head: A, tail: List[A]) extends List[A] {

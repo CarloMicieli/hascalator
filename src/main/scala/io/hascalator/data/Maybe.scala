@@ -17,7 +17,7 @@
 package io.hascalator.data
 
 import io.hascalator.functions._
-import io.hascalator.typeclasses.{ Eq, Show }
+import io.hascalator.typeclasses.{ Ord, Ordering, Show }
 
 /**
   * The `Maybe` type encapsulates an optional value. A value of type `Maybe[A]`
@@ -202,7 +202,17 @@ object Maybe {
       x.map(v => implicitly[Show[A]].show(v)).toString
   }
 
-  implicit def toEqMaybe[A: Eq]: Eq[Maybe[A]] = Eq(_ equals _)
+  implicit def toOrdMaybe[A](implicit ordA: Ord[A]): Ord[Maybe[A]] = Ord {
+    (x: Maybe[A], y: Maybe[A]) =>
+      {
+        (x, y) match {
+          case (None, None)       => Ordering.EQ
+          case (None, Just(_))    => Ordering.LT
+          case (Just(_), None)    => Ordering.GT
+          case (Just(a), Just(b)) => ordA.compare(a, b)
+        }
+      }
+  }
 }
 
 private[this] case class Just[A](get: A) extends Maybe[A] {

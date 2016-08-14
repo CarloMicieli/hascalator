@@ -16,11 +16,13 @@ The library is currently implementing the following types:
 
 * `Data.List`
 * `Data.Maybe`
+* `Data.Either`
 
-The following typeclasses are now implemented:
+and the following typeclasses:
 
 * `Show`
-
+* `Eq`
+* `Ord`
 
 ## References ##
 
