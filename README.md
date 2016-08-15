@@ -27,12 +27,29 @@ and the following typeclasses:
 * `Integral`
 * `Fractional`
 
+## Layout ##
+
+The project has the following layout:
+
+```
++ src
+--+ main
+----+ scala
+------+ io
+---------+ hascalator
+---------+ package.scala   // type aliases for typeclasses
+------------+ dst             // immutable, purely function data structures
+------------+ data            // basic data types (ie Maybe, Either, List...)
+------------+ functions       // functions helpers
+------------+ math            // math types
+------------+ typeclasses     // typeclasses
+```
 
 ## References ##
 
 * Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
 * Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
-
+* Larry LIU Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
 ## Contribution policy ##
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project's open source license and warrant that you have the legal authority to do so.
