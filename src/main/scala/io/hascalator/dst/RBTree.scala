@@ -21,7 +21,7 @@ import io.hascalator.functions._
 import io.hascalator.data.{ List, Maybe }
 import Maybe._
 
-private[this] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
+private[dst] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
   override def lookup[K1 >: K](key: K1)(implicit ord: Ord[K1]): Maybe[V] = {
     this match {
       case EmptyRBTree                              => none
@@ -131,12 +131,12 @@ private[this] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
   }
 }
 
-private case object EmptyRBTree extends RBTree[Nothing, Nothing] {
+private[dst] case object EmptyRBTree extends RBTree[Nothing, Nothing] {
   override def get: Nothing = error("Tree.get: tree is empty")
   override def isEmpty: Boolean = true
 }
 
-private case class RBNode[K, V](color: Color, left: RBTree[K, V], key: K, value: V, right: RBTree[K, V]) extends RBTree[K, V] {
+private[dst] case class RBNode[K, V](color: Color, left: RBTree[K, V], key: K, value: V, right: RBTree[K, V]) extends RBTree[K, V] {
 
   def this(key: K, value: V) = this(Red, EmptyRBTree, key, value, EmptyRBTree)
 
