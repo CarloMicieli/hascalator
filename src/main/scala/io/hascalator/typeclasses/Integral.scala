@@ -78,6 +78,30 @@ object Integral {
     }
   }
 
+  implicit val short2Integral: Integral[Short] = new Integral[Short] {
+    override def add(x: Short, y: Short): Short = toS(x + y)
+    override def mul(x: Short, y: Short): Short = toS(x * y)
+    override def div(a: Short, b: Short): Short = toS(a / b)
+    override def mod(a: Short, b: Short): Short = {
+      val res = a % b
+      val m = if (res < 0) res + b else res
+      toS(m)
+    }
+
+    override def negate(x: Short): Short = toS(-x)
+    override def fromInteger(n: Int): Short = toS(n)
+    override def signum(x: Short): Short = x match {
+      case 0          => 0
+      case _ if x < 0 => -1
+      case _ if x > 0 => 1
+    }
+
+    override def show(x: Short): String = x.toString
+    override def eq(lhs: Short, rhs: Short): Boolean = lhs equals rhs
+
+    private def toS(n: Int): Short = n.toShort
+  }
+
   implicit val int2Integral: Integral[Int] = new Integral[Int] {
     override def add(x: Int, y: Int): Int = x + y
     override def mul(x: Int, y: Int): Int = x * y

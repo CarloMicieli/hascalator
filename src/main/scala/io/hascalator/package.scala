@@ -17,15 +17,21 @@
 package io
 
 package object hascalator {
-  type Traversable[+A] = scala.collection.immutable.Traversable[A]
-  type Iterable[+A] = scala.collection.immutable.Iterable[A]
-  type Seq[+A] = scala.collection.immutable.Seq[A]
-  type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
-
   type Eq[A] = io.hascalator.typeclasses.Eq[A]
+  val Eq = io.hascalator.typeclasses.Eq
+
   type Ord[A] = io.hascalator.typeclasses.Ord[A]
+  val Ord = io.hascalator.typeclasses.Ord
+
   type Show[A] = io.hascalator.typeclasses.Show[A]
+  val Show = io.hascalator.typeclasses.Show
+
   type Num[A] = io.hascalator.typeclasses.Num[A]
+  val Num = io.hascalator.typeclasses.Num
+
   type Integral[A] = io.hascalator.typeclasses.Integral[A]
+  val Integral = io.hascalator.typeclasses.Integral
+
   type Fractional[A] = io.hascalator.typeclasses.Fractional[A]
+  val Fractional = io.hascalator.typeclasses.Fractional
 }

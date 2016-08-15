@@ -141,3 +141,10 @@ protected[typeclasses] trait MultiplicationLaws {
     a * id == id * a
   }
 }
+
+protected[typeclasses] trait SignumLaws {
+  import Num.ops._
+  def law[A: Num](x: A): Boolean = {
+    x.abs * x.signum == x
+  }
+}

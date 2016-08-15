@@ -20,6 +20,19 @@ import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
 
 class IntegralProperties extends AbstractPropertySpec with AdditionLaws {
+  property("Short: was made instance of Integral type class") {
+    check(forAll { (x: Short, y: Short) =>
+      val num = Integral[Short]
+
+      num.fromInteger(x.toInt) === x
+      num.add(x, y) === x + y
+      num.sub(x, y) === x - y
+      num.mul(x, y) === x * y
+      num.abs(x) >= 0
+      num.mul(num.abs(x), num.signum(x)) === x
+    })
+  }
+
   property("Int: was made instance of Integral type class") {
     check(forAll { (x: Int, y: Int) =>
       val num = Integral[Int]
@@ -32,4 +45,18 @@ class IntegralProperties extends AbstractPropertySpec with AdditionLaws {
       num.mul(num.abs(x), num.signum(x)) === x
     })
   }
+
+  property("Long: was made instance of Integral type class") {
+    check(forAll { (x: Long, y: Long, z: Int) =>
+      val num = Integral[Long]
+
+      num.fromInteger(z) === z.toLong
+      num.add(x, y) === x + y
+      num.sub(x, y) === x - y
+      num.mul(x, y) === x * y
+      num.abs(x) >= 0
+      num.mul(num.abs(x), num.signum(x)) === x
+    })
+  }
 }
+
