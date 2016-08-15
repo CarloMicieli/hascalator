@@ -118,13 +118,13 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
       }
     }
 
-    describe("map2") {
+    describe("either") {
       it("should apply the left function to Left values") {
-        leftOne.map2(l => l.length)(r => r * 2) shouldBe 3
+        leftOne.either(l => l.length)(r => r * 2) shouldBe 3
       }
 
       it("should apply the right function to Right values") {
-        right42.map2(l => l.length)(r => r * 2) shouldBe 84
+        right42.either(l => l.length)(r => r * 2) shouldBe 84
       }
     }
 

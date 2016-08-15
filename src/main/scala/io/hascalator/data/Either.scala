@@ -88,14 +88,15 @@ sealed trait Either[+A, +B] {
   }
 
   /**
-    * Map `Either` values to a result of the same type, for both ''Left'' and ''Right'' values.
+    * Case analysis for the `Either` type. If the value is a ''Left(a)'', apply the first
+    * function to ''a''; if it is ''Right(b)'', apply the second function to ''b''.
     *
     * @param left the function to map ''Left'' values
     * @param right the function to map ''Right'' values
     * @tparam C the resulting data type
     * @return the result applying either `left` or `right` function
     */
-  def map2[C](left: A => C)(right: B => C): C = {
+  def either[C](left: A => C)(right: B => C): C = {
     this match {
       case Right(v) => right(v)
       case Left(v)  => left(v)
@@ -224,7 +225,7 @@ object Either {
       {
         val l = (a: A) => s"Left(${implicitly[Show[A]].show(a)})"
         val r = (b: B) => s"Right(${implicitly[Show[B]].show(b)})"
-        x.map2(l)(r)
+        x.either(l)(r)
       }
   }
 
