@@ -34,4 +34,7 @@ package object hascalator {
 
   type Fractional[A] = io.hascalator.typeclasses.Fractional[A]
   val Fractional = io.hascalator.typeclasses.Fractional
+
+  type Real[A] = io.hascalator.typeclasses.Real[A]
+  val Real = io.hascalator.typeclasses.Real
 }
