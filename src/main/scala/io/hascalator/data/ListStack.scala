@@ -25,7 +25,7 @@ private[data] class ListStack[+A](st: List[A]) extends Stack[A] {
 
   override def size: Int = st.length
 
-  override def top: Maybe[A] = st.headOption
+  override def top: Maybe[A] = st.headMaybe
 
   override def isEmpty: Boolean = st.isEmpty
 

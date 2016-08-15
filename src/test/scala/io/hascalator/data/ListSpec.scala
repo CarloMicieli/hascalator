@@ -206,12 +206,12 @@ class ListSpec extends AbstractTestSpec with SampleLists {
     describe("head") {
       import Maybe._
       it("should return None for empty list head") {
-        emptyList.headOption shouldBe none
+        emptyList.headMaybe shouldBe none
       }
 
       it("should return the element in front of this list") {
         numbersList.head shouldBe 1
-        numbersList.headOption shouldBe just(1)
+        numbersList.headMaybe shouldBe just(1)
       }
 
       it("should throw an exception for empty lists head") {

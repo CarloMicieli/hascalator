@@ -36,7 +36,7 @@ sealed trait List[+A] extends Product with Serializable {
     * `O(1)` Optionally returns the first element of a list.
     * @return `Some(head)` if the list is not empty; `None` otherwise
     */
-  def headOption: Maybe[A] = {
+  def headMaybe: Maybe[A] = {
     import Maybe._
     if (isEmpty) {
       none
