@@ -244,12 +244,12 @@ object Either {
   }
 }
 
-private[this] case class Left[A, B](value: A) extends Either[A, B] {
+private case class Left[A, B] private (value: A) extends Either[A, B] {
   override def isLeft: Boolean = true
   override def get: B = error("Left.get: this value is a Left")
 }
 
-private[this] case class Right[A, B](value: B) extends Either[A, B] {
+private case class Right[A, B] private (value: B) extends Either[A, B] {
   override def isLeft: Boolean = false
   override def get: B = value
 }

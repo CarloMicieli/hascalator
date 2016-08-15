@@ -513,7 +513,7 @@ object List {
   }
 }
 
-private[this] case class Cons[A](head: A, tail: List[A]) extends List[A] {
+private case class Cons[A] private (head: A, tail: List[A]) extends List[A] {
   override def isEmpty: Boolean = false
 }
 
@@ -523,7 +523,7 @@ object +: {
     else Some((xs.head, xs.tail))
 }
 
-private[this] case object Nil extends List[Nothing] {
+private case object Nil extends List[Nothing] {
   override def head: Nothing = error("List.head: empty list")
   override def tail: Nothing = error("List.tail: empty list")
   override def isEmpty: Boolean = true
