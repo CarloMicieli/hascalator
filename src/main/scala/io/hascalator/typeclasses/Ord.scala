@@ -39,7 +39,79 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound("The type ${A} was not made an instance of the Ord type class")
 trait Ord[A] extends Any with Eq[A] { self =>
+  /**
+    * Returns an `Ordering` value that communicates how `x` compares to `y`.
+    * @param x the first value
+    * @param y the second value
+    * @return an `Ordering` value
+    */
   def compare(x: A, y: A): Ordering
+
+  /**
+    * Returns `true` if `x < y` in the ordering
+    * @param x the first value
+    * @param y the second value
+    * @return `true` if `x < y` in the ordering
+    */
+  def lt(x: A, y: A): Boolean = compare(x, y) == Ordering.LT
+
+  /**
+    * Returns `true` if `x <= y` in the ordering
+    * @param x the first value
+    * @param y the second value
+    * @return `true` if `x <= y` in the ordering
+    */
+  def lte(x: A, y: A): Boolean = {
+    val cmp = compare(x, y)
+    cmp == Ordering.EQ || cmp == Ordering.LT
+  }
+
+  /**
+    * Returns `true` if `x > y` in the ordering
+    * @param x the first value
+    * @param y the second value
+    * @return `true` if `x > y` in the ordering
+    */
+  def gt(x: A, y: A): Boolean = compare(x, y) == Ordering.GT
+
+  /**
+    * Returns `true` if `x >= y` in the ordering
+    * @param x the first value
+    * @param y the second value
+    * @return `true` if `x >= y` in the ordering
+    */
+  def gte(x: A, y: A): Boolean = {
+    val cmp = compare(x, y)
+    cmp == Ordering.EQ || cmp == Ordering.GT
+  }
+
+  /**
+    * Return `x` if `x <= y`, otherwise `y`.
+    * @param x the first value
+    * @param y the second value
+    * @return the min value between `x` and `y`
+    */
+  def min(x: A, y: A): A = {
+    if (lte(x, y)) {
+      x
+    } else {
+      y
+    }
+  }
+
+  /**
+    * Return `x` if `x >= y`, otherwise `y`.
+    * @param x the first value
+    * @param y the second value
+    * @return the max value between `x` and `y`
+    */
+  def max(x: A, y: A): A = {
+    if (gte(x, y)) {
+      x
+    } else {
+      y
+    }
+  }
 }
 
 object Ord {
@@ -55,21 +127,14 @@ object Ord {
 
     def ordInstance: Ord[A]
 
-    def ===(that: A): Boolean = ordInstance.compare(self, that) == Ordering.EQ
-    def =/=(that: A): Boolean = ordInstance.compare(self, that) != Ordering.EQ
-    def <(that: A): Boolean = ordInstance.compare(self, that) == Ordering.LT
-
-    def <=(that: A): Boolean = {
-      val res = ordInstance.compare(self, that)
-      res == Ordering.LT || res == Ordering.EQ
-    }
-
-    def >(that: A): Boolean = ordInstance.compare(self, that) == Ordering.GT
-
-    def >=(that: A): Boolean = {
-      val res = ordInstance.compare(self, that)
-      res == Ordering.GT || res == Ordering.EQ
-    }
+    def ===(that: A): Boolean = ordInstance.eq(self, that)
+    def =/=(that: A): Boolean = ordInstance.neq(self, that)
+    def <(that: A): Boolean = ordInstance.lt(self, that)
+    def <=(that: A): Boolean = ordInstance.lte(self, that)
+    def >(that: A): Boolean = ordInstance.gt(self, that)
+    def >=(that: A): Boolean = ordInstance.gte(self, that)
+    def max(that: A): A = ordInstance.max(self, that)
+    def min(that: A): A = ordInstance.min(self, that)
   }
 
   object ops {
@@ -118,14 +183,18 @@ protected[typeclasses] trait OrdLaws {
 
   def antisymmetryLaw[A: Ord](x: A, y: A): Boolean = {
     if (x <= y && y <= x) {
-      implicitly[Ord[A]].compare(x, y) == Ordering.EQ
+      implicitly[Ord[A]].eq(x, y)
     } else {
       true
     }
   }
 
   def transitivityLaw[A: Ord](x: A, y: A, z: A): Boolean = {
-    if (x <= y && y <= z) x <= z else true
+    if (x <= y && y <= z) {
+      x <= z
+    } else {
+      true
+    }
   }
 
   def totalityLaw[A: Ord](x: A, y: A): Boolean = {
