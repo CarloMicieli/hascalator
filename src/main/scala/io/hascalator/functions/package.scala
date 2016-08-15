@@ -16,6 +16,8 @@
 
 package io.hascalator
 
+import scala.util.control.NoStackTrace
+
 package object functions {
 
   /**
@@ -54,9 +56,45 @@ package object functions {
     throw new ApplicationException(s"*** Exception: '$msg'")
   }
 
+  /**
+    * A variant of [[error]] that does not produce a stack trace.
+    * @param msg the error message
+    * @tparam A the return type
+    * @return
+    */
+  def errorWithoutStackTrace[A](msg: String): A = {
+    throw new ApplicationException(s"*** Exception: '$msg'") with NoStackTrace
+  }
+
+  /**
+    * `until p f` yields the result of applying `f` until `p` holds.
+    *
+    * @param p the termination condition
+    * @param f the function to compute the next value
+    * @param z the initial value
+    * @tparam A
+    * @return the result
+    */
+  @annotation.tailrec
+  final def until[A](p: A => Boolean)(f: A => A)(z: A): A = {
+    if (p(z)) {
+      z
+    } else {
+      until(p)(f)(f(z))
+    }
+  }
+
   implicit class Function2Flip[A, B, C](val f: (A, B) => C) extends AnyVal {
     def flip: (B, A) => C = functions.flip(f)
   }
+
+  implicit class ForwardPipe[A](val x: A) extends AnyVal {
+    def |>[B](f: A => B): B = f(x)
+  }
+
+  implicit class ForwardComp[A, B](val f: A => B) extends AnyVal {
+    def >>[C](g: B => C): A => C = f andThen g
+  }
 }
 
-final class ApplicationException(msg: String) extends Exception(msg)
+class ApplicationException(msg: String) extends Exception(msg)

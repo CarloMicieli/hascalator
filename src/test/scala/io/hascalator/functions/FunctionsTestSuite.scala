@@ -47,4 +47,15 @@ class FunctionsTestSuite extends AbstractTestSuite {
       error("BOOM")
     } should have message "*** Exception: 'BOOM'"
   }
+
+  "errorWithoutStackTrace" should "throw an exception" in {
+    the[ApplicationException] thrownBy {
+      errorWithoutStackTrace("BOOM")
+    } should have message "*** Exception: 'BOOM'"
+  }
+
+  "util" should "apply the function f until condition holds" in {
+    until[Int](_ > 10)(_ + 1)(1) shouldBe 11
+    until[Int](_ < 10)(_ + 1)(1) shouldBe 1
+  }
 }
