@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator.typeclasses
 
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
@@ -26,7 +26,7 @@ import scala.language.implicitConversions
   * @tparam A the type class instance type
   */
 @implicitNotFound("The type ${A} was not made an instance of the Integral type class")
-trait Integral[A] extends Num[A] {
+trait Integral[A] extends Any with Num[A] {
 
   /**
     * Returns the integer division operation

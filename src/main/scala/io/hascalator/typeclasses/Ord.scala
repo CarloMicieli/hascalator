@@ -20,20 +20,25 @@ import scala.language.implicitConversions
 import scala.annotation.implicitNotFound
 
 /**
-  * The Ord class is used for totally ordered datatypes.
+  * The `Ord` typeclass is used for totally ordered data types.
   *
-  * Instances of Ord can be derived for any user-defined datatype whose constituent types
-  * are in Ord. The declared order of the constructors in the data declaration determines the
+  * Instances of `Ord` can be derived for any user-defined data type whose constituent types
+  * are in `Ord`. The declared order of the constructors in the data declaration determines the
   * ordering in derived Ord instances. The Ordering data type allows a single comparison to
   * determine the precise ordering of two objects.
   *
-  * Minimal complete definition: either compare or <=. Using compare can be more efficient
-  * for complex types.
+  * Minimal complete definition is `compare`.
   *
-  * @tparam A
+  * ==Laws==
+  * A good implementation for an instance of `Ord` should respect the following laws:
+  *  - If `x ≤ y` and `y ≤ x` then `x = y` (''antisymmetry'');
+  *  - If `x ≤ y` and `y ≤ z` then `x ≤ z` (''transitivity'');
+  *  - `x ≤ y` or `y ≤ z` (''totality'').
+  *
+  * @tparam A the instance data type
   */
 @implicitNotFound("The type ${A} was not made an instance of the Ord type class")
-trait Ord[A] extends Eq[A] { self =>
+trait Ord[A] extends Any with Eq[A] { self =>
   def compare(x: A, y: A): Ordering
 }
 
@@ -108,13 +113,7 @@ object Ordering {
   }
 }
 
-/**
-  *
-  *  - If x ≤ y and y ≤ x then x = y (antisymmetry);
-  *  - If x ≤ y and y ≤ z then x ≤ z (transitivity);
-  *  - x ≤ y or y ≤ z (totality).
-  */
-trait OrdLaws {
+protected[typeclasses] trait OrdLaws {
   import Ord.ops._
 
   def antisymmetryLaw[A: Ord](x: A, y: A): Boolean = {

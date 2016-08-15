@@ -25,7 +25,7 @@ import io.hascalator.data.List
   * @tparam A
   */
 @implicitNotFound("Type ${A} was not made an instance of the Show type class")
-trait Show[A] {
+trait Show[A] extends Any {
   def show(x: A): String
   def showList(xs: List[A]): String = xs.map(show).mkString(", ", "[", "]")
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator.typeclasses
 
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
 
-class NumProperties extends AbstractPropertySpec with AdditionLaws {
+class NumProperties extends AbstractPropertySpec {
   property("Int: was made instance of Num type class") {
     check(forAll { (x: Int, y: Int) =>
       val num = Num[Int]
@@ -66,14 +66,6 @@ class NumProperties extends AbstractPropertySpec with AdditionLaws {
       num.mul(x, y) === x * y
       num.abs(x) >= 0
       num.mul(num.abs(x), num.signum(x)) === x
-    })
-  }
-
-  property("sum is lawful according to addition laws") {
-    check(forAll { (x: Int, y: Int, z: Int) =>
-      commutativityLaw[Int](x, y)
-      associativityLaw[Int](x, y, z)
-      identityElement[Int](x)
     })
   }
 }

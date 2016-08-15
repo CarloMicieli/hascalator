@@ -23,10 +23,10 @@ import scala.language.implicitConversions
   * Eq is used for types that support equality and inequality testing.
   * The functions its members implement are `eq` and `neq`.
   *
-  * @tparam A
+  * @tparam A the instance data type
   */
 @implicitNotFound("The type ${A} was not made an instance of the Eq type class")
-trait Eq[A] {
+trait Eq[A] extends Any {
   /**
     * Checks whether lhs and rhs are equals
     * @param lhs the first value

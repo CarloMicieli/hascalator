@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package io
+package io.hascalator.typeclasses
 
-package object hascalator {
-  type Traversable[+A] = scala.collection.immutable.Traversable[A]
-  type Iterable[+A] = scala.collection.immutable.Iterable[A]
-  type Seq[+A] = scala.collection.immutable.Seq[A]
-  type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
+import io.hascalator.AbstractPropertySpec
+import org.scalacheck.Prop.forAll
 
-  type Eq[A] = io.hascalator.typeclasses.Eq[A]
-  type Ord[A] = io.hascalator.typeclasses.Ord[A]
-  type Show[A] = io.hascalator.typeclasses.Show[A]
-  type Num[A] = io.hascalator.typeclasses.Num[A]
-  type Integral[A] = io.hascalator.typeclasses.Integral[A]
-  type Fractional[A] = io.hascalator.typeclasses.Fractional[A]
+class IntegralProperties extends AbstractPropertySpec with AdditionLaws {
+  property("Int: was made instance of Integral type class") {
+    check(forAll { (x: Int, y: Int) =>
+      val num = Integral[Int]
+
+      num.fromInteger(x) === x
+      num.add(x, y) === x + y
+      num.sub(x, y) === x - y
+      num.mul(x, y) === x * y
+      num.abs(x) >= 0
+      num.mul(num.abs(x), num.signum(x)) === x
+    })
+  }
 }

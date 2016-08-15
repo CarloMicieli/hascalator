@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator.typeclasses
 
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
@@ -23,7 +23,7 @@ import scala.language.implicitConversions
   * It represents the type class for fractional numbers, supporting real division.
   */
 @implicitNotFound("The type ${A} was not made an instance of the Fractional type class")
-trait Fractional[A] extends Num[A] {
+trait Fractional[A] extends Any with Num[A] {
   def div(x: A, y: A): A
   def recip(x: A): A = div(fromInteger(1), x)
 }

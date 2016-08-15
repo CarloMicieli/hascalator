@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator.typeclasses
 
-import io.hascalator.typeclasses.{ Eq, Show }
-
-import scala.language.implicitConversions
 import scala.annotation.implicitNotFound
+import scala.language.implicitConversions
 
 /**
-  * It represents a basic type class for numeric types.
-  * @tparam A
+  * It represents a basic typeclass for numeric types.
+  * @tparam A the instance type
   */
 @implicitNotFound("The type ${A} was not made instance of the Num type class")
-trait Num[A] extends Eq[A] with Show[A] {
+trait Num[A] extends Any with Eq[A] with Show[A] {
 
   /**
     * Conversion from an `Int`. An integer literal represents the application of the
@@ -116,7 +114,7 @@ object Num {
   }
 }
 
-trait AdditionLaws {
+protected[typeclasses] trait AdditionLaws {
   import Num.ops._
 
   def commutativityLaw[A: Num](a: A, b: A): Boolean = (a + b) == (b + a)
@@ -125,5 +123,21 @@ trait AdditionLaws {
   def identityElement[A: Num](a: A): Boolean = {
     val id = implicitly[Num[A]].fromInteger(0)
     a + id == id + a
+  }
+}
+
+protected[typeclasses] trait MultiplicationLaws {
+  import Num.ops._
+
+  def commutativityLaw[A: Num](a: A, b: A): Boolean = (a * b) == (b * a)
+  def associativityLaw[A: Num](a: A, b: A, c: A): Boolean = ((a * b) * c) == (a * (b * c))
+
+  def distributiveLaw[A: Num](a: A, b: A, c: A): Boolean = {
+    a * (b + c) == a * b + a * c
+  }
+
+  def identityElement[A: Num](a: A): Boolean = {
+    val id = implicitly[Num[A]].fromInteger(1)
+    a * id == id * a
   }
 }

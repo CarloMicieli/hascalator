@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator.typeclasses
 
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
 
-class IntegralProperties extends AbstractPropertySpec with AdditionLaws {
-  property("Int: was made instance of Integral type class") {
-    check(forAll { (x: Int, y: Int) =>
-      val num = Integral[Int]
+class NumMultiplicationProperties extends AbstractPropertySpec with MultiplicationLaws {
+  property("multiplication of Ints is lawful according to addition laws") {
+    check(forAll { (x: Int, y: Int, z: Int) =>
+      commutativityLaw[Int](x, y)
+      associativityLaw[Int](x, y, z)
+      distributiveLaw[Int](x, y, z)
+      identityElement[Int](x)
+    })
+  }
 
-      num.fromInteger(x) === x
-      num.add(x, y) === x + y
-      num.sub(x, y) === x - y
-      num.mul(x, y) === x * y
-      num.abs(x) >= 0
-      num.mul(num.abs(x), num.signum(x)) === x
+  property("multiplication of Longs is lawful according to addition laws") {
+    check(forAll { (x: Long, y: Long, z: Long) =>
+      commutativityLaw[Long](x, y)
+      associativityLaw[Long](x, y, z)
+      distributiveLaw[Long](x, y, z)
+      identityElement[Long](x)
     })
   }
 }
