@@ -23,6 +23,10 @@ and the following typeclasses:
 * `Show`
 * `Eq`
 * `Ord`
+* `Num`
+* `Integral`
+* `Fractional`
+
 
 ## References ##
 
