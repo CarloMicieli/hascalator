@@ -20,7 +20,7 @@ import io.hascalator.AbstractTestSpec
 
 class ListStackSpec extends AbstractTestSpec with StacksFixture {
 
-  describe("A ListStack") {
+  describe("A Stack, backed by a list") {
     describe("size") {
       it("should be 0 for the empty stack") {
         val emptyStack = Stack.empty[Int]

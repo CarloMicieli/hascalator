@@ -77,4 +77,45 @@ package object data {
       override def clear(): Unit = list = List.empty[T]
     }
   }
+
+  implicit def stackToTraversable[T](stack: Stack[T]): Traversable[T] = new Traversable[T] {
+    override def foreach[U](f: (T) => U): Unit = stack.foreach(f)
+  }
+
+  implicit def buildableStack[T]: Buildable[T, Stack[T]] = new Buildable[T, Stack[T]] {
+    def builder = new scala.collection.mutable.Builder[T, Stack[T]]() {
+      private var stack = Stack.empty[T]
+
+      override def +=(elem: T): this.type = {
+        stack = stack push elem
+        this
+      }
+
+      override def result(): Stack[T] = stack
+
+      override def clear(): Unit = stack = Stack.empty[T]
+    }
+  }
+
+  implicit def arbitraryStack[T](implicit a: Arbitrary[T]): Arbitrary[Stack[T]] = Arbitrary {
+    import Arbitrary._
+    import Gen._
+
+    val genEmptyStack = const(Stack.empty[T])
+
+    def genStack = containerOf[Stack, T](arbitrary[T])
+
+    frequency((1, genEmptyStack), (2, genStack))
+  }
+
+  implicit def arbitraryStackOp[T](implicit a: Arbitrary[T]): Arbitrary[StackOp[T]] = Arbitrary {
+    import Arbitrary._
+    import Gen._
+
+    val genPopOp = const(PopOp)
+
+    def genPushOp = for { v <- arbitrary[T] } yield PushOp(v)
+
+    frequency((1, genPopOp), (2, genPushOp))
+  }
 }
