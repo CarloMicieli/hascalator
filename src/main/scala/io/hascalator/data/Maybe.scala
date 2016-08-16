@@ -215,11 +215,11 @@ object Maybe {
   }
 }
 
-private case class Just[A] private (get: A) extends Maybe[A] {
+final case class Just[A] private (get: A) extends Maybe[A] {
   def isDefined: Boolean = true
 }
 
-private case object None extends Maybe[Nothing] {
+case object None extends Maybe[Nothing] {
   def get: Nothing = error("Maybe.get: a value doesn't exist")
   def isDefined: Boolean = false
 }
