@@ -40,4 +40,7 @@ package object hascalator {
 
   type Enum[A] = io.hascalator.typeclasses.Enum[A]
   val Enum = io.hascalator.typeclasses.Enum
+
+  type Bounded[A] = io.hascalator.typeclasses.Bounded[A]
+  val Bounded = io.hascalator.typeclasses.Bounded
 }
