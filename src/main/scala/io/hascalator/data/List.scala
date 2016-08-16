@@ -97,7 +97,7 @@ sealed trait List[+A] extends Product with Serializable {
     * @return `true` if `x` is a list element; `false` otherwise
     */
   def elem[A1 >: A](x: A1)(implicit E: Eq[A1]): Boolean = {
-    find(x).isDefined
+    find(E.eq(_: A1, x)).isDefined
   }
 
   /**
@@ -106,16 +106,15 @@ sealed trait List[+A] extends Product with Serializable {
     *
     * @usecase def find(x: A): Maybe[A]
     * @inheritdoc
-    * @param x the element to find
-    * @param E the equality typeclass
+    * @param p the predicate to match
     * @tparam A1 the element type
     * @return `Just(x)` if the value is found; `None` otherwise
     */
-  def find[A1 >: A](x: A1)(implicit E: Eq[A1]): Maybe[A1] = {
+  def find[A1 >: A](p: A1 => Boolean): Maybe[A1] = {
     this match {
-      case y +: _ if E.eq(y, x) => Maybe.just(y)
-      case _ +: ys              => ys find x
-      case Nil                  => Maybe.none
+      case y +: _ if p(y) => Maybe.just(y)
+      case _ +: ys        => ys find p
+      case Nil            => Maybe.none
     }
   }
 

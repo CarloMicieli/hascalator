@@ -62,15 +62,19 @@ class ListSpec extends AbstractTestSpec with SampleLists {
 
     describe("find") {
       it("should return a None for empty lists") {
-        emptyList find 42 shouldBe Maybe.none
+        emptyList.find(_ == 42) shouldBe Maybe.none
       }
 
-      it("should return a Just if the list contains the element") {
-        numbersList find 6 shouldBe Maybe.just(6)
+      it("should return a Just with the element which match the predicate") {
+        numbersList.find(_ == 6) shouldBe Maybe.just(6)
       }
 
-      it("should return a None if the list doesn't contain the element") {
-        numbersList find 999 shouldBe Maybe.none
+      it("should return a Just for the leftmost element which match the predicate") {
+        numbersList.find(_ > 0) shouldBe Maybe.just(1)
+      }
+
+      it("should return a None if no element in the list is matching the predicate") {
+        numbersList.find(_ == 999) shouldBe Maybe.none
       }
     }
 
