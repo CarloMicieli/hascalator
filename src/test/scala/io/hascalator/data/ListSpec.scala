@@ -46,6 +46,34 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("elem") {
+      it("should return false for empty lists") {
+        emptyList elem 42 shouldBe false
+      }
+
+      it("should return true if the list contains the element") {
+        numbersList elem 6 shouldBe true
+      }
+
+      it("should return false if the list doesn't contain the element") {
+        numbersList elem 999 shouldBe false
+      }
+    }
+
+    describe("find") {
+      it("should return a None for empty lists") {
+        emptyList find 42 shouldBe Maybe.none
+      }
+
+      it("should return a Just if the list contains the element") {
+        numbersList find 6 shouldBe Maybe.just(6)
+      }
+
+      it("should return a None if the list doesn't contain the element") {
+        numbersList find 999 shouldBe Maybe.none
+      }
+    }
+
     describe("foreach") {
       it("should apply a function to list elements, for its side-effect") {
         var res = 0

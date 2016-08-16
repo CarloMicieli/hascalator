@@ -16,6 +16,7 @@
 
 package io.hascalator.data
 
+import io.hascalator.Eq
 import io.hascalator.functions._
 import io.hascalator.typeclasses.{ Ord, Ordering, Show }
 
@@ -84,6 +85,37 @@ sealed trait List[+A] extends Product with Serializable {
       none
     } else {
       just((head, tail))
+    }
+  }
+
+  /**
+    * `O(n)` Checks whether this list contains a given value as an element.
+    * @usecase def elem(x: A): Boolean
+    * @inheritdoc
+    * @param x the element to find
+    * @tparam A1 the element type
+    * @return `true` if `x` is a list element; `false` otherwise
+    */
+  def elem[A1 >: A](x: A1)(implicit E: Eq[A1]): Boolean = {
+    find(x).isDefined
+  }
+
+  /**
+    * `O(n)` The find function takes a predicate and a structure and returns the leftmost
+    * element of the structure matching the predicate, or `None` if there is no such element.
+    *
+    * @usecase def find(x: A): Maybe[A]
+    * @inheritdoc
+    * @param x the element to find
+    * @param E the equality typeclass
+    * @tparam A1 the element type
+    * @return `Just(x)` if the value is found; `None` otherwise
+    */
+  def find[A1 >: A](x: A1)(implicit E: Eq[A1]): Maybe[A1] = {
+    this match {
+      case y +: _ if E.eq(y, x) => Maybe.just(y)
+      case _ +: ys              => ys find x
+      case Nil                  => Maybe.none
     }
   }
 
