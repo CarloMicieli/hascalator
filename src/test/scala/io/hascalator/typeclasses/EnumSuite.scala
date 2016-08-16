@@ -16,20 +16,76 @@
 
 package io.hascalator.typeclasses
 
-import io.hascalator.AbstractTestSpec
-import io.hascalator.data.Maybe
+import io.hascalator.AbstractTestSuite
+import io.hascalator.data.{ List, Maybe }
 
-class EnumSpec extends AbstractTestSpec with IntEnum {
-  describe("Enum typeclass") {
-    describe("prev") {
-      it("should return the previous element if exists") {
-        prev(42) shouldBe 41
-      }
-    }
+class EnumSuite extends AbstractTestSuite with ColorsEnum {
+  "prev" should "return the previous element if exists" in {
+    prev(Red) shouldBe Maybe.just(Black)
+  }
+
+  "prev" should "return None when the value doesn't exist" in {
+    prev(Black) shouldBe Maybe.none
+  }
+
+  "succ" should "return the next element" in {
+    succ(Red) shouldBe Maybe.just(Yellow)
+  }
+
+  "succ" should "return None when the value doesn't exist" in {
+    succ(Cyan) shouldBe Maybe.none
+  }
+
+  "enumFrom" should "produce a Stream with the enum values" in {
+    enumFrom(Yellow).toList.mkString(", ") shouldBe "Yellow, Blue, Green, Orange, Pink, Cyan"
+  }
+
+  "enumFromThen" should "take in consideration the step value" in {
+    enumFromThen(Black, Yellow).toList.mkString(", ") shouldBe "Black, Yellow, Green, Pink"
+  }
+
+  "enumFromThen" should "return the empty Stream when x > y" in {
+    enumFromThen(Yellow, Black) shouldBe Stream.empty[Color]
+  }
+
+  "enumFromTo" should "build a list from start to end" in {
+    enumFromTo(Black, Yellow) shouldBe List(Black, Red, Yellow)
+  }
+
+  "enumFromTo" should "return the empty list when start > end" in {
+    enumFromTo(Yellow, Black) shouldBe List.empty[Color]
+  }
+
+  "enumFromThenTo" should "take in consideration the step value" in {
+    enumFromThenTo(Black, Yellow, Cyan) shouldBe List(Black, Yellow, Green, Pink)
+  }
+
+  "enumFromThenTo" should "return the empty list when x > y" in {
+    enumFromThenTo(Yellow, Black, Cyan) shouldBe List.empty[Color]
+  }
+
+  "enumFromThenTo" should "return a list with only one element if y > bound" in {
+    enumFromThenTo(Black, Yellow, Red) shouldBe List(Black)
   }
 }
 
-trait IntEnum extends Enum[Int] {
-  override def fromEnum(x: Int): Int = x
-  override def toEnum(x: Int): Maybe[Int] = Maybe.just(x)
+sealed trait Color {
+  def id: Int
+}
+case object Black extends Color { override val id: Int = 0 }
+case object Red extends Color { override val id: Int = 1 }
+case object Yellow extends Color { override val id: Int = 2 }
+case object Blue extends Color { override val id: Int = 3 }
+case object Green extends Color { override val id: Int = 4 }
+case object Orange extends Color { override val id: Int = 5 }
+case object Pink extends Color { override val id: Int = 6 }
+case object Cyan extends Color { override val id: Int = 7 }
+
+trait ColorsEnum extends Enum[Color] {
+  private val colors = List(Black, Red, Yellow, Blue, Green, Orange, Pink, Cyan)
+
+  override def fromEnum(x: Color): Int = x.id
+  override def toEnum(x: Int): Maybe[Color] = {
+    colors.find(_.id == x)
+  }
 }

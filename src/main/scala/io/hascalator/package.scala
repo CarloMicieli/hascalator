@@ -37,4 +37,7 @@ package object hascalator {
 
   type Real[A] = io.hascalator.typeclasses.Real[A]
   val Real = io.hascalator.typeclasses.Real
+
+  type Enum[A] = io.hascalator.typeclasses.Enum[A]
+  val Enum = io.hascalator.typeclasses.Enum
 }

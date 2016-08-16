@@ -26,6 +26,7 @@ and the following typeclasses:
 * `Num`
 * `Integral`
 * `Fractional`
+* `Enum`
 
 ## Layout ##
 
