@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package io.hascalator.dst
+package io.hascalator
+package dst
 
-import io.hascalator.functions._
-import io.hascalator.Ord
-import io.hascalator.data.{ List, Maybe }
+import Prelude._
 import Maybe._
+import scala.StringContext
 
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
 private[this] sealed trait BinarySearchTree[+K, +V] extends Any with Tree[K, V] {
   def get: (K, V)
 
@@ -99,7 +103,7 @@ private[this] sealed trait BinarySearchTree[+K, +V] extends Any with Tree[K, V] 
 
   def depth: Int = this match {
     case EmptyTree               => 0
-    case Node(_, _, left, right) => 1 + math.max(left.depth, right.depth)
+    case Node(_, _, left, right) => 1 + scala.math.max(left.depth, right.depth)
   }
 
   def upsert[K1 >: K, V1 >: V](key: K1, value: V1)(f: (V1) => V1)(implicit ord: Ord[K1]): Tree[K1, V1] = {

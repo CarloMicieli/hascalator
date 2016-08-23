@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
+
+import Prelude._
 
 /**
   * It represents a FIFO data structure, the first element
   * added to the queue will be the first one to be removed.
   *
   * @tparam A the `Queue` element type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 trait Queue[+A] {
   /**
@@ -69,4 +74,4 @@ object Queue {
   def empty[A]: Queue[A] = BalancedQueue.empty[A]
 }
 
-class EmptyQueueException extends Exception
+class EmptyQueueException extends java.lang.Exception

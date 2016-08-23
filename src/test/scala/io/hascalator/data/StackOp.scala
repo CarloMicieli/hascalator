@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
+
+import Prelude._
+import scala.annotation.tailrec
 
 sealed trait StackOp[+A]
 case object PopOp extends StackOp[Nothing]
@@ -22,7 +26,7 @@ final case class PushOp[A](el: A) extends StackOp[A]
 final case class InvalidStackOperation[A](stack: Stack[A], op: StackOp[A], ex: Exception)
 
 object StackOp {
-  @annotation.tailrec
+  @tailrec
   final def sequence[A](initial: Stack[A], ops: List[StackOp[A]]): Either[InvalidStackOperation[A], Stack[A]] = {
     ops match {
       case Nil               => Either.right(initial)

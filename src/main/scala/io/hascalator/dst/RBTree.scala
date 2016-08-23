@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package io.hascalator.dst
+package io.hascalator
+package dst
 
-import io.hascalator.Ord
-import io.hascalator.functions._
-import io.hascalator.data.{ List, Maybe }
+import Prelude._
 import Maybe._
+import scala.StringContext
+import scala.NoSuchElementException
 
 private[dst] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
   override def lookup[K1 >: K](key: K1)(implicit ord: Ord[K1]): Maybe[V] = {
@@ -94,7 +95,7 @@ private[dst] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
     }
   }
 
-  override def delete[K1 >: K](key: K1)(implicit ord: Ord[K1]): (Maybe[V], Tree[K1, V]) = ???
+  override def delete[K1 >: K](key: K1)(implicit ord: Ord[K1]): (Maybe[V], Tree[K1, V]) = undefined
 
   override def contains[K1 >: K](key: K1)(implicit ord: Ord[K1]): Boolean = {
     this match {
@@ -114,13 +115,13 @@ private[dst] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
     this match {
       case EmptyRBTree => 0
       case RBNode(_, left, _, _, right) =>
-        1 + math.max(left.depth, right.depth)
+        1 + scala.math.max(left.depth, right.depth)
     }
   }
 
-  override def upsert[K1 >: K, V1 >: V](key: K1, value: V1)(f: (V1) => V1)(implicit ord: Ord[K1]): Tree[K1, V1] = ???
+  override def upsert[K1 >: K, V1 >: V](key: K1, value: V1)(f: (V1) => V1)(implicit ord: Ord[K1]): Tree[K1, V1] = undefined
 
-  override def map[V1](f: (V) => V1): Tree[K, V1] = ???
+  override def map[V1](f: (V) => V1): Tree[K, V1] = undefined
 
   override def toString: String = {
     this match {

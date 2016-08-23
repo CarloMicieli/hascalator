@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
+import Prelude._
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
@@ -24,6 +26,8 @@ import scala.language.implicitConversions
   * The functions its members implement are `eq` and `neq`.
   *
   * @tparam A the instance data type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 @implicitNotFound("The type ${A} was not made an instance of the Eq type class")
 trait Eq[A] extends Any {

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
+
+import Prelude._
 
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
 /**
   * It represents the type class for fractional numbers, supporting real division.
+  * @tparam A the instance type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 @implicitNotFound("The type ${A} was not made an instance of the Fractional type class")
 trait Fractional[A] extends Any with Num[A] {
@@ -59,7 +65,7 @@ object Fractional {
     override def mul(x: Float, y: Float): Float = x * y
     override def negate(x: Float): Float = -x
     override def fromInteger(n: Int): Float = n.toFloat
-    override def signum(x: Float): Float = x.signum.toFloat
+    override def signum(x: Float): Float = scala.math.signum(x)
     override def eq(lhs: Float, rhs: Float): Boolean = lhs equals rhs
   }
 
@@ -70,7 +76,7 @@ object Fractional {
     override def mul(x: Double, y: Double): Double = x * y
     override def negate(x: Double): Double = -x
     override def fromInteger(n: Int): Double = n.toDouble
-    override def signum(x: Double): Double = x.signum.toDouble
+    override def signum(x: Double): Double = scala.math.signum(x)
     override def eq(lhs: Double, rhs: Double): Boolean = lhs equals rhs
   }
 }

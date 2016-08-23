@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package io.hascalator.functions
+package io.hascalator.typeclasses
 
-import io.hascalator.AbstractTestSpec
+import io.hascalator.Prelude._
 
-class PipesSpec extends AbstractTestSpec with SampleFunctions {
-  describe("pipe-forward") {
-    it("should pass intermediate values forward") {
-      20 |> addOne |> double shouldBe 42
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+sealed trait Ordering
+
+object Ordering {
+  case object LT extends Ordering
+  case object EQ extends Ordering
+  case object GT extends Ordering
+
+  def apply(i: Int): Ordering = {
+    i match {
+      case 0          => Ordering.EQ
+      case n if n < 0 => Ordering.LT
+      case n if n > 0 => Ordering.GT
     }
   }
 
-  describe("forward compose") {
-    it("should chains functions") {
-      val f = square >> triple
-      f(3) shouldBe 27
-    }
+  def apply[A](cmp: (A, A) => Int): (A, A) => Ordering = {
+    (x, y) => Ordering(cmp(x, y))
   }
-}
-
-trait SampleFunctions {
-  val triple: Int => Int = _ * 3
-  val square: Int => Int = x => x * x
-  val addOne: Int => Int = _ + 1
-  val double: Int => Int = _ * 2
 }

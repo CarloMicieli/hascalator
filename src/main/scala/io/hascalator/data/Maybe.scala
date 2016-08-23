@@ -17,7 +17,7 @@
 package io.hascalator
 package data
 
-import io.hascalator.functions._
+import Prelude._
 import io.hascalator.typeclasses.{ Ord, Ordering, Show }
 
 /**
@@ -30,7 +30,7 @@ import io.hascalator.typeclasses.{ Ord, Ordering, Show }
   * @author Carlo Micieli
   * @since 0.0.1
   */
-sealed trait Maybe[+A] extends Product with Serializable {
+sealed trait Maybe[+A] {
   self =>
   /**
     * Return the contained value if `this` is a `Just[_]` value,

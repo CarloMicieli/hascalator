@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.hascalator.functions
+package io.hascalator
 
-import io.hascalator.{ AbstractTestSuite, ApplicationException }
+import Prelude._
+import scala.StringContext
 
-class FunctionsTestSuite extends AbstractTestSuite {
+class PreludeTestSuite extends AbstractTestSuite {
 
   "id" should "return the same value" in {
     id(42) shouldBe 42

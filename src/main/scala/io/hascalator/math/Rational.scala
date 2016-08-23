@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator
+package math
+
+import Prelude._
 
 /**
   * Arbitrary-precision rational numbers, represented as a ratio of two `Int` values.
@@ -22,6 +25,8 @@ package io.hascalator.math
   *
   * @param n the numerator
   * @param d the denominator
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 final class Rational private (n: Int, d: Int) extends Ratio[Int](n, d) {
   override def equals(o: Any): Boolean = {

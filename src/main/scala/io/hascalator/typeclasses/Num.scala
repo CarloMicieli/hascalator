@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
+import Prelude._
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
 /**
   * It represents a basic typeclass for numeric types.
   * @tparam A the instance type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 @implicitNotFound("The type ${A} was not made instance of the Num type class")
 trait Num[A] extends Any with Eq[A] with Show[A] {

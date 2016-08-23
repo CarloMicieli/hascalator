@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
+
+import Prelude._
 
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
@@ -22,7 +25,7 @@ import org.scalacheck.Prop.forAll
 class EitherProperties extends AbstractPropertySpec {
   property("map: identity law") {
     check(forAll { (e: Either[String, Int]) =>
-      e.map(identity) === e
+      e.map(id) === e
     })
   }
 

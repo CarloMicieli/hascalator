@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
+
+import Prelude._
 
 /**
   * The `Bounded` class is used to name the upper and lower limits of a type. `Ord` is not a superclass of Bounded
   * since types that are not totally ordered may also have upper and lower bounds.
   *
-  * @tparam A
+  * @tparam A the type for the instance
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 trait Bounded[A] extends Any {
   /**
@@ -45,10 +50,10 @@ object Bounded {
   }
 
   implicit val bool2Bounded: Bounded[Boolean] = newInstance(false)(true)
-  implicit val char2Bounded: Bounded[Char] = newInstance(Char.MinValue)(Char.MaxValue)
-  implicit val short2Bounded: Bounded[Short] = newInstance(Short.MinValue)(Short.MaxValue)
-  implicit val int2Bounded: Bounded[Int] = newInstance(Int.MinValue)(Int.MaxValue)
-  implicit val long2Bounded: Bounded[Long] = newInstance(Long.MinValue)(Long.MaxValue)
-  implicit val float2Bounded: Bounded[Float] = newInstance(Float.MinValue)(Float.MaxValue)
-  implicit val double2Bounded: Bounded[Double] = newInstance(Double.MinValue)(Double.MaxValue)
+  implicit val char2Bounded: Bounded[Char] = newInstance(scala.Char.MinValue)(scala.Char.MaxValue)
+  implicit val short2Bounded: Bounded[Short] = newInstance(scala.Short.MinValue)(scala.Short.MaxValue)
+  implicit val int2Bounded: Bounded[Int] = newInstance(scala.Int.MinValue)(scala.Int.MaxValue)
+  implicit val long2Bounded: Bounded[Long] = newInstance(scala.Long.MinValue)(scala.Long.MaxValue)
+  implicit val float2Bounded: Bounded[Float] = newInstance(scala.Float.MinValue)(scala.Float.MaxValue)
+  implicit val double2Bounded: Bounded[Double] = newInstance(scala.Double.MinValue)(scala.Double.MaxValue)
 }

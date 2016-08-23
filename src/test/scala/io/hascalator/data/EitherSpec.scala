@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
+import Prelude._
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
 import Either._
-import io.hascalator.typeclasses.{ Eq, Ord, Ordering }
 
 class EitherSpec extends AbstractTestSpec with EitherValues {
   describe("Either") {

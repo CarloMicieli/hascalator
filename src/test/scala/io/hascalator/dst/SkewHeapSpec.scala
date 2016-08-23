@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package io.hascalator.dst
+package io.hascalator
+package dst
+
+import Prelude._
 
 import io.hascalator.AbstractTestSpec
-import io.hascalator.data.Maybe
 
 class SkewHeapSpec extends AbstractTestSpec with SkewHeapTestFixture {
   describe("A Skew Heap") {

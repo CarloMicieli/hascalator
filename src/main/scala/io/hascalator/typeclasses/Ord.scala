@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
+import Prelude._
 import scala.language.implicitConversions
 import scala.annotation.implicitNotFound
 
@@ -36,6 +38,8 @@ import scala.annotation.implicitNotFound
   *  - `x ≤ y` or `y ≤ z` (''totality'').
   *
   * @tparam A the instance data type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 @implicitNotFound("The type ${A} was not made an instance of the Ord type class")
 trait Ord[A] extends Any with Eq[A] { self =>
@@ -145,37 +149,17 @@ object Ord {
     }
   }
 
-  implicit val booleanOrd: Ord[Boolean] = fromCompare((x, y) => x compare y)
-  implicit val byteOrd: Ord[Byte] = fromCompare((x, y) => x compare y)
-  implicit val shortOrd: Ord[Short] = fromCompare((x, y) => x compare y)
-  implicit val intOrd: Ord[Int] = fromCompare((x, y) => x compare y)
-  implicit val longOrd: Ord[Long] = fromCompare((x, y) => x compare y)
-  implicit val floatOrd: Ord[Float] = fromCompare((x, y) => x compare y)
-  implicit val doubleOrd: Ord[Double] = fromCompare((x, y) => x compare y)
-  implicit val charOrd: Ord[Char] = fromCompare((x, y) => x compare y)
-  implicit val stringOrd: Ord[String] = fromCompare((x, y) => x compare y)
+  implicit val booleanOrd: Ord[Boolean] = fromCompare((x, y) => java.lang.Boolean.compare(x, y))
+  implicit val byteOrd: Ord[Byte] = fromCompare((x, y) => java.lang.Byte.compare(x, y))
+  implicit val shortOrd: Ord[Short] = fromCompare((x, y) => java.lang.Short.compare(x, y))
+  implicit val intOrd: Ord[Int] = fromCompare((x, y) => java.lang.Integer.compare(x, y))
+  implicit val longOrd: Ord[Long] = fromCompare((x, y) => java.lang.Long.compare(x, y))
+  implicit val floatOrd: Ord[Float] = fromCompare((x, y) => java.lang.Float.compare(x, y))
+  implicit val doubleOrd: Ord[Double] = fromCompare((x, y) => java.lang.Double.compare(x, y))
+  implicit val charOrd: Ord[Char] = fromCompare((x, y) => java.lang.Character.compare(x, y))
+  implicit val stringOrd: Ord[String] = fromCompare((x, y) => x.compareTo(y))
 
   private def fromCompare[A: Eq](cmp: (A, A) => Int): Ord[A] = Ord(Ordering(cmp))
-}
-
-sealed trait Ordering
-
-object Ordering {
-  case object LT extends Ordering
-  case object EQ extends Ordering
-  case object GT extends Ordering
-
-  def apply(i: Int): Ordering = {
-    i match {
-      case 0          => Ordering.EQ
-      case n if n < 0 => Ordering.LT
-      case n if n > 0 => Ordering.GT
-    }
-  }
-
-  def apply[A](cmp: (A, A) => Int): (A, A) => Ordering = {
-    (x, y) => Ordering(cmp(x, y))
-  }
 }
 
 protected[typeclasses] trait OrdLaws {

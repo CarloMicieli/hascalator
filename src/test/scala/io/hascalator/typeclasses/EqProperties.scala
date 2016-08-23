@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
+
+import Prelude._
 
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
@@ -64,7 +67,7 @@ class EqProperties extends AbstractPropertySpec with EqLaws {
 
   property("Boolean respect the Eq type class laws") {
     check(forAll { (x: Boolean, y: Boolean, z: Boolean) =>
-      checkAllLaws(x, y, z)(identity)
+      checkAllLaws(x, y, z)(id)
     })
   }
 

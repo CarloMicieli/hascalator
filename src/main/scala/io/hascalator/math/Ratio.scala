@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator
+package math
 
-import io.hascalator.typeclasses
+import Prelude._
 
+import scala.StringContext
 import scala.language.implicitConversions
+import scala.annotation.tailrec
 
 /**
   * Rational numbers, with numerator and denominator of some Integral type.
@@ -26,6 +29,8 @@ import scala.language.implicitConversions
   * @param n the numerator
   * @param d the denominator
   * @tparam A
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 class Ratio[A: typeclasses.Integral] protected (n: A, d: A) {
   private val I = implicitly[typeclasses.Integral[A]]
@@ -103,7 +108,7 @@ class Ratio[A: typeclasses.Integral] protected (n: A, d: A) {
     Ratio.compute(this, that)(f)
   }
 
-  @annotation.tailrec
+  @tailrec
   private def gcd(a: A, b: A): A = {
     if (b == I.fromInteger(0)) {
       a

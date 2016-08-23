@@ -21,6 +21,9 @@ import org.scalacheck.{ Gen, Arbitrary }
 import org.scalatest.enablers.Length
 import scala.language.implicitConversions
 
+import scala.{ Unit, Int, Long }
+import scala.collection.immutable.Traversable
+
 package object data {
 
   implicit def arbitraryEither[A, B](implicit a: Arbitrary[A], b: Arbitrary[B]): Arbitrary[Either[A, B]] = Arbitrary {

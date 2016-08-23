@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package io.hascalator.dst
+package io.hascalator
+package dst
 
-import io.hascalator.Ord
-import io.hascalator.data.Maybe
-import io.hascalator.functions._
+import Prelude._
+import scala.StringContext
 
 /**
   * A "skew heap" (a representation of priority queues) based upon Chris Okasaki's implementation.
   * Insert operation based upon the John Hughes's implementation.
   *
   * @tparam A the element data type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 sealed trait SkewHeap[+A] {
   def get: A

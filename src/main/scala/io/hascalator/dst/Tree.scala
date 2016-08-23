@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.dst
+package io.hascalator
+package dst
 
-import io.hascalator.Ord
-import io.hascalator.data.{ List, Maybe }
+import Prelude._
 
 /**
   * It represents a binary search tree.
@@ -28,6 +28,9 @@ import io.hascalator.data.{ List, Maybe }
   *
   * @tparam K the `Key` type
   * @tparam V the `Value` type
+  *
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 trait Tree[+K, +V] extends Any {
 

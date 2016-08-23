@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
-private[data] case class SizedList[+A](xs: List[A], size: Int) {
+import Prelude._
+
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+private[this] case class SizedList[+A](xs: List[A], size: Int) {
   def this() = this(List.empty[A], 0)
 
   def isEmpty: Boolean = size == 0

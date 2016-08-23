@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
+import Prelude._
 import io.hascalator.math.Rational
 import scala.language.implicitConversions
 
 /**
   *
   * @tparam A the instance type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 trait Real[A] extends Any with Num[A] with Ord[A] {
   /**

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
+
+import Prelude._
+import scala.{ Char, Int, Short, Long, Float, Double }
 
 import io.hascalator.AbstractTestSuite
 

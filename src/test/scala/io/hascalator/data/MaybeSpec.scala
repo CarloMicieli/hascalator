@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
+
+import Prelude._
 
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
 import Maybe._
-import io.hascalator.typeclasses.{ Show, Eq, Ord, Ordering }
 
 class MaybeSpec extends AbstractTestSpec with MaybeValues {
   describe("Maybe") {
@@ -52,7 +54,7 @@ class MaybeSpec extends AbstractTestSpec with MaybeValues {
     describe("map") {
       it("should apply a function to Some values") {
         just(21).map(_ * 2) shouldBe just(42)
-        just(21).map(identity) shouldBe just(21)
+        just(21).map(id) shouldBe just(21)
       }
 
       it("should produce a none applying a function to none values") {

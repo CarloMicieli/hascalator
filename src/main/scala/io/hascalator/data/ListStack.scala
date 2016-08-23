@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
+import Prelude._
 import scala.util.control.NoStackTrace
+import scala.StringContext
 
-private[data] class ListStack[+A](st: List[A]) extends Stack[A] {
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+private[this] class ListStack[+A](st: List[A]) extends Stack[A] {
   override def push[A1 >: A](el: A1): Stack[A1] = {
     new ListStack[A1](el +: st)
   }

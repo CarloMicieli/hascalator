@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
+
+import Prelude._
 
 import org.scalacheck.Prop.forAll
 import io.hascalator.AbstractPropertySpec

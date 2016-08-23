@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
-import io.hascalator.data.{ Just, List, Maybe, None }
-import io.hascalator.functions._
+import Prelude._
+import io.hascalator.data.{ Just, None }
 
-import scala.annotation.implicitNotFound
+import scala.{ Stream, PartialFunction }
+import scala.annotation.{ tailrec, implicitNotFound }
 
 /**
   * Typeclass `Enum` defines operations on sequentially ordered types.
@@ -31,6 +33,8 @@ import scala.annotation.implicitNotFound
   * The minimal complete definition includes `toEnum` and `fromEnum`.
   *
   * @tparam A the instance data type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 @implicitNotFound("The type ${A} was not made an instance of the Enum type class.")
 trait Enum[A] extends Any {
@@ -123,7 +127,7 @@ trait Enum[A] extends Any {
     if (fromV > toV) {
       List.empty[A]
     } else {
-      @annotation.tailrec
+      @tailrec
       def loop(x: A, out: List[A]): List[A] = {
         if (eqInt.eq(fromV, fromEnum(x))) {
           x +: out
@@ -156,7 +160,7 @@ trait Enum[A] extends Any {
     if (fromV > toV) {
       List.empty[A]
     } else {
-      @annotation.tailrec
+      @tailrec
       def loop(a1: A, a2: A, out: List[A]): List[A] = {
         val x: Int = fromEnum(a1)
         val y: Int = fromEnum(a2)
@@ -199,7 +203,7 @@ object Enum {
 
   implicit val char2Enum: Enum[Char] =
     newInstance[Char](_.toInt)({
-      case n if n >= Char.MinValue.toInt && n <= Char.MaxValue.toInt => n.toChar
+      case n if n >= scala.Char.MinValue.toInt && n <= scala.Char.MaxValue.toInt => n.toChar
     })
 
   implicit val float2Enum: Enum[Float] =

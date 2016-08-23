@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
+import Prelude._
 import io.hascalator.AbstractTestSuite
-import io.hascalator.data.{ List, Maybe }
+import scala.Stream
 
 class EnumSuite extends AbstractTestSuite with ColorsEnum {
   "prev" should "return the previous element if exists" in {

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
+
+import Prelude._
 
 import io.hascalator.AbstractTestSpec
 

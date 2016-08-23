@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
+
+import Prelude._
 
 /**
   * It represents a LIFO data structure, the last element
@@ -24,6 +27,8 @@ package io.hascalator.data
   * return a new, modified `Stack`.
   *
   * @tparam A the element type
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 trait Stack[+A] {
   /**
@@ -96,4 +101,4 @@ object Stack {
   }
 }
 
-class EmptyStackException extends Exception("Stack is empty")
+class EmptyStackException extends java.lang.Exception("Stack is empty")

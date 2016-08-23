@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
+import Prelude._
 import scala.util.control.NoStackTrace
+import scala.StringContext
 
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
 private[data] case class ListQueue[+A](front: List[A], rear: List[A]) extends Queue[A] {
 
   def this() = {

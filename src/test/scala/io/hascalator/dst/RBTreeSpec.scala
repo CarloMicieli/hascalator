@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package io.hascalator.dst
+package io.hascalator
+package dst
 
-import io.hascalator.data.List
-import io.hascalator.data.Maybe._
+import Prelude._
+import Maybe._
+import scala.NoSuchElementException
+
 import io.hascalator.AbstractTestSpec
 
 class RBTreeSpec extends AbstractTestSpec with RBTreesFixture {

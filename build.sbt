@@ -12,8 +12,6 @@ organizationName := "CarloMicieli"
 
 organizationHomepage := Some(url("http://CarloMicieli.github.io"))
 
-version := "1.0.0-SNAPSHOT"
-
 scalaVersion := "2.11.8"
 
 homepage := Some(url("https://github.com/CarloMicieli/hascalator"))
@@ -33,7 +31,9 @@ scalacOptions ++= Seq(
   "-Ywarn-value-discard",
   "-Ywarn-inaccessible",
   "-Ywarn-dead-code",
-  "-J-Xss6M"
+  "-J-Xss6M",
+  "-Yno-imports",
+  "-Yno-predef"
 )
 
 scalacOptions in (Compile, console) --= Seq(

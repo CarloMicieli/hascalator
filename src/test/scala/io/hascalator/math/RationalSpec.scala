@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package io.hascalator.math
+package io.hascalator
+package math
 
 import io.hascalator.AbstractTestSpec
 

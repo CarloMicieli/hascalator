@@ -17,8 +17,10 @@
 package io.hascalator
 package data
 
-import io.hascalator.functions._
-import io.hascalator.typeclasses.{ Ord, Ordering, Show }
+import Prelude._
+import scala.Tuple2
+import scala.StringContext
+import scala.annotation.tailrec
 
 /**
   * A list is either empty, or a constructed list with a `head` and a `tail`.
@@ -27,7 +29,7 @@ import io.hascalator.typeclasses.{ Ord, Ordering, Show }
   * @author Carlo Micieli
   * @since 0.0.1
   */
-sealed trait List[+A] extends Product with Serializable {
+sealed trait List[+A] {
   self =>
 
   /**
@@ -240,7 +242,7 @@ sealed trait List[+A] extends Product with Serializable {
     * @return left-associative fold of this list
     */
   def foldLeft[B](z: B)(f: (B, A) => B): B = {
-    @annotation.tailrec
+    @tailrec
     def go(xs: List[A], acc: B): B = xs match {
       case Nil     => acc
       case y +: ys => go(ys, f(acc, y))
@@ -493,7 +495,7 @@ object List {
     * @return a list
     */
   def unfoldRight[A, B](z: B)(f: B => Maybe[(A, B)]): List[A] = {
-    @annotation.tailrec
+    @tailrec
     def loop(z: B, acc: List[A]): List[A] = f(z) match {
       case None           => acc
       case Just((na, nb)) => loop(nb, na +: acc)
@@ -518,8 +520,8 @@ object List {
     }
   }
 
-  def unapplySeq[A](xs: List[A]): Option[Seq[A]] = {
-    Some(xs.foldRight(Seq.empty[A])((x, sq) => x +: sq))
+  def unapplySeq[A](xs: List[A]): scala.Option[Seq[A]] = {
+    scala.Some(xs.foldRight(Seq.empty[A])((x, sq) => x +: sq))
   }
 
   implicit def toShowList[A: Show]: Show[List[A]] = Show {
@@ -527,7 +529,7 @@ object List {
   }
 
   implicit def toOrdList[A: Ord](implicit ordA: Ord[A]): Ord[List[A]] = {
-    @annotation.tailrec
+    @tailrec
     def compareLists(xs: List[A], ys: List[A]): Ordering = {
       (xs, ys) match {
         case (Nil, Nil)    => Ordering.EQ
@@ -552,9 +554,12 @@ private[this] case class Cons[A] private (head: A, tail: List[A]) extends List[A
 }
 
 object +: {
-  def unapply[A](xs: List[A]): Option[(A, List[A])] =
-    if (xs.isEmpty) scala.None
-    else Some((xs.head, xs.tail))
+  def unapply[A](xs: List[A]): scala.Option[(A, List[A])] =
+    if (xs.isEmpty) {
+      scala.None
+    } else {
+      scala.Some((xs.head, xs.tail))
+    }
 }
 
 private[this] case object Nil extends List[Nothing] {

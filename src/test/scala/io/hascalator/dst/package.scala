@@ -17,6 +17,7 @@
 package io.hascalator
 
 import org.scalatest.enablers.Size
+import Prelude._
 
 package object dst {
   implicit def treeSize[K, V]: Size[Tree[K, V]] = new Size[Tree[K, V]] {
