@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
 import io.hascalator.functions._
 import io.hascalator.typeclasses.{ Ord, Ordering, Show }
@@ -25,6 +26,9 @@ import io.hascalator.typeclasses.{ Ord, Ordering, Show }
   * empty (represented as `None`).
   *
   * @tparam A the element type
+  *
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 sealed trait Maybe[+A] extends Product with Serializable {
   self =>

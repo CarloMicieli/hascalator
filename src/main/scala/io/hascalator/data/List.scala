@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
-import io.hascalator.Eq
 import io.hascalator.functions._
 import io.hascalator.typeclasses.{ Ord, Ordering, Show }
 
 /**
   * A list is either empty, or a constructed list with a `head` and a `tail`.
   * @tparam A the list element type
+  *
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 sealed trait List[+A] extends Product with Serializable {
   self =>
@@ -365,7 +368,7 @@ sealed trait List[+A] extends Product with Serializable {
   }
 
   /**
-    * `O(n)` It takes two lists and returns a list of corresponding pairs. If one input
+    * `O(n)` Takes two lists and returns a list of corresponding pairs. If one input
     * list is short, excess elements of the longer list are discarded.
     * @param that the second list
     * @tparam B the second list element type
@@ -374,7 +377,7 @@ sealed trait List[+A] extends Product with Serializable {
   def zip[B](that: List[B]): List[(A, B)] = this.zipWith(that)(Tuple2.apply)
 
   /**
-    * `O(n)` It takes two lists and returns a list applying `f` to each corresponding pair. If one input
+    * `O(n)` Takes two lists and returns a list applying `f` to each corresponding pair. If one input
     * list is short, excess elements of the longer list are discarded.
     * @param that the second list
     * @param f the function to produce elements in the resulting list
@@ -544,7 +547,7 @@ object List {
   }
 }
 
-private case class Cons[A] private (head: A, tail: List[A]) extends List[A] {
+private[this] case class Cons[A] private (head: A, tail: List[A]) extends List[A] {
   override def isEmpty: Boolean = false
 }
 
@@ -554,7 +557,7 @@ object +: {
     else Some((xs.head, xs.tail))
 }
 
-private case object Nil extends List[Nothing] {
+private[this] case object Nil extends List[Nothing] {
   override def head: Nothing = error("List.head: empty list")
   override def tail: Nothing = error("List.tail: empty list")
   override def isEmpty: Boolean = true

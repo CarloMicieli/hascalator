@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
 import scala.util.control.NoStackTrace
 
@@ -60,9 +61,6 @@ private[data] class BalancedQueue[+A](front: SizedList[A], rear: SizedList[A]) e
   }
 }
 
-/**
-  *
-  */
 object BalancedQueue {
   def empty[A]: Queue[A] = BalancedQueue(SizedList.empty[A], SizedList.empty[A])
 

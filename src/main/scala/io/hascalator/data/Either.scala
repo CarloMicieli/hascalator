@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
 import io.hascalator.functions._
 import io.hascalator.typeclasses.{ Ord, Show, Ordering }
@@ -29,6 +30,9 @@ import io.hascalator.typeclasses.{ Ord, Show, Ordering }
   * +
   * @tparam A the left data type
   * @tparam B the right data type
+  *
+  * @author Carlo Micieli
+  * @since 0.0.1
   */
 sealed trait Either[+A, +B] {
 
@@ -244,12 +248,12 @@ object Either {
   }
 }
 
-private case class Left[A, B] private (value: A) extends Either[A, B] {
+private[this] case class Left[A, B] private (value: A) extends Either[A, B] {
   override def isLeft: Boolean = true
   override def get: B = error("Left.get: this value is a Left")
 }
 
-private case class Right[A, B] private (value: B) extends Either[A, B] {
+private[this] case class Right[A, B] private (value: B) extends Either[A, B] {
   override def isLeft: Boolean = false
   override def get: B = value
 }
