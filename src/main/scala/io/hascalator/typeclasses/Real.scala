@@ -21,8 +21,7 @@ import Prelude._
 import io.hascalator.math.Rational
 import scala.language.implicitConversions
 
-/**
-  * @tparam A the instance type
+/** @tparam A the instance type
   * @author Carlo Micieli
   * @since 0.0.1
   */

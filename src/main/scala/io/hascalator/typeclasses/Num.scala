@@ -75,7 +75,7 @@ trait Num[A] extends Any with Eq[A] with Show[A] {
     *
     * The functions abs and signum should satisfy the law:
     * {{{
-    *  abs x * signum x == x
+    * abs x * signum x == x
     * }}}
     * For real numbers, the signum is either -1 (negative), 0 (zero) or 1 (positive).
     *

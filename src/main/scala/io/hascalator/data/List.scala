@@ -381,8 +381,8 @@ sealed trait List[+A] {
     *
     * Example:
     * {{{
-    *  scala> val l = List('a', 'b', 'c', 'd', 'e').intersperse('-')
-    *  l: List[Char] = [a, -, b, -, c, -, d, -, e]
+    * scala> val l = List('a', 'b', 'c', 'd', 'e').intersperse('-')
+    * l: List[Char] = [a, -, b, -, c, -, d, -, e]
     * }}}
     *
     * @usecase def intersperse(x: A): List[A]

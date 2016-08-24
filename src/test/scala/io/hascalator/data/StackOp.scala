@@ -19,8 +19,7 @@ package data
 
 import Prelude._
 
-/**
-  * @tparam A
+/** @tparam A
   * @author Carlo Micieli
   * @since 0.0.1
   */
