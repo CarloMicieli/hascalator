@@ -19,7 +19,6 @@ package dst
 
 import Prelude._
 import Maybe._
-import scala.StringContext
 import scala.NoSuchElementException
 
 private[dst] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {

@@ -18,9 +18,6 @@ package io.hascalator
 package data
 
 import Prelude._
-import scala.Tuple2
-import scala.StringContext
-import scala.annotation.tailrec
 
 /**
   * A list is either empty, or a constructed list with a `head` and a `tail`.
@@ -376,7 +373,7 @@ sealed trait List[+A] {
     * @tparam B the second list element type
     * @return a list with corresponding pairs
     */
-  def zip[B](that: List[B]): List[(A, B)] = this.zipWith(that)(Tuple2.apply)
+  def zip[B](that: List[B]): List[(A, B)] = this.zipWith(that)((_, _))
 
   /**
     * `O(n)` Takes two lists and returns a list applying `f` to each corresponding pair. If one input

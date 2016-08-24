@@ -18,8 +18,13 @@ package io.hascalator
 package data
 
 import Prelude._
-import scala.annotation.tailrec
 
+/**
+  *
+  * @tparam A
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
 sealed trait StackOp[+A]
 case object PopOp extends StackOp[Nothing]
 final case class PushOp[A](el: A) extends StackOp[A]

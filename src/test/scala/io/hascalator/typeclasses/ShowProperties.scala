@@ -22,7 +22,6 @@ import Show.ops._
 
 import org.scalacheck.Prop.{ forAll }
 import io.hascalator.AbstractPropertySpec
-import scala.StringContext
 
 class ShowProperties extends AbstractPropertySpec {
   property("Boolean is made instance of the Show type class") {

@@ -19,7 +19,6 @@ package data
 
 import Prelude._
 import scala.util.control.NoStackTrace
-import scala.StringContext
 
 /**
   * @author Carlo Micieli

@@ -18,7 +18,6 @@ package io.hascalator
 package dst
 
 import Prelude._
-import scala.StringContext
 
 /**
   * A "skew heap" (a representation of priority queues) based upon Chris Okasaki's implementation.

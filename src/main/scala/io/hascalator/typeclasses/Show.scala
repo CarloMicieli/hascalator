@@ -19,7 +19,6 @@ package typeclasses
 
 import scala.language.implicitConversions
 import scala.annotation.implicitNotFound
-import scala.StringContext
 
 import Prelude._
 

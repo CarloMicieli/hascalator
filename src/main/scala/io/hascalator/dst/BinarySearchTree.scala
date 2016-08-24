@@ -19,7 +19,6 @@ package dst
 
 import Prelude._
 import Maybe._
-import scala.StringContext
 
 /**
   * @author Carlo Micieli

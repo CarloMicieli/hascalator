@@ -18,8 +18,6 @@ package io.hascalator
 package data
 
 import Prelude._
-import Prelude.{ List => _ }
-import scala.StringContext
 
 import io.hascalator.{ AbstractTestSpec, ApplicationException }
 

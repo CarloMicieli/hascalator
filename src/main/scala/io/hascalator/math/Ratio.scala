@@ -19,9 +19,7 @@ package math
 
 import Prelude._
 
-import scala.StringContext
 import scala.language.implicitConversions
-import scala.annotation.tailrec
 
 /**
   * Rational numbers, with numerator and denominator of some Integral type.

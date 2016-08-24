@@ -17,10 +17,7 @@
 package io.hascalator
 
 import scala.util.control.NoStackTrace
-import scala.StringContext
-import scala.annotation.tailrec
 import scala.{ inline, Tuple2, Range }
-import java.lang.{ String, Exception }
 
 /**
   * The Prelude: a standard module.
@@ -29,6 +26,8 @@ import java.lang.{ String, Exception }
   * @since 0.0.1
   */
 object Prelude {
+  type tailrec = scala.annotation.tailrec
+
   type Any = scala.Any
   type AnyVal = scala.AnyVal
   type AnyRef = scala.AnyRef
@@ -36,6 +35,9 @@ object Prelude {
   type Unit = scala.Unit
 
   type Exception = java.lang.Exception
+
+  type StringContext = scala.StringContext
+  final val StringContext = scala.StringContext
 
   type Seq[+A] = scala.collection.immutable.Seq[A]
   val Seq = scala.collection.immutable.Seq
@@ -53,13 +55,23 @@ object Prelude {
   type Float = scala.Float
   type Double = scala.Double
 
-  type Maybe[A] = data.Maybe[A]
+  final val Boolean = scala.Boolean
+  final val Byte = scala.Byte
+  final val Short = scala.Short
+  final val Char = scala.Char
+  final val Int = scala.Int
+  final val Integer = scala.math.BigInt
+  final val Long = scala.Long
+  final val Float = scala.Float
+  final val Double = scala.Double
+
+  type Maybe[+A] = data.Maybe[A]
   val Maybe = io.hascalator.data.Maybe
 
-  type Either[A, B] = data.Either[A, B]
+  type Either[+A, +B] = data.Either[A, B]
   val Either = io.hascalator.data.Either
 
-  type List[A] = data.List[A]
+  type List[+A] = data.List[A]
   val List = io.hascalator.data.List
 
   type Ordering = io.hascalator.typeclasses.Ordering
@@ -204,5 +216,3 @@ object Prelude {
     }
   }
 }
-
-class ApplicationException(msg: String) extends Exception(msg)

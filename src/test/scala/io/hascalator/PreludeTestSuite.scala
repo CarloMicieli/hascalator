@@ -17,7 +17,6 @@
 package io.hascalator
 
 import Prelude._
-import scala.StringContext
 
 class PreludeTestSuite extends AbstractTestSuite {
 

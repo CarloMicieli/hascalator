@@ -18,7 +18,6 @@ package io.hascalator
 package data
 
 import Prelude._
-import scala.StringContext
 
 /**
   * The `Either` type represents values with two possibilities: a value of type `Either[A,B]` is
