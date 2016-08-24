@@ -202,7 +202,7 @@ sealed trait Either[+A, +B] {
   }
 }
 
-object Either {
+object Either extends EitherInstances {
   /**
     * Build a new ''Left'' value.
     *
@@ -222,7 +222,9 @@ object Either {
     * @return the right value
     */
   def right[A, B](v: B): Either[A, B] = Right(v)
+}
 
+trait EitherInstances {
   implicit def toShowEither[A: Show, B: Show]: Show[Either[A, B]] = Show {
     (x: Either[A, B]) =>
       {

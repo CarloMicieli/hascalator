@@ -15,14 +15,25 @@
  */
 
 package io.hascalator
+package tests.arbitrary
 
-import Prelude._
+import io.hascalator.data.Maybe
+import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.enablers.Length
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+trait ArbitraryMaybe {
+  implicit def arbitraryMaybe[T](implicit a: Arbitrary[T]): Arbitrary[Maybe[T]] = Arbitrary {
+    val genNone: Gen[Maybe[T]] = {
+      Gen.const(Maybe.none[T])
+    }
 
-package object data {
+    def genJust: Gen[Maybe[T]] = {
+      for (x <- a.arbitrary) yield Maybe.just(x)
+    }
 
-  implicit val listLength: Length[List[_]] = new Length[List[_]] {
-    def lengthOf(obj: List[_]): Long = obj.length.toLong
+    Gen.oneOf(genNone, genJust)
   }
 }

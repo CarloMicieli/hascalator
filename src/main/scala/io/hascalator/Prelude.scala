@@ -16,8 +16,9 @@
 
 package io.hascalator
 
+import scala.annotation.implicitNotFound
 import scala.util.control.NoStackTrace
-import scala.{ inline, Tuple2, Range }
+import scala.{ Range, Tuple2, inline }
 
 /**
   * The Prelude: a standard module.
@@ -185,6 +186,18 @@ object Prelude {
   @inline final def undefined[A]: A = throw new scala.NotImplementedError
 
   // Definitions from Scala.Predef
+
+  @implicitNotFound(msg = "Cannot prove that ${From} <:< ${To}.")
+  sealed abstract class <:<[-From, +To] extends (From => To) with scala.Serializable
+  private[this] final val singleton_<:< = new <:<[Any, Any] { def apply(x: Any): Any = x }
+
+  @implicitNotFound(msg = "Cannot prove that ${From} =:= ${To}.")
+  sealed abstract class =:=[From, To] extends (From => To) with scala.Serializable
+  private[this] final val singleton_=:= = new =:=[Any, Any] { def apply(x: Any): Any = x }
+  object =:= {
+    implicit def tpEquals[A]: A =:= A = singleton_=:=.asInstanceOf[A =:= A]
+  }
+
   @inline final def require(requirement: Boolean): Unit = {
     scala.Predef.require(requirement)
   }

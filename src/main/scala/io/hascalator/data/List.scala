@@ -455,7 +455,7 @@ sealed trait List[+A] {
   override def toString: String = mkString(", ", "[", "]")
 }
 
-object List {
+object List extends ListInstances {
   /**
     * Creates a new, empty `List`.
     * @tparam A the list element type
@@ -520,7 +520,9 @@ object List {
   def unapplySeq[A](xs: List[A]): scala.Option[Seq[A]] = {
     scala.Some(xs.foldRight(Seq.empty[A])((x, sq) => x +: sq))
   }
+}
 
+trait ListInstances {
   implicit def toShowList[A: Show]: Show[List[A]] = Show {
     (x: List[A]) => Show[A].showList(x)
   }

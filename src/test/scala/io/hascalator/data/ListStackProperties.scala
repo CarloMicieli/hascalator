@@ -18,6 +18,7 @@ package io.hascalator
 package data
 
 import Prelude._
+import tests.arbitrary.stack._
 
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.{ forAll }

@@ -19,6 +19,7 @@ package data
 
 import Prelude._
 
+import tests.arbitrary.either._
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
 

@@ -22,12 +22,13 @@ import org.scalacheck.{ Arbitrary, Gen }
 import Gen._
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
+import tests.arbitrary.list._
 
 class ListProperties extends AbstractPropertySpec {
   //  property("intersperse: length increased") {
   //    check(forAll { (x: Int, xs: List[Int]) =>
   //      (xs.length > 1) ==> {
-  //        xs.intersperse(x).length == (xs.length + xs.length - 1)
+  //        xs.intersperse(x).length === (xs.length + xs.length - 1)
   //      }
   //    })
   //  }

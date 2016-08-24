@@ -37,6 +37,7 @@ scalacOptions ++= Seq(
 )
 
 scalacOptions in (Compile, console) --= Seq(
+  "-Yno-imports",
   "-Xfatal-warnings",
   "-Ywarn-dead-code",
   "-Ywarn-unused-import"
@@ -57,9 +58,7 @@ lazy val scalaProject = (project in file("."))
   .enablePlugins(GitBranchPrompt)
 
 initialCommands := """|import io.hascalator._
-                      |import io.hascalator.data._
-                      |import io.hascalator.math._
-                      |import io.hascalator.functions._
+                      |import Prelude._
                       |""".stripMargin
 
 // Header settings

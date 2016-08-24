@@ -15,14 +15,24 @@
  */
 
 package io.hascalator
+package tests.arbitrary
 
-import Prelude._
+import io.hascalator.data.{ PopOp, PushOp, StackOp }
+import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.enablers.Length
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+trait ArbitraryStackOp {
+  implicit def arbitraryStackOp[T](implicit a: Arbitrary[T]): Arbitrary[StackOp[T]] = Arbitrary {
+    import Arbitrary._
+    import Gen._
 
-package object data {
+    val genPopOp = const(PopOp)
 
-  implicit val listLength: Length[List[_]] = new Length[List[_]] {
-    def lengthOf(obj: List[_]): Long = obj.length.toLong
+    def genPushOp = for { v <- arbitrary[T] } yield PushOp(v)
+
+    frequency((1, genPopOp), (2, genPushOp))
   }
 }

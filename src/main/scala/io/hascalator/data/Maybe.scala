@@ -18,7 +18,6 @@ package io.hascalator
 package data
 
 import Prelude._
-import io.hascalator.typeclasses.{ Ord, Ordering, Show }
 
 /**
   * The `Maybe` type encapsulates an optional value. A value of type `Maybe[A]`
@@ -164,7 +163,7 @@ sealed trait Maybe[+A] {
   }
 }
 
-object Maybe {
+object Maybe extends MaybeInstances {
   /**
     * Creates a new empty value.
     *
@@ -200,7 +199,9 @@ object Maybe {
   def catMaybes[A](xs: List[Maybe[A]]): List[A] = {
     for { Just(x) <- xs } yield x
   }
+}
 
+trait MaybeInstances {
   implicit def toShowMaybe[A: Show]: Show[Maybe[A]] = Show {
     (x: Maybe[A]) =>
       x.map(v => implicitly[Show[A]].show(v)).toString

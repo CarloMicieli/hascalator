@@ -15,14 +15,25 @@
  */
 
 package io.hascalator
+package tests.arbitrary
 
-import Prelude._
+import io.hascalator.data.Either
+import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.enablers.Length
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+trait ArbitraryEither {
+  implicit def arbitraryEither[A, B](implicit a: Arbitrary[A], b: Arbitrary[B]): Arbitrary[Either[A, B]] = Arbitrary {
+    def genLeft: Gen[Either[A, B]] = {
+      for (x <- a.arbitrary) yield Either.left(x)
+    }
 
-package object data {
+    def genRight: Gen[Either[A, B]] = {
+      for (x <- b.arbitrary) yield Either.right(x)
+    }
 
-  implicit val listLength: Length[List[_]] = new Length[List[_]] {
-    def lengthOf(obj: List[_]): Long = obj.length.toLong
+    Gen.oneOf(genLeft, genRight)
   }
 }

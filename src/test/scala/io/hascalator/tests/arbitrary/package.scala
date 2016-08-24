@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package io.hascalator
+package io.hascalator.tests
 
-import Prelude._
+/**
+  * @author Carlo Micieli
+  * @since 0.0.1
+  */
+package object arbitrary {
 
-import org.scalatest.enablers.Length
+  object all extends ArbitraryList
+    with ArbitraryMaybe
+    with ArbitraryEither
+    with ArbitraryStack
+    with ArbitraryStackOp
 
-package object data {
-
-  implicit val listLength: Length[List[_]] = new Length[List[_]] {
-    def lengthOf(obj: List[_]): Long = obj.length.toLong
-  }
+  object list extends ArbitraryList
+  object maybe extends ArbitraryMaybe
+  object either extends ArbitraryEither
+  object stack extends ArbitraryStack
+  object stackOp extends ArbitraryStackOp
 }
