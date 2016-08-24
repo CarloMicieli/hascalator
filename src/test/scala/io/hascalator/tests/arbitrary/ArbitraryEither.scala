@@ -20,8 +20,7 @@ package tests.arbitrary
 import io.hascalator.data.Either
 import org.scalacheck.{ Arbitrary, Gen }
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 trait ArbitraryEither {

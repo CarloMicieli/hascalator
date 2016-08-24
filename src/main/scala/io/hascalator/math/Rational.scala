@@ -19,8 +19,7 @@ package math
 
 import Prelude._
 
-/**
-  * Arbitrary-precision rational numbers, represented as a ratio of two `Int` values.
+/** Arbitrary-precision rational numbers, represented as a ratio of two `Int` values.
   * A rational number may be constructed using the `%%` operator.
   *
   * @param n the numerator

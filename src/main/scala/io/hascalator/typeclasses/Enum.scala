@@ -23,8 +23,7 @@ import io.hascalator.data.{ Just, None }
 import scala.{ Stream, PartialFunction }
 import scala.annotation.{ tailrec, implicitNotFound }
 
-/**
-  * Typeclass `Enum` defines operations on sequentially ordered types.
+/** Typeclass `Enum` defines operations on sequentially ordered types.
   *
   * Instances for this typeclasses can produce ''ranges'' of values:
   * - ''eagerly evaluated'': `enumFromTo` and `enumFromThenTo`
@@ -38,8 +37,7 @@ import scala.annotation.{ tailrec, implicitNotFound }
   */
 @implicitNotFound("The type ${A} was not made an instance of the Enum type class.")
 trait Enum[A] extends Any {
-  /**
-    * Convert from an `Int` to the corresponding `A` value.
+  /** Convert from an `Int` to the corresponding `A` value.
     *
     * For any type that is an instance of type class `Enum`, the following should hold:
     * - `toEnum` should returns `None` if the result value is not representable in the result type.
@@ -49,29 +47,25 @@ trait Enum[A] extends Any {
     */
   def toEnum(x: Int): Maybe[A]
 
-  /**
-    * Convert from an `A` value to the corresponding `Int`.
+  /** Convert from an `A` value to the corresponding `Int`.
     * @param x the element to convert
     * @return the corresponding element id
     */
   def fromEnum(x: A): Int
 
-  /**
-    * Returns the successor of a value.
+  /** Returns the successor of a value.
     * @param x the current element
     * @return `Just(el)` if the element has a successor, `None` otherwise.
     */
   def succ(x: A): Maybe[A] = toEnum(fromEnum(x) + 1)
 
-  /**
-    * Returns the predecessor of a value.
+  /** Returns the predecessor of a value.
     * @param x the current element
     * @return `Just(el)` if the element has a predecessor, `None` otherwise.
     */
   def prev(x: A): Maybe[A] = toEnum(fromEnum(x) - 1)
 
-  /**
-    * Returns a Stream of values for this Enum, starting from `from`.
+  /** Returns a Stream of values for this Enum, starting from `from`.
     * @param from the starting a value
     * @return a Stream of values
     */
@@ -86,8 +80,7 @@ trait Enum[A] extends Any {
     from #:: nextS(from)
   }
 
-  /**
-    * Produce a Stream of values from the Enum
+  /** Produce a Stream of values from the Enum
     * @param x the first element
     * @param y the second element
     * @return a Stream
@@ -113,8 +106,7 @@ trait Enum[A] extends Any {
     }
   }
 
-  /**
-    * It translates in a list with elements from `from` to `to`.
+  /** It translates in a list with elements from `from` to `to`.
     * @param from the starting element
     * @param to the final element
     * @return a List
@@ -143,8 +135,7 @@ trait Enum[A] extends Any {
     }
   }
 
-  /**
-    * It translates in a list with elements from `x` to `bound`, with the given step.
+  /** It translates in a list with elements from `x` to `bound`, with the given step.
     *
     * `List(x, y, ... bound)`
     *

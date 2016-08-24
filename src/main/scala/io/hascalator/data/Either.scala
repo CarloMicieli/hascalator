@@ -19,8 +19,7 @@ package data
 
 import Prelude._
 
-/**
-  * The `Either` type represents values with two possibilities: a value of type `Either[A,B]` is
+/** The `Either` type represents values with two possibilities: a value of type `Either[A,B]` is
   * either `Left(a)` or `Right(b)`.
   *
   * The `Either` type is sometimes used to represent a value which is either correct or an error;
@@ -35,28 +34,24 @@ import Prelude._
   */
 sealed trait Either[+A, +B] {
 
-  /**
-    * Returns `true` if `this` is a ''Left'' value; `false` otherwise.
+  /** Returns `true` if `this` is a ''Left'' value; `false` otherwise.
     * @return `true` if `this` is a ''Left'' value; `false` otherwise
     */
   def isLeft: Boolean
 
-  /**
-    * Returns `true` if `this` is a ''Right'' value; `false` otherwise.
+  /** Returns `true` if `this` is a ''Right'' value; `false` otherwise.
     * @return `true` if `this` is a ''Right'' value; `false` otherwise
     */
   def isRight: Boolean = !isLeft
 
-  /**
-    * Returns the value contained if `this` is a ''Right'' value; it
+  /** Returns the value contained if `this` is a ''Right'' value; it
     * throws an exception otherwise.
     *
     * @return the value contained in the ''Right''
     */
   def get: B
 
-  /**
-    * Returns the contained value if `this` is a ''Right''; it returns
+  /** Returns the contained value if `this` is a ''Right''; it returns
     * the provided `default` otherwise.
     *
     * @usecase def getOrElse(default: => B): B
@@ -73,8 +68,7 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * Applies the given function `f` to the contained value if `this` is a ''Right'';
+  /** Applies the given function `f` to the contained value if `this` is a ''Right'';
     * does nothing if `this` is a ''Left''.
     *
     * @usecase def foreach(f: B => Unit): Unit
@@ -90,8 +84,7 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * Case analysis for the `Either` type. If the value is a ''Left(a)'', apply the first
+  /** Case analysis for the `Either` type. If the value is a ''Left(a)'', apply the first
     * function to ''a''; if it is ''Right(b)'', apply the second function to ''b''.
     *
     * @param left the function to map ''Left'' values
@@ -106,12 +99,11 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * Maps the given function to this `Either`'s value if it is a ''Right'' or returns this if it is a ''Left''.
+  /** Maps the given function to this `Either`'s value if it is a ''Right'' or returns this if it is a ''Left''.
     * @param f the function to apply
     * @tparam B1 the resulting value type
     * @return if this is a ''Right'', the result of applying the given function to the contained value
-    *         wrapped in a ''Right''; a ''Left'' otherwise
+    *        wrapped in a ''Right''; a ''Left'' otherwise
     */
   def map[B1](f: B => B1): Either[A, B1] = {
     this match {
@@ -120,8 +112,7 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * Returns the given function applied to the value contained in this `Either` if it is a ''Right'',
+  /** Returns the given function applied to the value contained in this `Either` if it is a ''Right'',
     * or returns this if it is a ''Left''.
     *
     * @usecase def flatMap[B1](f: B => Either[A, B1]): Either[A, B1]
@@ -130,7 +121,7 @@ sealed trait Either[+A, +B] {
     * @tparam A1 the ''Left'' type
     * @tparam B1 the ''Right'' type
     * @return if this is a ''Right'', the result of applying the given function to the contained value
-    *         wrapped in a ''Right''; a ''Left'' otherwise
+    *        wrapped in a ''Right''; a ''Left'' otherwise
     */
   def flatMap[A1 >: A, B1](f: B => Either[A1, B1]): Either[A1, B1] = {
     this match {
@@ -139,8 +130,7 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * It accumulate two `Either`s together. If both are ''Right'', you'll get a ''Right'' tuple containing
+  /** It accumulate two `Either`s together. If both are ''Right'', you'll get a ''Right'' tuple containing
     * both original ''Right'' values. Otherwise, you'll get a ''Left'' containing a tuple with the
     * original ''Left'' values.
     *
@@ -158,8 +148,7 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * Returns `true` if this `Either` is a ''Right'' and the predicate `p` returns
+  /** Returns `true` if this `Either` is a ''Right'' and the predicate `p` returns
     * `true` when applied to this ''Right'' value.
     *
     * @param p the predicate to match
@@ -173,8 +162,7 @@ sealed trait Either[+A, +B] {
     }
   }
 
-  /**
-    * Returns an `Either` with the ''Right'' and ''Left'' types swapped: ''Left'' becomes ''Right'' and ''Right''
+  /** Returns an `Either` with the ''Right'' and ''Left'' types swapped: ''Left'' becomes ''Right'' and ''Right''
     * becomes ''Left''.
     *
     * @return a swapped `Either` value
@@ -184,8 +172,7 @@ sealed trait Either[+A, +B] {
     case Left(b)  => Right(b)
   }
 
-  /**
-    * Returns a `Just` value with the element contained in a ''Right'';
+  /** Returns a `Just` value with the element contained in a ''Right'';
     * it simply return `None` otherwise.
     *
     * @usecase def toMaybe: Maybe[B]
@@ -203,8 +190,7 @@ sealed trait Either[+A, +B] {
 }
 
 object Either extends EitherInstances {
-  /**
-    * Build a new ''Left'' value.
+  /** Build a new ''Left'' value.
     *
     * @param v the wrapped value
     * @tparam A the ''Left'' data type
@@ -213,8 +199,7 @@ object Either extends EitherInstances {
     */
   def left[A, B](v: A): Either[A, B] = Left(v)
 
-  /**
-    * Build a new ''Right'' value.
+  /** Build a new ''Right'' value.
     *
     * @param v the wrapped value
     * @tparam A the ''Left'' data type

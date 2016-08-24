@@ -18,8 +18,7 @@ package io.hascalator
 
 import Prelude._
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 class ApplicationException(msg: String) extends Exception(msg)

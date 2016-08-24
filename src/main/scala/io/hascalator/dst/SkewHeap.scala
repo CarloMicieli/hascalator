@@ -19,8 +19,7 @@ package dst
 
 import Prelude._
 
-/**
-  * A "skew heap" (a representation of priority queues) based upon Chris Okasaki's implementation.
+/** A "skew heap" (a representation of priority queues) based upon Chris Okasaki's implementation.
   * Insert operation based upon the John Hughes's implementation.
   *
   * @tparam A the element data type

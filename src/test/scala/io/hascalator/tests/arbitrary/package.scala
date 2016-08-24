@@ -16,8 +16,7 @@
 
 package io.hascalator.tests
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 package object arbitrary {

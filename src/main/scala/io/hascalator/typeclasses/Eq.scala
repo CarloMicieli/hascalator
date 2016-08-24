@@ -21,8 +21,7 @@ import Prelude._
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
-/**
-  * Eq is used for types that support equality and inequality testing.
+/** Eq is used for types that support equality and inequality testing.
   * The functions its members implement are `eq` and `neq`.
   *
   * @tparam A the instance data type
@@ -31,16 +30,14 @@ import scala.language.implicitConversions
   */
 @implicitNotFound("The type ${A} was not made an instance of the Eq type class")
 trait Eq[A] extends Any {
-  /**
-    * Checks whether lhs and rhs are equals
+  /** Checks whether lhs and rhs are equals
     * @param lhs the first value
     * @param rhs the second value
     * @return `true` if they are equals; `false` otherwise
     */
   def eq(lhs: A, rhs: A): Boolean
 
-  /**
-    * Checks whether lhs and rhs are different
+  /** Checks whether lhs and rhs are different
     * @param lhs the first value
     * @param rhs the second value
     * @return `true` if they are equals; `false` otherwise
@@ -82,8 +79,7 @@ object Eq {
   implicit val stringEq: Eq[String] = apply(_ equals _)
 }
 
-/**
-  * Laws Eq instances should have are the following:
+/** Laws Eq instances should have are the following:
   * - Reflexivity: x == x should always be True.
   * - Symmetry: x == y iff y == x.
   * - Transitivity: If x == y and y == z, then x == z.

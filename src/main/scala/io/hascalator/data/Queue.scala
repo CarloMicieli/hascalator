@@ -19,8 +19,7 @@ package data
 
 import Prelude._
 
-/**
-  * It represents a FIFO data structure, the first element
+/** It represents a FIFO data structure, the first element
   * added to the queue will be the first one to be removed.
   *
   * @tparam A the `Queue` element type
@@ -28,8 +27,7 @@ import Prelude._
   * @since 0.0.1
   */
 trait Queue[+A] {
-  /**
-    * Insert the new element to the last position of the `Queue`.
+  /** Insert the new element to the last position of the `Queue`.
     *
     * @usecase def enqueue(el: A): Queue[A]
     * @inheritdoc
@@ -39,32 +37,27 @@ trait Queue[+A] {
     */
   def enqueue[A1 >: A](el: A1): Queue[A1]
 
-  /**
-    * Remove the element from the front position (if any).
+  /** Remove the element from the front position (if any).
     * @return
     */
   def dequeue: Either[EmptyQueueException, (A, Queue[A])]
 
-  /**
-    * Return the element in the front position, if exists.
+  /** Return the element in the front position, if exists.
     * @return optionally the front element
     */
   def peek: Maybe[A]
 
-  /**
-    * Check whether this `Queue` is empty.
+  /** Check whether this `Queue` is empty.
     * @return `true` if this `Queue` is empty; `false` otherwise
     */
   def isEmpty: Boolean
 
-  /**
-    * Check whether this `Queue` is not empty.
+  /** Check whether this `Queue` is not empty.
     * @return `true` if this `Queue` is not empty; `false` otherwise
     */
   def nonEmpty: Boolean = !isEmpty
 
-  /**
-    * Return the current size of the `Queue`.
+  /** Return the current size of the `Queue`.
     * @return the number of elements in this `Queue`
     */
   def size: Int

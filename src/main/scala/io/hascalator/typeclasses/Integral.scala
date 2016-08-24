@@ -21,8 +21,7 @@ import Prelude._
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
-/**
-  * It represents the type class for types that implement the numeric operation for
+/** It represents the type class for types that implement the numeric operation for
   * whole numbers.
   *
   * @tparam A the type class instance type
@@ -32,24 +31,21 @@ import scala.language.implicitConversions
 @implicitNotFound("The type ${A} was not made an instance of the Integral type class")
 trait Integral[A] extends Any with Num[A] {
 
-  /**
-    * Returns the integer division operation
+  /** Returns the integer division operation
     * @param a the first operand
     * @param b the second operand
     * @return the division
     */
   def div(a: A, b: A): A
 
-  /**
-    * Returns the integer remainder operation
+  /** Returns the integer remainder operation
     * @param a the first operand
     * @param b the second operand
     * @return the remainder
     */
   def mod(a: A, b: A): A
 
-  /**
-    * Returns the integer division and remainder operation
+  /** Returns the integer division and remainder operation
     * @param a the first operand
     * @param b the second operand
     * @return a pair with division and remainder

@@ -22,14 +22,12 @@ import io.hascalator.math.Rational
 import scala.language.implicitConversions
 
 /**
-  *
   * @tparam A the instance type
   * @author Carlo Micieli
   * @since 0.0.1
   */
 trait Real[A] extends Any with Num[A] with Ord[A] {
-  /**
-    * Return the rational equivalent of its real argument with full precision
+  /** Return the rational equivalent of its real argument with full precision
     * @param x
     * @return
     */

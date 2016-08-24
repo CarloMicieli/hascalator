@@ -19,8 +19,7 @@ package typeclasses
 
 import Prelude._
 
-/**
-  * The `Bounded` class is used to name the upper and lower limits of a type. `Ord` is not a superclass of Bounded
+/** The `Bounded` class is used to name the upper and lower limits of a type. `Ord` is not a superclass of Bounded
   * since types that are not totally ordered may also have upper and lower bounds.
   *
   * @tparam A the type for the instance
@@ -28,14 +27,12 @@ import Prelude._
   * @since 0.0.1
   */
 trait Bounded[A] extends Any {
-  /**
-    * Returns the lower limit for the type
+  /** Returns the lower limit for the type
     * @return the lower limit
     */
   def minBound: A
 
-  /**
-    * Returns the upper limit for the type
+  /** Returns the upper limit for the type
     * @return the upper limit
     */
   def maxBound: A

@@ -21,8 +21,7 @@ import Prelude._
 import scala.language.implicitConversions
 import scala.annotation.implicitNotFound
 
-/**
-  * The `Ord` typeclass is used for totally ordered data types.
+/** The `Ord` typeclass is used for totally ordered data types.
   *
   * Instances of `Ord` can be derived for any user-defined data type whose constituent types
   * are in `Ord`. The declared order of the constructors in the data declaration determines the
@@ -33,9 +32,9 @@ import scala.annotation.implicitNotFound
   *
   * ==Laws==
   * A good implementation for an instance of `Ord` should respect the following laws:
-  *  - If `x ≤ y` and `y ≤ x` then `x = y` (''antisymmetry'');
-  *  - If `x ≤ y` and `y ≤ z` then `x ≤ z` (''transitivity'');
-  *  - `x ≤ y` or `y ≤ z` (''totality'').
+  * - If `x ≤ y` and `y ≤ x` then `x = y` (''antisymmetry'');
+  * - If `x ≤ y` and `y ≤ z` then `x ≤ z` (''transitivity'');
+  * - `x ≤ y` or `y ≤ z` (''totality'').
   *
   * @tparam A the instance data type
   * @author Carlo Micieli
@@ -43,24 +42,21 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound("The type ${A} was not made an instance of the Ord type class")
 trait Ord[A] extends Any with Eq[A] { self =>
-  /**
-    * Returns an `Ordering` value that communicates how `x` compares to `y`.
+  /** Returns an `Ordering` value that communicates how `x` compares to `y`.
     * @param x the first value
     * @param y the second value
     * @return an `Ordering` value
     */
   def compare(x: A, y: A): Ordering
 
-  /**
-    * Returns `true` if `x < y` in the ordering
+  /** Returns `true` if `x < y` in the ordering
     * @param x the first value
     * @param y the second value
     * @return `true` if `x < y` in the ordering
     */
   def lt(x: A, y: A): Boolean = compare(x, y) == Ordering.LT
 
-  /**
-    * Returns `true` if `x <= y` in the ordering
+  /** Returns `true` if `x <= y` in the ordering
     * @param x the first value
     * @param y the second value
     * @return `true` if `x <= y` in the ordering
@@ -70,16 +66,14 @@ trait Ord[A] extends Any with Eq[A] { self =>
     cmp == Ordering.EQ || cmp == Ordering.LT
   }
 
-  /**
-    * Returns `true` if `x > y` in the ordering
+  /** Returns `true` if `x > y` in the ordering
     * @param x the first value
     * @param y the second value
     * @return `true` if `x > y` in the ordering
     */
   def gt(x: A, y: A): Boolean = compare(x, y) == Ordering.GT
 
-  /**
-    * Returns `true` if `x >= y` in the ordering
+  /** Returns `true` if `x >= y` in the ordering
     * @param x the first value
     * @param y the second value
     * @return `true` if `x >= y` in the ordering
@@ -89,8 +83,7 @@ trait Ord[A] extends Any with Eq[A] { self =>
     cmp == Ordering.EQ || cmp == Ordering.GT
   }
 
-  /**
-    * Return `x` if `x <= y`, otherwise `y`.
+  /** Return `x` if `x <= y`, otherwise `y`.
     * @param x the first value
     * @param y the second value
     * @return the min value between `x` and `y`
@@ -103,8 +96,7 @@ trait Ord[A] extends Any with Eq[A] { self =>
     }
   }
 
-  /**
-    * Return `x` if `x >= y`, otherwise `y`.
+  /** Return `x` if `x >= y`, otherwise `y`.
     * @param x the first value
     * @param y the second value
     * @return the max value between `x` and `y`

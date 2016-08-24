@@ -19,8 +19,7 @@ package data
 
 import Prelude._
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 private[this] case class SizedList[+A](xs: List[A], size: Int) {

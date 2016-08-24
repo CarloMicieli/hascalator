@@ -20,8 +20,7 @@ package dst
 import Prelude._
 import Maybe._
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 private[this] sealed trait BinarySearchTree[+K, +V] extends Any with Tree[K, V] {
@@ -162,16 +161,14 @@ private[this] sealed trait BinarySearchTree[+K, +V] extends Any with Tree[K, V] 
 
 object BinarySearchTree {
 
-  /**
-    * It creates a new empty, binary search tree.
+  /** It creates a new empty, binary search tree.
     * @tparam K the key type
     * @tparam V the value type
     * @return an empty `Tree`
     */
   def empty[K: Ord, V]: Tree[K, V] = EmptyTree
 
-  /**
-    * It creates a binary search tree from the list elements.
+  /** It creates a binary search tree from the list elements.
     *
     * @param xs the list of elements to insert
     * @param ord the ordering

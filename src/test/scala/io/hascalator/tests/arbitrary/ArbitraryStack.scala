@@ -25,8 +25,7 @@ import org.scalacheck.util.Buildable
 import scala.collection.immutable.Traversable
 import scala.language.implicitConversions
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 trait ArbitraryStack {

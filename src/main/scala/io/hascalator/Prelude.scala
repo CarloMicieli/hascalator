@@ -20,8 +20,7 @@ import scala.annotation.implicitNotFound
 import scala.util.control.NoStackTrace
 import scala.{ Range, Tuple2, inline }
 
-/**
-  * The Prelude: a standard module.
+/** The Prelude: a standard module.
   *
   * @author Carlo Micieli
   * @since 0.0.1
@@ -97,8 +96,7 @@ object Prelude {
   type Fractional[A] = io.hascalator.typeclasses.Fractional[A]
   val Fractional = io.hascalator.typeclasses.Fractional
 
-  /**
-    * The identity function
+  /** The identity function
     *
     * @tparam A the function type
     * @return the identity function
@@ -107,8 +105,7 @@ object Prelude {
     x => x
   }
 
-  /**
-    * `const(x)` is a unary function which evaluates to `x` for all inputs.
+  /** `const(x)` is a unary function which evaluates to `x` for all inputs.
     *
     * @param const the const value the function will always return
     * @tparam A the output type
@@ -119,16 +116,14 @@ object Prelude {
     _ => const
   }
 
-  /**
-    * is a type-restricted version of [[const]].
+  /** is a type-restricted version of [[const]].
     * @param x the const value the function will always return
     * @tparam A the output type
     * @return a constant function
     */
   @inline final def asTypeOf[A](x: A): A => A = const(x)
 
-  /**
-    * `flip(f)` takes its (first) two arguments in the reverse order of `f`.
+  /** `flip(f)` takes its (first) two arguments in the reverse order of `f`.
     *
     * @param f a binary function
     * @tparam A the first argument type
@@ -138,8 +133,7 @@ object Prelude {
     */
   def flip[A, B, C](f: (A, B) => C): (B, A) => C = (b, a) => f(a, b)
 
-  /**
-    * `until p f` yields the result of applying `f` until `p` holds.
+  /** `until p f` yields the result of applying `f` until `p` holds.
     *
     * @param p the termination condition
     * @param f the function to compute the next value
@@ -156,8 +150,7 @@ object Prelude {
     }
   }
 
-  /**
-    * stops execution and displays an error message.
+  /** stops execution and displays an error message.
     * @param msg the error message
     * @tparam A the return type
     * @return
@@ -166,8 +159,7 @@ object Prelude {
     throw new ApplicationException(s"*** Exception: '$msg'")
   }
 
-  /**
-    * A variant of [[error]] that does not produce a stack trace.
+  /** A variant of [[error]] that does not produce a stack trace.
     * @param msg the error message
     * @tparam A the return type
     * @return
@@ -176,8 +168,7 @@ object Prelude {
     throw new ApplicationException(s"*** Exception: '$msg'") with NoStackTrace
   }
 
-  /**
-    * A special case of [[error]]. It is expected that compilers will recognize
+  /** A special case of [[error]]. It is expected that compilers will recognize
     * this and insert error messages which are more appropriate to the context
     * in which undefined appears.
     * @tparam A basically any type

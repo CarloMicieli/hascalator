@@ -22,8 +22,7 @@ import Prelude._
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
-/**
-  * It represents the type class for fractional numbers, supporting real division.
+/** It represents the type class for fractional numbers, supporting real division.
   * @tparam A the instance type
   * @author Carlo Micieli
   * @since 0.0.1

@@ -16,8 +16,7 @@
 
 package io.hascalator.data
 
-/**
-  * Created by carlo on 15/08/16.
+/** Created by carlo on 15/08/16.
   */
 class StackProperties {
 

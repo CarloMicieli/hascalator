@@ -21,8 +21,7 @@ import Prelude._
 
 import scala.language.implicitConversions
 
-/**
-  * Rational numbers, with numerator and denominator of some Integral type.
+/** Rational numbers, with numerator and denominator of some Integral type.
   *
   * @param n the numerator
   * @param d the denominator
@@ -36,14 +35,12 @@ class Ratio[A: typeclasses.Integral] protected (n: A, d: A) {
 
   def this(n: A) = this(n, implicitly[typeclasses.Integral[A]].fromInteger(1))
 
-  /**
-    * Extract the numerator of the ratio in reduced form: the numerator and denominator
+  /** Extract the numerator of the ratio in reduced form: the numerator and denominator
     * have no common factor and the denominator is positive.
     */
   val numerator: A = I.div(n, g)
 
-  /**
-    * Extract the denominator of the ratio in reduced form: the numerator and denominator have no
+  /** Extract the denominator of the ratio in reduced form: the numerator and denominator have no
     * common factor and the denominator is positive.
     */
   val denominator: A = I.div(d, g)

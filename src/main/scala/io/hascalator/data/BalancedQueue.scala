@@ -20,8 +20,7 @@ package data
 import Prelude._
 import scala.util.control.NoStackTrace
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 private[data] class BalancedQueue[+A](front: SizedList[A], rear: SizedList[A]) extends Queue[A] {

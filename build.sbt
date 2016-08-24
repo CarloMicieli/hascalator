@@ -70,6 +70,7 @@ ScalariformKeys.preferences := ScalariformKeys.preferences.value
   .setPreference(AlignSingleLineCaseStatements, true)
   .setPreference(DoubleIndentClassDeclaration, true)
   .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
+  .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
   .setPreference(PreserveDanglingCloseParenthesis, true)
 
 // tut

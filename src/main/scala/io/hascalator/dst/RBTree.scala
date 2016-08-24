@@ -144,30 +144,27 @@ private[dst] case class RBNode[K, V](color: Color, left: RBTree[K, V], key: K, v
   override def get: (K, V) = (key, value)
 }
 
-/**
-  * Red-black tree is a type of self-balancing binary search tree. By using color
+/** Red-black tree is a type of self-balancing binary search tree. By using color
   * changing and rotation, red-black tree provides a very simple and straightforward
   * way to keep the tree balanced.
   *
   * A binary search tree red-black tree satisfies the following 5 properties:
-  *  - Every node is either red or black.
-  *  - The root is black.
-  *  - Every leaf (`NIL`) is black.
-  *  - If a node is red, then both its children are black.
-  *  - For each node, all paths from the node to descendant leaves contain the same number of black nodes.
+  * - Every node is either red or black.
+  * - The root is black.
+  * - Every leaf (`NIL`) is black.
+  * - If a node is red, then both its children are black.
+  * - For each node, all paths from the node to descendant leaves contain the same number of black nodes.
   */
 object RBTree {
 
-  /**
-    * It creates a new empty red-black tree.
+  /** It creates a new empty red-black tree.
     * @tparam K the key type
     * @tparam V the value type
     * @return an empty tree
     */
   def empty[K, V](implicit ord: Ord[K]): Tree[K, V] = EmptyRBTree
 
-  /**
-    * It creates a new red-black tree, initialized with the provided list elements.
+  /** It creates a new red-black tree, initialized with the provided list elements.
     * @param xs the initial elements of the tree
     * @tparam K the key type
     * @tparam V the value type

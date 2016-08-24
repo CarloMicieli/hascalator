@@ -20,8 +20,7 @@ package data
 import Prelude._
 import scala.util.control.NoStackTrace
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 private[this] class ListStack[+A](st: List[A]) extends Stack[A] {

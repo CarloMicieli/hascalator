@@ -24,8 +24,7 @@ import org.scalacheck.util.Buildable
 import scala.collection.mutable
 import scala.language.implicitConversions
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 trait ArbitraryList {

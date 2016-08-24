@@ -18,8 +18,7 @@ package io.hascalator.typeclasses
 
 import io.hascalator.Prelude._
 
-/**
-  * @author Carlo Micieli
+/** @author Carlo Micieli
   * @since 0.0.1
   */
 sealed trait Ordering

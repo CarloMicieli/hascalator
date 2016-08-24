@@ -22,8 +22,7 @@ import scala.annotation.implicitNotFound
 
 import Prelude._
 
-/**
-  * It represents the type class for conversion of values to readable Strings.
+/** It represents the type class for conversion of values to readable Strings.
   * @tparam A the instance type
   * @author Carlo Micieli
   * @since 0.0.1
