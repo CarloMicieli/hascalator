@@ -1,7 +1,4 @@
-# hascalator #
-
 ![Logo](img/logo.png)  
-
 (Logo design by *Sandro Stucky* - retrivied from the Martin Odersky's talk _The Evolution of Scala_, 2015).
 
 [![Build Status](https://travis-ci.org/CarloMicieli/hascalator.png?branch=master)](https://travis-ci.org/CarloMicieli/hascalator)
@@ -38,10 +35,9 @@ The project has the following layout:
 ----+ scala
 ------+ io
 ---------+ hascalator
----------+ package.scala   // type aliases for typeclasses
-------------+ dst             // immutable, purely function data structures
+------------+ Prelude.scala   // the entry point
 ------------+ data            // basic data types (ie Maybe, Either, List...)
-------------+ functions       // functions helpers
+------------+ dst             // immutable, purely function data structures
 ------------+ math            // math types
 ------------+ typeclasses     // typeclasses
 ```
