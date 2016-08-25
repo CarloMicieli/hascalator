@@ -152,12 +152,16 @@ sealed trait Maybe[+A] {
 
 object Maybe extends MaybeInstances {
   /** Creates a new empty value.
-    *
-    * @tparam A
-    * @return
+    * @tparam A the element type
+    * @return an empty `Maybe` value
     */
   def none[A]: Maybe[A] = None
 
+  /** Creates a new `Maybe` value which wraps the provided value
+    * @param x the wrapped value
+    * @tparam A the element type
+    * @return a new `Maybe` value
+    */
   def just[A](x: A): Maybe[A] = Just(x)
 
   /** Creates a new `Just` value whether the provided `x` is not `null`; returns a `None` otherwise.
@@ -183,6 +187,95 @@ object Maybe extends MaybeInstances {
   def catMaybes[A](xs: List[Maybe[A]]): List[A] = {
     for { Just(x) <- xs } yield x
   }
+
+  /** Takes a default value and `Maybe` value. If the `Maybe` is Nothing, it returns the default values; otherwise,
+    * it returns the value contained in the Maybe.
+    *
+    * ===Examples===
+    * Basic usage:
+    * {{{
+    * scala> fromMaybe(just("Hello, World!"))("")
+    * res0: String = "Hello, World!"
+    *
+    * scala> fromMaybe(none[String])("")
+    * res1: String = ""
+    * }}}
+    * @param ma
+    * @param default
+    * @tparam A
+    * @return
+    */
+  def fromMaybe[A](ma: Maybe[A])(default: => A): A = {
+    ma.getOrElse(default)
+  }
+
+  /** Returns Nothing on an empty list or Just a where a is the first element of the list.
+    *
+    * ===Examples===
+    * Basic usage:
+    *
+    * {{{
+    * scala> listToMaybe(List.empty[Int])
+    * res0: Maybe[Int] = None
+    *
+    * scala> listToMaybe(List(9))
+    * res1: Maybe[Int] = Just(9)
+    *
+    * scala> listToMaybe(List(1, 2, 3))
+    * res2: Maybe[Int] = Just(1)
+    * }}}
+    *
+    * Composing [[maybeToList]] with [[listToMaybe]] should be the identity on singleton/empty lists:
+    * {{{
+    * scala> (maybeToList _ andThen listToMaybe _)(List(5))
+    * res0: List[Int] = [5]
+    *
+    * scala> (maybeToList _ andThen listToMaybe _)(List.empty[Int])
+    * res1: List[Int] = []
+    * }}}
+    *
+    * But not on lists with more than one element:
+    * {{{
+    * scala> (maybeToList _ andThen listToMaybe _)(List(1, 2, 3))
+    * res0: List[Int] = [1]
+    * }}}
+    * @param as
+    * @tparam A
+    * @return
+    */
+  def listToMaybe[A](as: List[A]): Maybe[A] = {
+    as.unCons.map(fst)
+  }
+
+  /** Returns an empty list when given Nothing or a singleton list when not given Nothing.
+    *
+    * ===Examples===
+    * Basic usage:
+    *
+    * {{{
+    * scala> maybeToList(just(7))
+    * res0: List[Int] = [7]
+    *
+    * scala> maybeToList(none[Int])
+    * res1: List[Int] = []
+    * }}}
+    *
+    * @param ma
+    * @tparam A
+    * @return
+    */
+  def maybeToList[A](ma: Maybe[A]): List[A] = undefined
+
+  /** is a version of map which can throw out elements. In particular, the functional argument returns something of type
+    * Maybe b. If this is Nothing, no element is added on to the result list. If it is Just b, then b is included in
+    * the result list.
+    * @param as
+    * @param f
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def mapMaybe[A, B](as: List[A])(f: A => Maybe[B]): List[B] = undefined
 }
 
 trait MaybeInstances {

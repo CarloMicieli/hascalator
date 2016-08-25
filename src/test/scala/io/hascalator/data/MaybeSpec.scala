@@ -24,6 +24,16 @@ import Maybe._
 
 class MaybeSpec extends AbstractTestSpec with MaybeValues {
   describe("Maybe") {
+    describe("fromMaybe") {
+      it("should return the value inside a just") {
+        fromMaybe(just("Hello, World!"))("") shouldBe "Hello, World!"
+      }
+
+      it("should return the default value for none values") {
+        fromMaybe(none[String])("") shouldBe ""
+      }
+    }
+
     describe("pattern matching") {
       it("should be possible to match the just values") {
         val res = just42 match {

@@ -235,7 +235,26 @@ sealed trait List[+A] {
     foldLeft(List.empty[A])((xs, x) => x +: xs)
   }
 
-  /** `O(m)` It returns the prefix of this list of length `m`, or the list itself if `m > length`.
+  /** Returns the prefix of this list of length `m`, or the list itself if `m > length`.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1, 2, 3, 4, 5) take 3
+    * res0: List[Int] = [1,2,3]
+    *
+    * scala> List(1, 2) take 3
+    * res1: List[Int] = [1,2]
+    *
+    * scala> List.empty[Int] take 3
+    * res2: List[Int] = []
+    *
+    * scala> List(1, 2, 3) take -1
+    * res3: List[Int] = []
+    *
+    * scala> List(1, 2, 3) take 0
+    * res4: List[Int] = []
+    * }}}
+    *
     * @param m the number of elements to take
     * @return the list prefix of length `m`
     */
@@ -246,6 +265,19 @@ sealed trait List[+A] {
   }
 
   /** Takes longest prefix of this list that satisfy a predicate.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1,2,3,4,1,2,3,4) takeWhile (_ < 3)
+    * res0: List[Int] = [1, 2]
+    *
+    * scala> List(1, 2, 3) takeWhile (_ < 9)
+    * res1: List[Int] = [1, 2, 3]
+    *
+    * scala> List(1, 2, 3) takeWhile (_ < 0)
+    * res2: List[Int] = []
+    * }}}
+    *
     * @param p the predicate to match
     * @return the longest prefix that satisfy `p`
     */
@@ -256,7 +288,26 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(m)` It returns the suffix of this list of length `m`, or the empty list if `m > length`.
+  /** Returns the suffix of this list of length `m`, or the empty list if `m > length`.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1, 2, 3, 4, 5) drop 3
+    * res0: List[Int] = [4,5]
+    *
+    * scala> List(1, 2) drop 3
+    * res1: List[Int] = []
+    *
+    * scala> List.empty[Int] drop 3
+    * res2: List[Int] = []
+    *
+    * scala> List(1, 2) drop -1
+    * res3: List[Int] = [1,2]
+    *
+    * scala>  List(1, 2) drop 0
+    * res4: List[Int] = [1,2]
+    * }}}
+    *
     * @param m the number of elements to drop
     * @return the list suffix of length `m`
     */
@@ -267,6 +318,18 @@ sealed trait List[+A] {
   }
 
   /** Drops longest prefix of this list that satisfy a predicate.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1,2,3,4,5,1,2,3) dropWhile (_ < 3)
+    * res0: List[Int] = [3, 4, 5, 1, 2, 3]
+    *
+    * scala> List(1,2,3) dropWhile (_ < 9)
+    * res1: List[Int] = []
+    *
+    * scala> List(1,2,3) dropWhile (_ < 0)
+    * res2: List[Int] = [1,2,3]
+    * }}}
     *
     * @param p the predicate to match
     * @return the suffix, if any
@@ -279,8 +342,48 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(m)` Returns a tuple where first element is the prefix of length `m`
+  /** Drops the largest suffix of a list in which the given predicate holds for all elements.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1,2,3,4,5) dropWhileEnd (_ < 3)
+    * res0: List[Int] = [1,2,3,4,5]
+    *
+    * scala> List(1,2,3,4,5) dropWhileEnd (_ > 10)
+    * res1: List[Int] = [1,2,3,4,5]
+    *
+    * scala> List(1,2,3,4,5) dropWhileEnd (_ < 20)
+    * res2: List[Int] = []
+    * }}}
+    *
+    * @param p
+    * @return
+    */
+  def dropWhileEnd(p: A => Boolean): List[A] = undefined
+
+  /** Returns a tuple where first element is the prefix of length `m`
     * and second element is the remainder of the list.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1, 2, 3, 4, 5) splitAt 3
+    * res0: Tuple2[List[Int], List[Int]] = ([1, 2, 3], [4, 5])
+    *
+    * scala> List(1, 2, 3) splitAt 1
+    * res1: Tuple2[List[Int], List[Int]] = ([1], [2, 3])
+    *
+    * scala> List(1, 2, 3) splitAt 3
+    * res2: Tuple2[List[Int], List[Int]] = ([1, 2, 3], [])
+    *
+    * scala> List(1, 2, 3) splitAt 4
+    * res3: Tuple2[List[Int], List[Int]] = ([1, 2, 3], [])
+    *
+    * scala> List(1, 2, 3) splitAt 0
+    * res4: Tuple2[List[Int], List[Int]] = ([], [1, 2, 3])
+    *
+    * scala> List(1, 2, 3) splitAt -1
+    * res5: Tuple2[List[Int], List[Int]] = ([], [1, 2, 3])
+    * }}}
     *
     * @param m the index where the list will be split
     * @return a pair of lists
@@ -310,9 +413,20 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(n)` Apply  a predicate `p` to `this` list, returns a tuple where first element
-    * is longest prefix (possibly empty) of elements that satisfy `p` and second element
-    * is the remainder of the list.
+  /** Returns a tuple where first element is longest prefix (possibly empty) of this list elements that satisfy `p` and
+    * second element is the remainder of the list.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1,2,3,4,1,2,3,4) span (_ < 3)
+    * res0: Tuple2[List[Int], List[Int]] = ([1,2], [3,4,1,2,3,4])
+    *
+    * scala> List(1, 2, 3) span (_ < 9)
+    * res1: Tuple2[List[Int], List[Int]] = ([1,2,3],[])
+    *
+    * scala> List(1, 2, 3) span (_ < 0)
+    * res2: ([], [1,2,3])
+    * }}}
     * @param p the predicate to apply
     * @return a pair of lists.
     */
@@ -325,6 +439,51 @@ sealed trait List[+A] {
         (x +: fst, snd)
     }
   }
+
+  /** Returns a tuple where first element is longest prefix (possibly empty) of this list elements that do not satisfy
+    * `p` and second element is the remainder of the list.
+    *
+    * ===Examples===
+    * {{{
+    * scala> List(1,2,3,4,1,2,3,4) break (_ > 3)
+    * ([1, 2, 3], [4, 1, 2, 3, 4])
+    *
+    * scala> List(1, 2, 3) break (_ < 9)
+    * ([],[1, 2, 3])
+    *
+    * scala> List(1, 2, 3) break (_ > 9)
+    * ([1, 2, 3], [])
+    * }}}
+    *
+    * @param p
+    * @return
+    */
+  def break(p: A => Boolean): (List[A], List[A]) = undefined
+
+  /** Drops the given prefix from a list.
+    *
+    * It returns Nothing if the list did not start with the prefix given, or Just the list after the prefix, if it does.
+    *
+    * {{{
+    * scala> List('f', 'o', 'o', 'b', 'a', 'r') stripPrefix List('f', 'o', 'o')
+    * res0: Maybe[List[Char]] = Just([b, a, r])
+    *
+    * scala> List('f', 'o', 'o') stripPrefix List('f', 'o', 'o')
+    * res1: Just([])
+    *
+    * scala> List('b', 'a', 'r', 'f', 'o', 'o') stripPrefix List('f', 'o', 'o')
+    * res2: Nothing
+    *
+    * scala> List('b', 'a', 'r', 'f', 'o', 'o', 'b', 'a', 'z') stripPrefix List('f', 'o', 'o')
+    * res3: Nothing
+    * }}}
+    *
+    * @param prefix
+    * @param e
+    * @tparam A1
+    * @return
+    */
+  def stripPrefix[A1 >: A](prefix: List[A1])(implicit e: Eq[A1]): Maybe[List[A1]] = undefined
 
   /** Converts this list of lists into a list formed by the elements of these lists.
     * @usecase def flatten: List[A]
