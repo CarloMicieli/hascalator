@@ -158,6 +158,11 @@ class ListSpec extends AbstractTestSpec with SampleLists {
     }
 
     describe("take") {
+      it("should take the elements until the list has them") {
+        val l = numbersList take 100
+        l shouldBe numbersList
+      }
+
       it("should return an empty list, take the first n elements from empty lists") {
         val l = emptyList take 5
         l.isEmpty shouldBe true
@@ -166,6 +171,11 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should take the first n elements from the list") {
         val l = numbersList take 5
         l shouldBe List(1, 2, 3, 4, 5)
+      }
+
+      it("should return the empty list taking a negative number of elements") {
+        val l = numbersList take -34
+        l.isEmpty shouldBe true
       }
     }
 
@@ -508,6 +518,28 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should interperse a value between list elements") {
         val l = List('a', 'b', 'c', 'd', 'e').intersperse('-')
         l shouldBe List('a', '-', 'b', '-', 'c', '-', 'd', '-', 'e')
+      }
+    }
+
+    describe("break") {
+      it("should returns a pair of empty list when applied to the empty list") {
+        val res = emptyList break (_ > 0)
+        res shouldBe ((emptyList, emptyList))
+      }
+
+      it("should return the original list in the first element of the pair when no element match the predicate") {
+        val res = numbersList break (_ > 100)
+        res shouldBe ((numbersList, emptyList))
+      }
+
+      it("should return the original list in the second element of the pair when all elements match the predicate") {
+        val res = numbersList break (_ < 100)
+        res shouldBe ((emptyList, numbersList))
+      }
+
+      it("should return the elements that don't match the predicate as first element, the remaining in the second one") {
+        val res = numbersList break (_ > 5)
+        res shouldBe ((List(1, 2, 3, 4, 5), List(6, 7, 8, 9, 10)))
       }
     }
 

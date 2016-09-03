@@ -33,14 +33,14 @@ class ListProperties extends AbstractPropertySpec {
   //    })
   //  }
 
-  property("+: increase the list length by 1") {
+  property(":: increase the list length by 1") {
     check(forAll { (x: Int, xs: List[Int]) =>
       val res = x :: xs
       res.length === xs.length + 1
     })
   }
 
-  property("+: add the new element as the list head") {
+  property(":: add the new element as the list head") {
     check(forAll { (x: Int, xs: List[Int]) =>
       val ys = x :: xs
       ys.head === x
@@ -250,6 +250,51 @@ class ListProperties extends AbstractPropertySpec {
       val (ys, zs) = xs.splitAt(x)
       ys.length <= suffixLen
       zs.length <= (xs.length - suffixLen)
+    })
+  }
+
+  property("partition: should not loose elements") {
+    check(forAll { (xs: List[Int]) =>
+      val (f, s) = xs.partition(_ > 0)
+      f.length + s.length === xs.length
+    })
+  }
+
+  property("partition: all elements in the first sublist must match the predicate") {
+    check(forAll { (xs: List[Int]) =>
+      val (f, _) = xs.partition(_ > 0)
+      f.all(_ > 0) === true
+    })
+  }
+
+  property("partition: no elements in the second sublist must match the predicate") {
+    check(forAll { (xs: List[Int]) =>
+      val (_, s) = xs.partition(_ > 0)
+      s.all(_ <= 0) === true
+    })
+  }
+
+  property("partition: respect the laws with filter") {
+    check(forAll { (xs: List[Int]) =>
+      val p = (n: Int) => n > 0
+      val expected: (List[Int], List[Int]) = (xs filter p, xs filterNot p)
+      xs.partition(p) === expected
+    })
+  }
+
+  property("break: first element must contains only elements that don't match the predicate") {
+    check(forAll { (xs: List[Int]) =>
+      val p = (n: Int) => n > 0
+      val (f, _) = xs break p
+      f.all(p.negate) === true
+    })
+  }
+
+  property("break: the head for second list is matching the predicate") {
+    check(forAll { (xs: List[Int]) =>
+      val p = (n: Int) => n > 0
+      val (_, s) = xs break p
+      s.isEmpty || p(s.head)
     })
   }
 

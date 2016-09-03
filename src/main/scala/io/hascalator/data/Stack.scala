@@ -43,7 +43,7 @@ trait Stack[+A] {
   /** `O(1)` If this `Stack` is not empty, it returns a pair with the top element and a new `Stack` without this element;
     * else it returns an `EmptyStackException` wrapped in a `Bad` value.
     * @return if not empty, a pair with the top element and a new `Stack`;
-    *     an `EmptyStackException` wrapped in a `Bad` value otherwise
+    *    an `EmptyStackException` wrapped in a `Bad` value otherwise
     */
   def pop: Either[EmptyStackException, (A, Stack[A])]
 

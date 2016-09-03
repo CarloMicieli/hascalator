@@ -18,6 +18,8 @@ package io.hascalator
 package data
 
 import Prelude._
+
+import scala.collection.mutable
 import scala.inline
 
 /** A list is either empty, or a constructed list with a `head` and a `tail`.
@@ -123,8 +125,25 @@ sealed trait List[+A] {
     * @return a list
     */
   def filter(p: A => Boolean): List[A] = {
-    val step = (x: A, xs: List[A]) => if (p(x)) x :: xs else xs
-    foldRight(List.empty[A])(step)
+
+    val builder = new ListBuilder[A]
+
+    @tailrec
+    def loop(xs: List[A]): Unit = {
+      xs match {
+        case h :: t =>
+          if (p(h)) {
+            builder += h
+          } else {
+            ()
+          }
+          loop(t)
+        case Nil => ()
+      }
+    }
+
+    loop(this)
+    builder.result()
   }
 
   /** `O(n)` Selects all elements of this list which do not satisfy a predicate.
@@ -141,17 +160,45 @@ sealed trait List[+A] {
     * @tparam B the resulting list elements type
     * @return the list obtained applying `f`
     */
-  def map[B](f: A => B): List[B] =
-    foldRight(List.empty[B])((x, xs) => f(x) :: xs)
+  def map[B](f: A => B): List[B] = {
+    val builder = new ListBuilder[B]
+
+    @tailrec
+    def loop(xs: List[A]): Unit = {
+      xs match {
+        case Cons(h, t) =>
+          builder += f(h)
+          loop(t)
+        case Nil =>
+          ()
+      }
+    }
+
+    loop(this)
+    builder.result()
+  }
 
   /** `O(n)` Builds a new list by applying a function to all elements and using the
     * elements of the resulting lists.
-    * @param f
-    * @tparam B
-    * @return
+    * @param f the function to apply
+    * @tparam B the resulting list elements type
+    * @return the list obtained applying `f`
     */
   def flatMap[B](f: A => List[B]): List[B] = {
-    foldRight(List.empty[B])((x, xs) => f(x) ++ xs)
+    val builder = new ListBuilder[B]
+
+    @tailrec
+    def loop(xs: List[A]): Unit = {
+      xs match {
+        case Cons(h, t) =>
+          f(h).foreach(e => builder += e)
+          loop(t)
+        case Nil => ()
+      }
+    }
+
+    loop(this)
+    builder.result()
   }
 
   /** `O(n)` Returns a new list obtained appending the elements from `that` list to this one.
@@ -259,10 +306,21 @@ sealed trait List[+A] {
     * @param m the number of elements to take
     * @return the list prefix of length `m`
     */
-  def take(m: Int): List[A] = this match {
-    case Nil         => Nil
-    case _ if m == 0 => Nil
-    case x :: xs     => x :: xs.take(m - 1)
+  def take(m: Int): List[A] = {
+    val builder = new ListBuilder[A]
+
+    @tailrec
+    def loop(xs: List[A], i: Int): Unit = {
+      xs match {
+        case _ if i <= 0 => ()
+        case Nil         => ()
+        case h :: t =>
+          builder += h
+          loop(t, i - 1)
+      }
+    }
+    loop(this, m)
+    builder.result()
   }
 
   /** Takes longest prefix of this list that satisfy a predicate.
@@ -398,6 +456,12 @@ sealed trait List[+A] {
   }
 
   /** `O(n)` Partitions this `List` in two lists according to the given predicate.
+    *
+    * The following equivalence must always hold:
+    * {{{
+    * (xs partition p) === (xs filter p, xs filterNot p)
+    * }}}
+    *
     * @param p the predicate to match
     * @return a pair of Lists
     */
@@ -405,12 +469,25 @@ sealed trait List[+A] {
     this match {
       case Nil => (Nil, Nil)
       case x :: xs =>
-        val (fst, snd) = xs partition p
-        if (p(x)) {
-          (x :: fst, snd)
-        } else {
-          (fst, x :: snd)
+        val fstBuilder = new ListBuilder[A]
+        val sndBuilder = new ListBuilder[A]
+
+        @tailrec
+        def loop(xs: List[A]): Unit = {
+          xs match {
+            case h :: t =>
+              if (p(h)) {
+                fstBuilder += h
+              } else {
+                sndBuilder += h
+              }
+              loop(t)
+            case Nil => ()
+          }
         }
+
+        loop(this)
+        (fstBuilder.result(), sndBuilder.result())
     }
   }
 
@@ -459,7 +536,30 @@ sealed trait List[+A] {
     * @param p
     * @return
     */
-  def break(p: A => Boolean): (List[A], List[A]) = undefined
+  def break(p: A => Boolean): (List[A], List[A]) = {
+    this match {
+      case Nil => (Nil, Nil)
+      case _ =>
+        val builder = new ListBuilder[A]
+
+        @tailrec
+        def loop(xs: List[A]): List[A] = {
+          xs match {
+            case Nil => Nil
+            case h :: t =>
+              if (p(h)) {
+                xs
+              } else {
+                builder += h
+                loop(t)
+              }
+          }
+        }
+
+        val remaining = loop(this)
+        (builder.result(), remaining)
+    }
+  }
 
   /** Drops the given prefix from a list.
     *
@@ -669,8 +769,36 @@ trait ListInstances {
   }
 }
 
-private[this] case class Cons[A] private (head: A, tail: List[A]) extends List[A] {
+private[this] case class Cons[A] private (head: A, private[data] var _tail: List[A]) extends List[A] {
   override def isEmpty: Boolean = false
+  override def tail: List[A] = _tail
+}
+
+final private[this] class ListBuilder[A] extends mutable.Builder[A, List[A]] {
+
+  private var out: List[A] = List.empty
+  private var end: Cons[A] = _
+
+  override def +=(elem: A): ListBuilder.this.type = {
+    out match {
+      case Cons(h, t) =>
+        val newEnd = Cons(elem, List.empty)
+        end._tail = newEnd
+        end = newEnd
+        this
+      case _ =>
+        end = Cons(elem, List.empty)
+        out = end
+        this
+    }
+  }
+
+  override def clear(): Unit = {
+    out = List.empty
+    end = null
+  }
+
+  override def result(): List[A] = out
 }
 
 object :: {

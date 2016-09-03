@@ -219,6 +219,10 @@ object Prelude {
     def flip: (B, A) => C = Prelude.flip(f)
   }
 
+  implicit class PredicateNegate[A](val p: A => Boolean) extends AnyVal {
+    def negate: A => Boolean = a => !p(a)
+  }
+
   implicit class IntRange(private val x: Int) extends AnyVal {
     def to(y: Int): Range = Range.inclusive(x, y)
     def until(y: Int): Range = Range(x, y)
