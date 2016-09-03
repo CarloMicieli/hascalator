@@ -419,6 +419,32 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("zip3") {
+      it("should produce the empty list when at least one of the lists is empty") {
+        emptyList.zip3(numbersList, numbersList) shouldBe emptyList
+        numbersList.zip3(emptyList, numbersList) shouldBe emptyList
+        numbersList.zip3(numbersList, emptyList) shouldBe emptyList
+      }
+
+      it("should produce a list of triples") {
+        List(1, 2, 3).zip3(numbersList, numbersList) shouldBe List((1, 1, 1), (2, 2, 2), (3, 3, 3))
+      }
+    }
+
+    describe("stripPrefix") {
+      it("should return the original list when the prefix is empty") {
+        numbersList.stripPrefix(emptyList) shouldBe Maybe.just(numbersList)
+      }
+
+      it("should return the list after the prefix was stripped") {
+        numbersList.stripPrefix(numbersList.take(3)) shouldBe Maybe.just(numbersList.drop(3))
+      }
+
+      it("should return none if the list don't start with the prefix") {
+        numbersList.stripPrefix(numbersList.drop(1)) shouldBe Maybe.none
+      }
+    }
+
     describe("equals") {
       it("should check whether two lists are equals") {
         val l1 = numbersList

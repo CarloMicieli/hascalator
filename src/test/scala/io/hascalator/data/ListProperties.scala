@@ -23,6 +23,7 @@ import Gen._
 import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
 import tests.arbitrary.list._
+import tests.generator.list._
 
 class ListProperties extends AbstractPropertySpec {
   //  property("intersperse: length increased") {
@@ -136,14 +137,13 @@ class ListProperties extends AbstractPropertySpec {
     })
   }
 
-  //  property("zip: resulting list must have the pair of original head elements as head") {
-  //    check(forAll { (xs: List[Int], ys: List[Int]) =>
-  //      (xs.nonEmpty && ys.nonEmpty) ==> {
-  //        val zs = xs zip ys
-  //        (xs.head, ys.head) === zs.head
-  //      }
-  //    })
-  //  }
+  property("zip: resulting list must have the pair of original head elements as head") {
+    check(forAll(nonEmptyList[Int], nonEmptyList[Int]) {
+      (xs: List[Int], ys: List[Int]) =>
+        val zs = xs zip ys
+        zs.head === ((xs.head, ys.head))
+    })
+  }
 
   property("zip: resulting list contains original elements") {
     check(forAll { (xs: List[Int], ys: List[Int]) =>
@@ -152,6 +152,13 @@ class ListProperties extends AbstractPropertySpec {
 
       zs.map(_._1) === xs.take(len)
       zs.map(_._2) === ys.take(len)
+    })
+  }
+
+  property("zip3: result list should have the same length of the shortest list") {
+    check(forAll { (xs: List[Int], ys: List[Int], zs: List[Int]) =>
+      val res = xs.zip3(ys, zs)
+      res.length === scala.math.min(xs.length, scala.math.min(ys.length, zs.length))
     })
   }
 

@@ -31,12 +31,12 @@ import scala.inline
 sealed trait List[+A] {
   self =>
 
-  /** `O(1)` Returns the first element of a list.
+  /** Returns the first element of a list.
     * @return the first element
     */
   def head: A
 
-  /** `O(1)` Optionally returns the first element of a list.
+  /** Optionally returns the first element of a list.
     * @return `Some(head)` if the list is not empty; `None` otherwise
     */
   def headMaybe: Maybe[A] = {
@@ -48,31 +48,31 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(1)` Returns the elements after the head of a list.
+  /** Returns the elements after the head of a list.
     * @return the elements after the head
     */
   def tail: List[A]
 
-  /** `O(1)` Checks whether this list is empty.
+  /** Checks whether this list is empty.
     * @return `true` if the list is empty; `false` otherwise
     */
   def isEmpty: Boolean
 
-  /** `O(1)` Checks whether this list is not empty.
+  /** Checks whether this list is not empty.
     * @return `true` if the list is not empty; `false` otherwise
     */
   def nonEmpty: Boolean = !isEmpty
 
-  /** `O(1)` Adds an element at the beginning of this list.
+  /** Adds an element at the beginning of this list.
     * @param x the element to add
     * @tparam A1 the list element type
     * @return a new list, with the element appended
-    * @usecase def +:(x: A): List[A]
+    * @usecase def ::(x: A): List[A]
     * @inheritdoc
     */
   def ::[A1 >: A](x: A1): List[A1] = Cons(x, this)
 
-  /** `O(1)` Decompose a list into its head and tail. If the list is empty, returns `None`. If the list is non-empty,
+  /** Decompose a list into its head and tail. If the list is empty, returns None`. If the list is non-empty,
     * returns `Just (x, xs)`, where `x` is the head of the list and `xs` its tail.
     * @return optionally a pair with the list head and tail
     */
@@ -85,7 +85,7 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(n)` Checks whether this list contains a given value as an element.
+  /** Checks whether this list contains a given value as an element.
     * @usecase def elem(x: A): Boolean
     * @inheritdoc
     * @param x the element to find
@@ -96,8 +96,8 @@ sealed trait List[+A] {
     find(E.eq(_: A1, x)).isDefined
   }
 
-  /** `O(n)` The find function takes a predicate and a structure and returns the leftmost
-    * element of the structure matching the predicate, or `None` if there is no such element.
+  /** Takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or
+    * ''None'' if there is no such element.
     *
     * @usecase def find(x: A): Maybe[A]
     * @inheritdoc
@@ -113,14 +113,14 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(n)` Returns the number of elements in the list.
+  /** Returns the number of elements in the list.
     * @return the number of elements
     */
   def length: Int = {
     foldLeft(0)((len, x) => len + 1)
   }
 
-  /** `O(n)` Selects all elements of this list which satisfy a predicate.
+  /** Selects all elements of this list which satisfy a predicate.
     * @param p the predicate to match
     * @return a list
     */
@@ -146,7 +146,7 @@ sealed trait List[+A] {
     builder.result()
   }
 
-  /** `O(n)` Selects all elements of this list which do not satisfy a predicate.
+  /** Selects all elements of this list which do not satisfy a predicate.
     * @param p the predicate
     * @return a list
     */
@@ -155,7 +155,7 @@ sealed trait List[+A] {
     filter(notP)
   }
 
-  /** `O(n)` Returns the list obtained by applying `f` to each element of this list.
+  /** Returns the list obtained by applying `f` to each element of this list.
     * @param f the function to apply
     * @tparam B the resulting list elements type
     * @return the list obtained applying `f`
@@ -178,7 +178,7 @@ sealed trait List[+A] {
     builder.result()
   }
 
-  /** `O(n)` Builds a new list by applying a function to all elements and using the
+  /** Builds a new list by applying a function to all elements and using the
     * elements of the resulting lists.
     * @param f the function to apply
     * @tparam B the resulting list elements type
@@ -201,7 +201,7 @@ sealed trait List[+A] {
     builder.result()
   }
 
-  /** `O(n)` Returns a new list obtained appending the elements from `that` list to this one.
+  /** Returns a new list obtained appending the elements from `that` list to this one.
     *
     * @usecase def ++(that: List[A]): List[A]
     * @inheritdoc
@@ -211,7 +211,7 @@ sealed trait List[+A] {
     */
   @inline def ++[A1 >: A](that: List[A1]): List[A1] = this append that
 
-  /** `O(n)` Returns a new list obtained appending the elements from `that` list to this one.
+  /** Returns a new list obtained appending the elements from `that` list to this one.
     *
     * @usecase def append(that: List[A]): List[A]
     * @inheritdoc
@@ -225,7 +225,7 @@ sealed trait List[+A] {
     case _         => foldRight(that)((x, xs) => x :: xs)
   }
 
-  /** `O(n)` Applies a function `f` to all elements of this list.
+  /** Applies a function `f` to all elements of this list.
     * @param f the function to apply
     * @tparam U
     * @usecase def foreach(f: A => Unit): Unit
@@ -250,7 +250,7 @@ sealed trait List[+A] {
     def withFilter(q: A => Boolean): WithFilter = new WithFilter(x => p(x) && q(x))
   }
 
-  /** `O(n)` Applies a binary operator to a start value and all elements of this sequence, going right to left.
+  /** Applies a binary operator to a start value and all elements of this sequence, going right to left.
     * @param z the start value
     * @param f the binary operator
     * @tparam B the result type of the binary operator
@@ -260,7 +260,7 @@ sealed trait List[+A] {
     reverse.foldLeft(z)((xs, x) => f(x, xs))
   }
 
-  /** `O(n)` Applies a binary operator to a start value and all elements of this sequence, going left to right.
+  /** Applies a binary operator to a start value and all elements of this sequence, going left to right.
     * @param z the start value
     * @param f the binary operator
     * @tparam B the result type of the binary operator
@@ -276,7 +276,7 @@ sealed trait List[+A] {
     go(this, z)
   }
 
-  /** `O(n)` Returns the elements of this list in reverse order.
+  /** Returns the elements of this list in reverse order.
     * @return the list in reversed order
     */
   def reverse: List[A] = {
@@ -563,28 +563,48 @@ sealed trait List[+A] {
 
   /** Drops the given prefix from a list.
     *
-    * It returns Nothing if the list did not start with the prefix given, or Just the list after the prefix, if it does.
+    * It returns a ''None'' if the list did not start with the prefix given, or a ''Just'' wrapping the list after
+    * the prefix, if it does.
     *
+    * ===Examples===
     * {{{
     * scala> List('f', 'o', 'o', 'b', 'a', 'r') stripPrefix List('f', 'o', 'o')
     * res0: Maybe[List[Char]] = Just([b, a, r])
     *
     * scala> List('f', 'o', 'o') stripPrefix List('f', 'o', 'o')
-    * res1: Just([])
+    * res1: Maybe[List[Char]] = Just([])
     *
     * scala> List('b', 'a', 'r', 'f', 'o', 'o') stripPrefix List('f', 'o', 'o')
-    * res2: Nothing
+    * res2: Maybe[List[Char]] = None
     *
     * scala> List('b', 'a', 'r', 'f', 'o', 'o', 'b', 'a', 'z') stripPrefix List('f', 'o', 'o')
-    * res3: Nothing
+    * res3: Maybe[List[Char]] = None
     * }}}
     *
-    * @param prefix
+    * @usecase def stripPrefix(prefix: List[A]): Maybe[List[A]]
+    * @inheritdoc
+    * @param prefix the list prefix to strip
     * @param e
-    * @tparam A1
-    * @return
+    * @tparam A1 the resulting list element type
+    * @return optionally the list after the prefix stripped
     */
-  def stripPrefix[A1 >: A](prefix: List[A1])(implicit e: Eq[A1]): Maybe[List[A1]] = undefined
+  def stripPrefix[A1 >: A](prefix: List[A1])(implicit e: Eq[A1]): Maybe[List[A1]] = {
+    @tailrec
+    def loop(p: List[A1], l: List[A1]): Maybe[List[A1]] = {
+      (p, l) match {
+        case (Nil, list)   => Maybe.just(list)
+        case (_ :: _, Nil) => Maybe.none
+        case (a :: as, b :: bs) =>
+          if (Eq[A1].eq(a, b)) {
+            loop(as, bs)
+          } else {
+            Maybe.none
+          }
+      }
+    }
+
+    loop(prefix, this)
+  }
 
   /** Converts this list of lists into a list formed by the elements of these lists.
     * @usecase def flatten: List[A]
@@ -597,13 +617,38 @@ sealed trait List[+A] {
     foldRight(List.empty[B])((xss, xs) => xss ++ xs)
   }
 
-  /** `O(n)` Takes two lists and returns a list of corresponding pairs. If one input
+  /** Takes two lists and returns a list of corresponding pairs. If one input
     * list is short, excess elements of the longer list are discarded.
     * @param that the second list
     * @tparam B the second list element type
     * @return a list with corresponding pairs
     */
   def zip[B](that: List[B]): List[(A, B)] = this.zipWith(that)((_, _))
+
+  /** Takes three lists and returns a list of triples, analogous to [[zip]].
+    * @param bs the second list
+    * @param cs the third list
+    * @tparam B the second list element type
+    * @tparam C the third list element type
+    * @return a list of triples
+    */
+  def zip3[B, C](bs: List[B], cs: List[C]): List[(A, B, C)] = {
+    val builder = new ListBuilder[(A, B, C)]
+
+    @tailrec
+    def loop(as: List[A], bs: List[B], cs: List[C]): Unit = {
+      (as, bs, cs) match {
+        case (Nil, _, _) | (_, Nil, _) | (_, _, Nil) => ()
+        case (x :: xs, y :: ys, z :: zs) =>
+          val el = (x, y, z)
+          builder += el
+          loop(xs, ys, zs)
+      }
+    }
+
+    loop(this, bs, cs)
+    builder.result()
+  }
 
   /** `O(n)` Takes two lists and returns a list applying `f` to each corresponding pair. If one input
     * list is short, excess elements of the longer list are discarded.
@@ -613,10 +658,20 @@ sealed trait List[+A] {
     * @tparam C the resulting list element type
     * @return a list
     */
-  def zipWith[B, C](that: List[B])(f: (A, B) => C): List[C] = (this, that) match {
-    case (_, Nil) | (Nil, _) => List.empty[C]
-    case (x :: xs, y :: ys) =>
-      f(x, y) :: xs.zipWith(ys)(f)
+  def zipWith[B, C](that: List[B])(f: (A, B) => C): List[C] = {
+    val builder = new ListBuilder[C]
+
+    def loop(fst: List[A], snd: List[B]): Unit = {
+      (fst, snd) match {
+        case (_, Nil) | (Nil, _) => ()
+        case (x :: xs, y :: ys) =>
+          builder += f(x, y)
+          loop(xs, ys)
+      }
+    }
+
+    loop(this, that)
+    builder.result()
   }
 
   /** `O(n)` Determines whether all elements of this list satisfy the predicate.
