@@ -305,5 +305,17 @@ class ListProperties extends AbstractPropertySpec {
     })
   }
 
+  property("init: should reduce length by 1 for non empty lists") {
+    check(forAll(nonEmptyList[Int]) { (xs: List[Int]) =>
+      xs.init.length === xs.length - 1
+    })
+  }
+
+  property("init: remove the last element") {
+    check(forAll(nonEmptyList[Int]) { (xs: List[Int]) =>
+      xs.init === xs.take(xs.length - 1)
+    })
+  }
+
   def intLists(implicit a: Arbitrary[List[Int]]): Gen[List[Int]] = a.arbitrary
 }

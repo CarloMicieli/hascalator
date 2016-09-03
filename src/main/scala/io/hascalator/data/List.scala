@@ -64,6 +64,31 @@ sealed trait List[+A] {
     */
   def tail: List[A]
 
+  /** Return all the elements of a list except the last one. The list must be non-empty.
+    * @return the list elements, but the last one
+    */
+  def init: List[A] = {
+    if (isEmpty) {
+      error("List.init: empty list")
+    } else {
+      val builder = new ListBuilder[A]
+
+      @tailrec
+      def loop(xs: List[A]): Unit = {
+        xs match {
+          case x :: Nil =>
+            ()
+          case h :: t =>
+            builder += h
+            loop(t)
+        }
+      }
+
+      loop(this)
+      builder.result()
+    }
+  }
+
   /** Checks whether this list is empty.
     * @return `true` if the list is empty; `false` otherwise
     */
@@ -75,16 +100,18 @@ sealed trait List[+A] {
   def nonEmpty: Boolean = !isEmpty
 
   /** Adds an element at the beginning of this list.
+    *
+    * @usecase def ::(x: A): List[A]
+    * @inheritdoc
     * @param x the element to add
     * @tparam A1 the list element type
     * @return a new list, with the element appended
-    * @usecase def ::(x: A): List[A]
-    * @inheritdoc
     */
   def ::[A1 >: A](x: A1): List[A1] = Cons(x, this)
 
-  /** Decompose a list into its head and tail. If the list is empty, returns None`. If the list is non-empty,
-    * returns `Just (x, xs)`, where `x` is the head of the list and `xs` its tail.
+  /** Decompose a list into its head and tail. If the list is empty, returns a ''None''.
+    * If the list is non-empty, returns ''just (x, xs)'', where `x` is the head of the list
+    * and `xs` its tail.
     * @return optionally a pair with the list head and tail
     */
   def unCons: Maybe[(A, List[A])] = {
@@ -97,6 +124,7 @@ sealed trait List[+A] {
   }
 
   /** Checks whether this list contains a given value as an element.
+    *
     * @usecase def elem(x: A): Boolean
     * @inheritdoc
     * @param x the element to find
@@ -218,7 +246,9 @@ sealed trait List[+A] {
     * @tparam A1 the resulting list type
     * @return a list obtained appending the element of `that` to this list
     */
-  @inline def ++[A1 >: A](that: List[A1]): List[A1] = this append that
+  @inline def ++[A1 >: A](that: List[A1]): List[A1] = {
+    this append that
+  }
 
   /** Returns a new list obtained appending the elements from `that` list to this one.
     *
@@ -228,10 +258,12 @@ sealed trait List[+A] {
     * @tparam A1 the resulting list type
     * @return a list obtained appending the element of `that` to this list
     */
-  def append[A1 >: A](that: List[A1]): List[A1] = (this, that) match {
-    case (Nil, ys) => ys
-    case (xs, Nil) => xs
-    case _         => foldRight(that)((x, xs) => x :: xs)
+  def append[A1 >: A](that: List[A1]): List[A1] = {
+    (this, that) match {
+      case (Nil, ys) => ys
+      case (xs, Nil) => xs
+      case _         => foldRight(that)((x, xs) => x :: xs)
+    }
   }
 
   /** Applies a function `f` to all elements of this list.
@@ -350,10 +382,24 @@ sealed trait List[+A] {
     * @return the longest prefix that satisfy `p`
     */
   def takeWhile(p: (A) ⇒ Boolean): List[A] = {
-    this match {
-      case x :: xs if p(x) => x :: xs.takeWhile(p)
-      case _               => Nil
+    val builder = new ListBuilder[A]
+
+    @tailrec
+    def loop(xs: List[A]): Unit = {
+      xs match {
+        case h :: t =>
+          if (p(h)) {
+            builder += h
+            loop(t)
+          } else {
+            ()
+          }
+        case _ => ()
+      }
     }
+
+    loop(this)
+    builder.result()
   }
 
   /** Returns the suffix of this list of length `m`, or the empty list if `m > length`.
@@ -379,7 +425,7 @@ sealed trait List[+A] {
     * @param m the number of elements to drop
     * @return the list suffix of length `m`
     */
-  def drop(m: Int): List[A] = this match {
+  @tailrec final def drop(m: Int): List[A] = this match {
     case Nil          => Nil
     case xs if m == 0 => xs
     case _ :: xs      => xs.drop(m - 1)
@@ -402,7 +448,7 @@ sealed trait List[+A] {
     * @param p the predicate to match
     * @return the suffix, if any
     */
-  def dropWhile(p: A => Boolean): List[A] = {
+  @tailrec final def dropWhile(p: A => Boolean): List[A] = {
     this match {
       case Nil              => Nil
       case x :: xs if !p(x) => this
@@ -456,12 +502,21 @@ sealed trait List[+A] {
     * @param m the index where the list will be split
     * @return a pair of lists
     */
-  def splitAt(m: Int): (List[A], List[A]) = (m, this) match {
-    case (_, Nil)         => (Nil, Nil)
-    case (i, _) if i <= 0 => (Nil, this)
-    case (i, x :: xs) =>
-      val (fst, snd) = xs.splitAt(i - 1)
-      (x :: fst, snd)
+  def splitAt(m: Int): (List[A], List[A]) = {
+    val builder = new ListBuilder[A]
+
+    @tailrec
+    def loop(n: Int, xs: List[A]): List[A] = {
+      (n, xs) match {
+        case (i, _) if i < 0   => xs
+        case (0, _) | (_, Nil) => xs
+        case (i, h :: t) =>
+          builder += h
+          loop(n - 1, t)
+      }
+    }
+    val rest = loop(m, this)
+    (builder.result(), rest)
   }
 
   /** `O(n)` Partitions this `List` in two lists according to the given predicate.
@@ -481,21 +536,13 @@ sealed trait List[+A] {
         val fstBuilder = new ListBuilder[A]
         val sndBuilder = new ListBuilder[A]
 
-        @tailrec
-        def loop(xs: List[A]): Unit = {
-          xs match {
-            case h :: t =>
-              if (p(h)) {
-                fstBuilder += h
-              } else {
-                sndBuilder += h
-              }
-              loop(t)
-            case Nil => ()
-          }
-        }
+        this.foreach(h =>
+          if (p(h)) {
+            fstBuilder += h
+          } else {
+            sndBuilder += h
+          })
 
-        loop(this)
         (fstBuilder.result(), sndBuilder.result())
     }
   }
@@ -518,13 +565,20 @@ sealed trait List[+A] {
     * @return a pair of lists.
     */
   def span(p: A => Boolean): (List[A], List[A]) = {
-    this match {
-      case Nil              => (Nil, Nil)
-      case x :: xs if !p(x) => (Nil, this)
-      case x :: xs =>
-        val (fst, snd) = xs span p
-        (x :: fst, snd)
+    val builder = new ListBuilder[A]
+
+    @tailrec
+    def loop(xs: List[A]): List[A] = {
+      xs match {
+        case h :: t if p(h) =>
+          builder += h
+          loop(t)
+        case _ => xs
+      }
     }
+
+    val rest = loop(this)
+    (builder.result(), rest)
   }
 
   /** Returns a tuple where first element is longest prefix (possibly empty) of this list elements that do not satisfy
@@ -546,28 +600,20 @@ sealed trait List[+A] {
     * @return
     */
   def break(p: A => Boolean): (List[A], List[A]) = {
-    this match {
-      case Nil => (Nil, Nil)
-      case _ =>
-        val builder = new ListBuilder[A]
+    val builder = new ListBuilder[A]
 
-        @tailrec
-        def loop(xs: List[A]): List[A] = {
-          xs match {
-            case Nil => Nil
-            case h :: t =>
-              if (p(h)) {
-                xs
-              } else {
-                builder += h
-                loop(t)
-              }
-          }
-        }
-
-        val remaining = loop(this)
-        (builder.result(), remaining)
+    @tailrec
+    def loop(xs: List[A]): List[A] = {
+      xs match {
+        case h :: t if !p(h) =>
+          builder += h
+          loop(t)
+        case _ => xs
+      }
     }
+
+    val remaining = loop(this)
+    (builder.result(), remaining)
   }
 
   /** Drops the given prefix from a list.
@@ -632,7 +678,9 @@ sealed trait List[+A] {
     * @tparam B the second list element type
     * @return a list with corresponding pairs
     */
-  def zip[B](that: List[B]): List[(A, B)] = this.zipWith(that)((_, _))
+  def zip[B](that: List[B]): List[(A, B)] = {
+    (this zipWith that)((_, _))
+  }
 
   /** Takes three lists and returns a list of triples, analogous to [[zip]].
     * @param bs the second list
@@ -716,12 +764,13 @@ sealed trait List[+A] {
     * @return
     */
   def intersperse[A1 >: A](x: A1): List[A1] = {
-    if (isEmpty) {
-      this
-    } else {
-      val zero: List[A1] = List(head)
-      val step = (ys: List[A1], y: A) => y :: x :: ys
-      tail.foldLeft(zero)(step).reverse
+    this match {
+      case h :: t =>
+        val builder = new ListBuilder[A1]
+        builder += h
+        t.foreach(h1 => builder ++= Seq(x, h1))
+        builder.result()
+      case _ => this
     }
   }
 
@@ -838,6 +887,21 @@ private[this] case class Cons[A] private (head: A, private[data] var _tail: List
   override def tail: List[A] = _tail
 }
 
+object :: {
+  def unapply[A](xs: List[A]): scala.Option[(A, List[A])] =
+    if (xs.isEmpty) {
+      scala.None
+    } else {
+      scala.Some((xs.head, xs.tail))
+    }
+}
+
+private[this] case object Nil extends List[Nothing] {
+  override def head: Nothing = error("List.head: empty list")
+  override def tail: Nothing = error("List.tail: empty list")
+  override def isEmpty: Boolean = true
+}
+
 final private[this] class ListBuilder[A] extends mutable.Builder[A, List[A]] {
 
   private var out: List[A] = List.empty
@@ -863,19 +927,4 @@ final private[this] class ListBuilder[A] extends mutable.Builder[A, List[A]] {
   }
 
   override def result(): List[A] = out
-}
-
-object :: {
-  def unapply[A](xs: List[A]): scala.Option[(A, List[A])] =
-    if (xs.isEmpty) {
-      scala.None
-    } else {
-      scala.Some((xs.head, xs.tail))
-    }
-}
-
-private[this] case object Nil extends List[Nothing] {
-  override def head: Nothing = error("List.head: empty list")
-  override def tail: Nothing = error("List.tail: empty list")
-  override def isEmpty: Boolean = true
 }

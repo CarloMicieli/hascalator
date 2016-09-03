@@ -64,6 +64,22 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("init") {
+      it("should throw an exception for empty list") {
+        the[ApplicationException] thrownBy {
+          emptyList.init
+        } should have message "*** Exception: List.init: empty list"
+      }
+
+      it("should return the empty list for the singleton list") {
+        List(42).init shouldBe emptyList
+      }
+
+      it("should return the list elements, but the last one") {
+        List(1, 2, 3).init shouldBe List(1, 2)
+      }
+    }
+
     describe("elem") {
       it("should return false for empty lists") {
         emptyList elem 42 shouldBe false

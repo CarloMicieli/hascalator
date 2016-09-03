@@ -35,12 +35,29 @@ xs ++ ys
 `head`: extract the first element of a list, which must be non-empty.
  
 ```tut
-xs.head
+List(1, 2, 3).head
+```
+
+`last`: extract the elements after the head of a list, which must be non-empty.
+
+```tut
+List(1, 2, 3).last
+```
+
+```tut:fail
+List().last
 ```
 
 `tail`: extract the elements after the head of a list, which must be non-empty.
+
 ```tut
 xs.tail
+```
+
+`init`: return all the elements of a list except the last one. The list must be non-empty.
+
+```tut
+List(1, 2, 3).init
 ```
 
 `unCons`: decompose a list into its `head` and `tail`. If the list is empty, returns `none`. 
