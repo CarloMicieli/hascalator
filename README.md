@@ -5,11 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/CarloMicieli/hascalator/badge.svg?branch=master)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
 [![Dependencies](https://app.updateimpact.com/badge/763721648812724224/hascalator.svg?config=compile)](https://app.updateimpact.com/latest/763721648812724224/hascalator)
 
-**DISCLAIMER/FAIR WARNING**: this is a *toy project*. Here I'm *reinventing the wheel* big time, but this is something I use to experiment with functional programming and to improve my Scala knowledge.
-
-Given the differences between Scala and Haskell, this is not complete nor an exact copy of the Haskell prelude. Almost everywhere the _dot notation_ has been preferred (ie `type.function`). Moreover, in order to help the Scala type inference the order of function parameters has been changed to improve the API usage.
-
-The library is currently implementing the following types:
+This library implements the following types:
 
 * `Data.List`
 * `Data.Maybe`
