@@ -122,11 +122,11 @@ trait Enum[A] extends Any {
       @tailrec
       def loop(x: A, out: List[A]): List[A] = {
         if (eqInt.eq(fromV, fromEnum(x))) {
-          x +: out
+          x :: out
         } else {
           prev(x) match {
-            case Just(v) => loop(v, x +: out)
-            case _       => x +: out
+            case Just(v) => loop(v, x :: out)
+            case _       => x :: out
           }
         }
       }
@@ -159,15 +159,15 @@ trait Enum[A] extends Any {
         if (x > y) {
           List.empty[A]
         } else if (y > toV) {
-          a1 +: out
+          a1 :: out
         } else {
           toEnum(y + (y - x)) match {
-            case Just(z) => loop(a2, z, a1 +: out)
+            case Just(z) => loop(a2, z, a1 :: out)
             case None =>
               if (x < toV && y < toV) {
-                a2 +: a1 +: out
+                a2 :: a1 :: out
               } else if (x < toV) {
-                a1 +: out
+                a1 :: out
               } else {
                 out
               }

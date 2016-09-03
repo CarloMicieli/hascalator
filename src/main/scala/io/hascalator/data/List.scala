@@ -18,6 +18,7 @@ package io.hascalator
 package data
 
 import Prelude._
+import scala.inline
 
 /** A list is either empty, or a constructed list with a `head` and a `tail`.
   * @tparam A the list element type
@@ -67,7 +68,7 @@ sealed trait List[+A] {
     * @usecase def +:(x: A): List[A]
     * @inheritdoc
     */
-  def +:[A1 >: A](x: A1): List[A1] = Cons(x, this)
+  def ::[A1 >: A](x: A1): List[A1] = Cons(x, this)
 
   /** `O(1)` Decompose a list into its head and tail. If the list is empty, returns `None`. If the list is non-empty,
     * returns `Just (x, xs)`, where `x` is the head of the list and `xs` its tail.
@@ -104,8 +105,8 @@ sealed trait List[+A] {
     */
   def find[A1 >: A](p: A1 => Boolean): Maybe[A1] = {
     this match {
-      case y +: _ if p(y) => Maybe.just(y)
-      case _ +: ys        => ys find p
+      case y :: _ if p(y) => Maybe.just(y)
+      case _ :: ys        => ys find p
       case Nil            => Maybe.none
     }
   }
@@ -122,7 +123,7 @@ sealed trait List[+A] {
     * @return a list
     */
   def filter(p: A => Boolean): List[A] = {
-    val step = (x: A, xs: List[A]) => if (p(x)) x +: xs else xs
+    val step = (x: A, xs: List[A]) => if (p(x)) x :: xs else xs
     foldRight(List.empty[A])(step)
   }
 
@@ -141,7 +142,7 @@ sealed trait List[+A] {
     * @return the list obtained applying `f`
     */
   def map[B](f: A => B): List[B] =
-    foldRight(List.empty[B])((x, xs) => f(x) +: xs)
+    foldRight(List.empty[B])((x, xs) => f(x) :: xs)
 
   /** `O(n)` Builds a new list by applying a function to all elements and using the
     * elements of the resulting lists.
@@ -161,7 +162,7 @@ sealed trait List[+A] {
     * @tparam A1 the resulting list type
     * @return a list obtained appending the element of `that` to this list
     */
-  def ++[A1 >: A](that: List[A1]): List[A1] = this append that
+  @inline def ++[A1 >: A](that: List[A1]): List[A1] = this append that
 
   /** `O(n)` Returns a new list obtained appending the elements from `that` list to this one.
     *
@@ -174,7 +175,7 @@ sealed trait List[+A] {
   def append[A1 >: A](that: List[A1]): List[A1] = (this, that) match {
     case (Nil, ys) => ys
     case (xs, Nil) => xs
-    case _         => foldRight(that)((x, xs) => x +: xs)
+    case _         => foldRight(that)((x, xs) => x :: xs)
   }
 
   /** `O(n)` Applies a function `f` to all elements of this list.
@@ -186,7 +187,7 @@ sealed trait List[+A] {
   def foreach[U](f: A => U): Unit = {
     var list = this
     while (list.nonEmpty) {
-      val head +: rest = list
+      val head :: rest = list
       f(head)
       list = rest
     }
@@ -222,7 +223,7 @@ sealed trait List[+A] {
     @tailrec
     def go(xs: List[A], acc: B): B = xs match {
       case Nil     => acc
-      case y +: ys => go(ys, f(acc, y))
+      case y :: ys => go(ys, f(acc, y))
     }
 
     go(this, z)
@@ -232,7 +233,7 @@ sealed trait List[+A] {
     * @return the list in reversed order
     */
   def reverse: List[A] = {
-    foldLeft(List.empty[A])((xs, x) => x +: xs)
+    foldLeft(List.empty[A])((xs, x) => x :: xs)
   }
 
   /** Returns the prefix of this list of length `m`, or the list itself if `m > length`.
@@ -261,7 +262,7 @@ sealed trait List[+A] {
   def take(m: Int): List[A] = this match {
     case Nil         => Nil
     case _ if m == 0 => Nil
-    case x +: xs     => x +: xs.take(m - 1)
+    case x :: xs     => x :: xs.take(m - 1)
   }
 
   /** Takes longest prefix of this list that satisfy a predicate.
@@ -283,7 +284,7 @@ sealed trait List[+A] {
     */
   def takeWhile(p: (A) ⇒ Boolean): List[A] = {
     this match {
-      case x +: xs if p(x) => x +: xs.takeWhile(p)
+      case x :: xs if p(x) => x :: xs.takeWhile(p)
       case _               => Nil
     }
   }
@@ -314,7 +315,7 @@ sealed trait List[+A] {
   def drop(m: Int): List[A] = this match {
     case Nil          => Nil
     case xs if m == 0 => xs
-    case _ +: xs      => xs.drop(m - 1)
+    case _ :: xs      => xs.drop(m - 1)
   }
 
   /** Drops longest prefix of this list that satisfy a predicate.
@@ -337,8 +338,8 @@ sealed trait List[+A] {
   def dropWhile(p: A => Boolean): List[A] = {
     this match {
       case Nil              => Nil
-      case x +: xs if !p(x) => this
-      case _ +: xs          => xs.dropWhile(p)
+      case x :: xs if !p(x) => this
+      case _ :: xs          => xs.dropWhile(p)
     }
   }
 
@@ -391,9 +392,9 @@ sealed trait List[+A] {
   def splitAt(m: Int): (List[A], List[A]) = (m, this) match {
     case (_, Nil)         => (Nil, Nil)
     case (i, _) if i <= 0 => (Nil, this)
-    case (i, x +: xs) =>
+    case (i, x :: xs) =>
       val (fst, snd) = xs.splitAt(i - 1)
-      (x +: fst, snd)
+      (x :: fst, snd)
   }
 
   /** `O(n)` Partitions this `List` in two lists according to the given predicate.
@@ -403,12 +404,12 @@ sealed trait List[+A] {
   def partition(p: A => Boolean): (List[A], List[A]) = {
     this match {
       case Nil => (Nil, Nil)
-      case x +: xs =>
+      case x :: xs =>
         val (fst, snd) = xs partition p
         if (p(x)) {
-          (x +: fst, snd)
+          (x :: fst, snd)
         } else {
-          (fst, x +: snd)
+          (fst, x :: snd)
         }
     }
   }
@@ -433,10 +434,10 @@ sealed trait List[+A] {
   def span(p: A => Boolean): (List[A], List[A]) = {
     this match {
       case Nil              => (Nil, Nil)
-      case x +: xs if !p(x) => (Nil, this)
-      case x +: xs =>
+      case x :: xs if !p(x) => (Nil, this)
+      case x :: xs =>
         val (fst, snd) = xs span p
-        (x +: fst, snd)
+        (x :: fst, snd)
     }
   }
 
@@ -514,8 +515,8 @@ sealed trait List[+A] {
     */
   def zipWith[B, C](that: List[B])(f: (A, B) => C): List[C] = (this, that) match {
     case (_, Nil) | (Nil, _) => List.empty[C]
-    case (x +: xs, y +: ys) =>
-      f(x, y) +: xs.zipWith(ys)(f)
+    case (x :: xs, y :: ys) =>
+      f(x, y) :: xs.zipWith(ys)(f)
   }
 
   /** `O(n)` Determines whether all elements of this list satisfy the predicate.
@@ -524,7 +525,7 @@ sealed trait List[+A] {
     */
   def all(p: A => Boolean): Boolean = this match {
     case Nil     => true
-    case x +: xs => p(x) && xs.all(p)
+    case x :: xs => p(x) && xs.all(p)
   }
 
   /** `O(n)` Determines whether any elements of this list satisfy the predicate.
@@ -533,7 +534,7 @@ sealed trait List[+A] {
     */
   def any(p: A => Boolean): Boolean = this match {
     case Nil     => false
-    case x +: xs => p(x) || xs.any(p)
+    case x :: xs => p(x) || xs.any(p)
   }
 
   /** `O(n)` Takes an element and a list and "intersperses" that element between the elements of the list.
@@ -555,7 +556,7 @@ sealed trait List[+A] {
       this
     } else {
       val zero: List[A1] = List(head)
-      val step = (ys: List[A1], y: A) => y +: x +: ys
+      val step = (ys: List[A1], y: A) => y :: x :: ys
       tail.foldLeft(zero)(step).reverse
     }
   }
@@ -595,7 +596,7 @@ object List extends ListInstances {
     if (items.isEmpty) {
       List.empty[A]
     } else {
-      items.head +: apply(items.tail: _*)
+      items.head :: apply(items.tail: _*)
     }
   }
 
@@ -616,7 +617,7 @@ object List extends ListInstances {
     @tailrec
     def loop(z: B, acc: List[A]): List[A] = f(z) match {
       case None           => acc
-      case Just((na, nb)) => loop(nb, na +: acc)
+      case Just((na, nb)) => loop(nb, na :: acc)
     }
 
     loop(z, List.empty[A])
@@ -633,7 +634,7 @@ object List extends ListInstances {
       Nil
     } else {
       val x = el
-      (1 to n).foldLeft(List.empty[A])((ys, y) => x +: ys)
+      (1 to n).foldLeft(List.empty[A])((ys, y) => x :: ys)
     }
   }
 
@@ -652,9 +653,9 @@ trait ListInstances {
     def compareLists(xs: List[A], ys: List[A]): Ordering = {
       (xs, ys) match {
         case (Nil, Nil)    => Ordering.EQ
-        case (Nil, _ +: _) => Ordering.LT
-        case (_ +: _, Nil) => Ordering.GT
-        case (x +: x1, y +: y1) =>
+        case (Nil, _ :: _) => Ordering.LT
+        case (_ :: _, Nil) => Ordering.GT
+        case (x :: x1, y :: y1) =>
           val cmp = ordA.compare(x, y)
           if (cmp == Ordering.EQ) {
             compareLists(x1, y1)
@@ -672,7 +673,7 @@ private[this] case class Cons[A] private (head: A, tail: List[A]) extends List[A
   override def isEmpty: Boolean = false
 }
 
-object +: {
+object :: {
   def unapply[A](xs: List[A]): scala.Option[(A, List[A])] =
     if (xs.isEmpty) {
       scala.None

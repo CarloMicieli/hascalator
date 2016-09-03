@@ -30,7 +30,7 @@ private[data] case class ListQueue[+A](front: List[A], rear: List[A]) extends Qu
   }
 
   override def enqueue[A1 >: A](el: A1): Queue[A1] = {
-    ListQueue(front, el +: rear)
+    ListQueue(front, el :: rear)
   }
 
   override def peek: Maybe[A] = {
@@ -38,7 +38,7 @@ private[data] case class ListQueue[+A](front: List[A], rear: List[A]) extends Qu
       Maybe.none
     } else {
       front match {
-        case x +: _ => Maybe.just(x)
+        case x :: _ => Maybe.just(x)
         case _      => rear.reverse.headMaybe
       }
     }
@@ -49,7 +49,7 @@ private[data] case class ListQueue[+A](front: List[A], rear: List[A]) extends Qu
       Either.left(new EmptyQueueException with NoStackTrace)
     } else {
       front match {
-        case x +: xs => Either.right((x, ListQueue(xs, rear)))
+        case x :: xs => Either.right((x, ListQueue(xs, rear)))
         case _ =>
           val newFront = rear.reverse
           Either.right((newFront.head, ListQueue(newFront.tail, List.empty[A])))

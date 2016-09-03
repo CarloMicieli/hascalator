@@ -40,7 +40,7 @@ private[this] case class SizedList[+A](xs: List[A], size: Int) {
   }
 
   def +:[A1 >: A](x: A1): SizedList[A1] = {
-    SizedList(x +: xs, size + 1)
+    SizedList(x :: xs, size + 1)
   }
 
   def union[A1 >: A](that: SizedList[A1]): SizedList[A1] = {

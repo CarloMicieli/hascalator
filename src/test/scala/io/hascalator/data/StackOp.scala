@@ -33,8 +33,8 @@ object StackOp {
   final def sequence[A](initial: Stack[A], ops: List[StackOp[A]]): Either[InvalidStackOperation[A], Stack[A]] = {
     ops match {
       case Nil               => Either.right(initial)
-      case PushOp(k) +: tail => sequence(initial.push(k), tail)
-      case PopOp +: tail =>
+      case PushOp(k) :: tail => sequence(initial.push(k), tail)
+      case PopOp :: tail =>
         initial.pop match {
           case Right((_, newStack)) =>
             sequence(newStack, tail)

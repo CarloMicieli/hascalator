@@ -56,7 +56,7 @@ trait ArbitraryList {
       private var list = List.empty[A]
 
       override def +=(elem: A): this.type = {
-        list = elem +: list
+        list = elem :: list
         this
       }
 

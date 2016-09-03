@@ -134,14 +134,14 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
-    describe("+:") {
+    describe("::") {
       it("should add the new element in front of the list") {
-        val list = 1 +: emptyList
+        val list = 1 :: emptyList
         list.head shouldBe 1
       }
 
       it("should create a new list, with size increased by 1") {
-        val list = 1 +: emptyList
+        val list = 1 :: emptyList
         emptyList should be theSameInstanceAs emptyList
         list should have length 1
       }

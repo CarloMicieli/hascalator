@@ -35,14 +35,14 @@ class ListProperties extends AbstractPropertySpec {
 
   property("+: increase the list length by 1") {
     check(forAll { (x: Int, xs: List[Int]) =>
-      val res = x +: xs
+      val res = x :: xs
       res.length === xs.length + 1
     })
   }
 
   property("+: add the new element as the list head") {
     check(forAll { (x: Int, xs: List[Int]) =>
-      val ys = x +: xs
+      val ys = x :: xs
       ys.head === x
     })
   }
@@ -69,13 +69,13 @@ class ListProperties extends AbstractPropertySpec {
 
   property("foldRight: Nil and cons recreate the original list") {
     check(forAll { (xs: List[Int]) =>
-      xs.foldRight(List.empty[Int])(_ +: _) === xs
+      xs.foldRight(List.empty[Int])(_ :: _) === xs
     })
   }
 
   property("foldLeft: Nil and cons recreate the original list reversed") {
     check(forAll { (xs: List[Int]) =>
-      xs.foldLeft(List.empty[Int])((ys, y) => y +: ys) === xs.reverse
+      xs.foldLeft(List.empty[Int])((ys, y) => y :: ys) === xs.reverse
     })
   }
 

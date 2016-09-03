@@ -25,7 +25,7 @@ import scala.util.control.NoStackTrace
   */
 private[this] class ListStack[+A](st: List[A]) extends Stack[A] {
   override def push[A1 >: A](el: A1): Stack[A1] = {
-    new ListStack[A1](el +: st)
+    new ListStack[A1](el :: st)
   }
 
   override def size: Int = st.length
@@ -45,7 +45,7 @@ private[this] class ListStack[+A](st: List[A]) extends Stack[A] {
     if (isEmpty) {
       Either.left(new EmptyStackException with NoStackTrace)
     } else {
-      val head +: tail = st
+      val head :: tail = st
       Either.right((head, new ListStack(tail)))
     }
 
