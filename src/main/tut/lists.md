@@ -1,4 +1,4 @@
-## Lists
+## `Data.List`
 
 The `List` is an immutable, inductive data type defined either as 
   
@@ -6,7 +6,8 @@ The `List` is an immutable, inductive data type defined either as
   * the constructed list `Cons`, with an `head` and a `tail`
   
 ```tut:silent
-import io.hascalator.data._
+import io.hascalator._
+import Prelude._
 ```
 
 ```tut

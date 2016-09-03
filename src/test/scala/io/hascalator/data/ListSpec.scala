@@ -48,6 +48,22 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("last") {
+      it("should throw an exception when invoked against the empty list") {
+        the[ApplicationException] thrownBy {
+          emptyList.last
+        } should have message "*** Exception: List.last: empty list"
+      }
+
+      it("should return the only element from singleton lists") {
+        List(42).last shouldBe 42
+      }
+
+      it("should return the last element") {
+        numbersList.last shouldBe numbersList.drop(numbersList.length - 1).head
+      }
+    }
+
     describe("elem") {
       it("should return false for empty lists") {
         emptyList elem 42 shouldBe false
@@ -261,7 +277,7 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should throw an exception for empty lists head") {
         the[ApplicationException] thrownBy {
           emptyList.head
-        } should have message "*** Exception: 'List.head: empty list'"
+        } should have message "*** Exception: List.head: empty list"
       }
     }
 
@@ -269,7 +285,7 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should throws an exception getting the list tail") {
         the[ApplicationException] thrownBy {
           emptyList.tail
-        } should have message "*** Exception: 'List.tail: empty list'"
+        } should have message "*** Exception: List.tail: empty list"
       }
 
       it("should return the tail for the list") {

@@ -9,7 +9,8 @@ The Maybe type is also a monad. It is a simple kind of error monad, where all er
 represented by Nothing. A richer error monad can be built using the Either type.
 
 ```tut:silent
-import io.hascalator.data._
+import io.hascalator._
+import Prelude._
 ```
 
 To create new values, the type `Maybe` provides two functions:

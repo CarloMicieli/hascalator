@@ -45,13 +45,13 @@ class PreludeTestSuite extends AbstractTestSuite {
   "error" should "throw an exception" in {
     the[ApplicationException] thrownBy {
       error("BOOM")
-    } should have message "*** Exception: 'BOOM'"
+    } should have message "*** Exception: BOOM"
   }
 
   "errorWithoutStackTrace" should "throw an exception" in {
     the[ApplicationException] thrownBy {
       errorWithoutStackTrace("BOOM")
-    } should have message "*** Exception: 'BOOM'"
+    } should have message "*** Exception: BOOM"
   }
 
   "util" should "apply the function f until condition holds" in {

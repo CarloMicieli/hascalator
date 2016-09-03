@@ -203,7 +203,7 @@ class BinarySearchTreeSpec extends AbstractTestSpec with BinarySearchTreesFixtur
     it("should throw an exception folding an empty tree") {
       the[ApplicationException] thrownBy {
         emptyTree.fold(_ + _)
-      } should have message "*** Exception: 'fold: tree is empty'"
+      } should have message "*** Exception: Tree.fold: tree is empty"
     }
 
     it("should fold the tree applying a function") {

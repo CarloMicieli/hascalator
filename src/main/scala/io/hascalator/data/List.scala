@@ -48,6 +48,17 @@ sealed trait List[+A] {
     }
   }
 
+  /** Extract the last element of a list, which must be finite and non-empty.
+    * @return the last element for non empty lists
+    */
+  def last: A = {
+    this match {
+      case x :: Nil  => x
+      case _ :: rest => rest.last
+      case Nil       => error("List.last: empty list")
+    }
+  }
+
   /** Returns the elements after the head of a list.
     * @return the elements after the head
     */
@@ -125,7 +136,6 @@ sealed trait List[+A] {
     * @return a list
     */
   def filter(p: A => Boolean): List[A] = {
-
     val builder = new ListBuilder[A]
 
     @tailrec
@@ -169,8 +179,7 @@ sealed trait List[+A] {
         case Cons(h, t) =>
           builder += f(h)
           loop(t)
-        case Nil =>
-          ()
+        case Nil => ()
       }
     }
 

@@ -152,11 +152,11 @@ object Prelude {
 
   /** stops execution and displays an error message.
     * @param msg the error message
-    * @tparam A the return type
+    * @tparam A the return typeù
     * @return
     */
   def error[A](msg: String): A = {
-    throw new ApplicationException(s"*** Exception: '$msg'")
+    throw new ApplicationException(s"*** Exception: $msg")
   }
 
   /** A variant of [[error]] that does not produce a stack trace.
@@ -165,7 +165,7 @@ object Prelude {
     * @return
     */
   def errorWithoutStackTrace[A](msg: String): A = {
-    throw new ApplicationException(s"*** Exception: '$msg'") with NoStackTrace
+    throw new ApplicationException(s"*** Exception: $msg") with NoStackTrace
   }
 
   /** A special case of [[error]]. It is expected that compilers will recognize
@@ -235,4 +235,8 @@ object Prelude {
       buf.toString
     }
   }
+
+  def print(x: Any) = scala.Console.print(x)
+  def println() = scala.Console.println()
+  def println(x: Any) = scala.Console.println(x)
 }

@@ -90,7 +90,7 @@ class MaybeSpec extends AbstractTestSpec with MaybeValues {
       it("should throw an exception for none values") {
         the[ApplicationException] thrownBy {
           noneInt.get
-        } should have message "*** Exception: 'Maybe.get: a value doesn't exist'"
+        } should have message "*** Exception: Maybe.get: a value doesn't exist"
       }
     }
 

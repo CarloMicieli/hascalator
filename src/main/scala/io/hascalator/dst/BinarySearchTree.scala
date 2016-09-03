@@ -128,7 +128,7 @@ private[this] sealed trait BinarySearchTree[+K, +V] extends Any with Tree[K, V] 
 
   def fold[V1 >: V](f: (V1, V1) => V1): V1 = {
     this match {
-      case EmptyTree                        => error("fold: tree is empty")
+      case EmptyTree                        => error("Tree.fold: tree is empty")
       case Node(_, v, EmptyTree, EmptyTree) => v
       case Node(_, v, left, EmptyTree)      => f(left.fold(f), v)
       case Node(_, v, EmptyTree, right)     => f(v, right.fold(f))

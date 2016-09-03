@@ -69,7 +69,7 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
       it("should throw an exception when the value is a left") {
         the[ApplicationException] thrownBy {
           leftOne.get
-        } should have message "*** Exception: 'Left.get: this value is a Left'"
+        } should have message "*** Exception: Left.get: this value is a Left"
       }
     }
 
