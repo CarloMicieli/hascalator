@@ -18,7 +18,7 @@ package io.hascalator
 
 import scala.annotation.implicitNotFound
 import scala.util.control.NoStackTrace
-import scala.{ Range, Tuple2, inline }
+import scala.{ Tuple2, inline }
 
 /** The Prelude: a standard module.
   *
@@ -222,11 +222,6 @@ object Prelude {
   def print(x: Any) = scala.Console.print(x)
   def println() = scala.Console.println()
   def println(x: Any) = scala.Console.println(x)
-
-  implicit class IntRange(private val x: Int) extends AnyVal {
-    def to(y: Int): Range = Range.inclusive(x, y)
-    def until(y: Int): Range = Range(x, y)
-  }
 
   implicit class ArrowAssoc[A](private val a: A) extends AnyVal {
     @inline def -> [B](b: B): Tuple2[A, B] = Tuple2(a, b)

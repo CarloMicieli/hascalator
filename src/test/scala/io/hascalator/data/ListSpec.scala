@@ -638,6 +638,18 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("fromRange") {
+      it("should create the empty list when the range has no element") {
+        val l = List.fromRange(0 until 0)
+        l shouldBe List()
+      }
+
+      it("should create a list with range elements") {
+        val l = List.fromRange(1 to 10)
+        l shouldBe numbersList
+      }
+    }
+
     describe("Eq[List]") {
       it("should be instance of the typeclass") {
         val eqInstance = implicitly[Eq[List[Int]]]

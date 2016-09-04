@@ -20,11 +20,11 @@ package data
 import Prelude._
 
 import scala.collection.mutable
-import scala.inline
+import scala.{ Range, inline }
 
 /** A list is either empty, or a constructed list with a `head` and a `tail`.
-  * @tparam A the list element type
   *
+  * @tparam A the list element type
   * @author Carlo Micieli
   * @since 0.0.1
   */
@@ -97,7 +97,7 @@ sealed trait List[+A] {
   /** Checks whether this list is not empty.
     * @return `true` if the list is not empty; `false` otherwise
     */
-  def nonEmpty: Boolean = !isEmpty
+  @inline def nonEmpty: Boolean = !isEmpty
 
   /** Adds an element at the beginning of this list.
     *
@@ -144,7 +144,7 @@ sealed trait List[+A] {
     * @tparam A1 the element type
     * @return `Just(x)` if the value is found; `None` otherwise
     */
-  def find[A1 >: A](p: A1 => Boolean): Maybe[A1] = {
+  @tailrec final def find[A1 >: A](p: A1 => Boolean): Maybe[A1] = {
     this match {
       case y :: _ if p(y) => Maybe.just(y)
       case _ :: ys        => ys find p
@@ -272,12 +272,12 @@ sealed trait List[+A] {
     * @usecase def foreach(f: A => Unit): Unit
     * @inheritdoc
     */
-  def foreach[U](f: A => U): Unit = {
-    var list = this
-    while (list.nonEmpty) {
-      val head :: rest = list
-      f(head)
-      list = rest
+  @tailrec final def foreach[U](f: A => U): Unit = {
+    this match {
+      case h :: t =>
+        f(h)
+        t.foreach(f)
+      case _ => ()
     }
   }
 
@@ -869,7 +869,10 @@ sealed trait List[+A] {
       if (isEmpty) {
         ""
       } else {
-        tail.foldLeft(head.toString)((str, x) => str + sep + x)
+        val sb = new java.lang.StringBuilder
+        sb.append(head)
+        tail.foreach(x => sb.append(sep).append(x))
+        sb.toString
       }
     s"$start$itemsString$end"
   }
@@ -878,7 +881,17 @@ sealed trait List[+A] {
 }
 
 object List extends ListInstances {
+
+  /** Creates a new List with the elements contained in the provided `Range`.
+    * @param range the values range for the list
+    * @return a list
+    */
+  def fromRange(range: scala.Range): List[Int] = {
+    range.foldRight(List.empty[Int])(_ :: _)
+  }
+
   /** Creates a new, empty `List`.
+    *
     * @tparam A the list element type
     * @return an empty `List`
     */
@@ -931,7 +944,7 @@ object List extends ListInstances {
       Nil
     } else {
       val x = el
-      (1 to n).foldLeft(List.empty[A])((ys, y) => x :: ys)
+      Range.inclusive(1, n).foldLeft(List.empty[A])((ys, y) => x :: ys)
     }
   }
 
