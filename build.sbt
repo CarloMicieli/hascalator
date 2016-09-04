@@ -36,12 +36,18 @@ scalacOptions ++= Seq(
   "-Yno-predef"
 )
 
-scalacOptions in (Compile, console) --= Seq(
+scalacOptions in (Compile, console) ~= (_.filterNot(Set(
   "-Yno-imports",
   "-Xfatal-warnings",
   "-Ywarn-dead-code",
   "-Ywarn-unused-import"
-)
+)))
+
+scalacOptions in Test ~= (_.filterNot(Set(
+  "-Ywarn-unused-import",
+  "-Yno-imports",
+  "-Yno-predef"
+)))
 
 libraryDependencies ++= Seq(
   Library.scalaLogging,

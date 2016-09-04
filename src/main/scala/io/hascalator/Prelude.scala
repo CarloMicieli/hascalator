@@ -211,10 +211,6 @@ object Prelude {
 
   @inline def implicitly[T](implicit e: T): T = e
 
-  implicit class ArrowAssoc[A](private val a: A) extends AnyVal {
-    @inline def -> [B](b: B): Tuple2[A, B] = Tuple2(a, b)
-  }
-
   implicit class Function2Flip[A, B, C](val f: (A, B) => C) extends AnyVal {
     def flip: (B, A) => C = Prelude.flip(f)
   }
@@ -223,20 +219,16 @@ object Prelude {
     def negate: A => Boolean = a => !p(a)
   }
 
+  def print(x: Any) = scala.Console.print(x)
+  def println() = scala.Console.println()
+  def println(x: Any) = scala.Console.println(x)
+
   implicit class IntRange(private val x: Int) extends AnyVal {
     def to(y: Int): Range = Range.inclusive(x, y)
     def until(y: Int): Range = Range(x, y)
   }
 
-  implicit class StringOps(private val s: String) extends AnyVal {
-    def *(n: Int): String = {
-      val buf = new java.lang.StringBuilder
-      for (i <- scala.Range(0, n)) buf append toString
-      buf.toString
-    }
+  implicit class ArrowAssoc[A](private val a: A) extends AnyVal {
+    @inline def -> [B](b: B): Tuple2[A, B] = Tuple2(a, b)
   }
-
-  def print(x: Any) = scala.Console.print(x)
-  def println() = scala.Console.println()
-  def println(x: Any) = scala.Console.println(x)
 }
