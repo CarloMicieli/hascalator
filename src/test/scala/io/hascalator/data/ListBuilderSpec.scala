@@ -14,10 +14,35 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
-/** Created by carlo on 04/09/16.
-  */
-class ListBuilderSpec {
+import Prelude._
 
+class ListBuilderSpec extends AbstractTestSpec {
+  describe("ListBuilder") {
+    it("should create the empty list when no element was added") {
+      val builder = new ListBuilder[Int]
+      builder.result() shouldBe List()
+    }
+
+    it("should add elements in order of insertion") {
+      val builder = new ListBuilder[Int]
+      builder += 1
+      builder += 2
+      builder += 3
+      builder.result() shouldBe List(1, 2, 3)
+    }
+
+    it("should only add elements after clear is invoked") {
+      val builder = new ListBuilder[Int]
+      builder += 1
+      builder += 2
+      builder += 3
+      builder.clear()
+      builder += 4
+      builder += 5
+      builder.result() shouldBe List(4, 5)
+    }
+  }
 }

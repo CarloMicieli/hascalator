@@ -23,28 +23,47 @@ import io.hascalator.{ AbstractTestSpec, ApplicationException }
 
 class ListSpec extends AbstractTestSpec with SampleLists {
   describe("A list") {
-    describe("Show") {
-      it("should make an instance") {
-        import Show.ops._
-        List(1, 2, 23, 4).show shouldBe "[1, 2, 23, 4]"
+    describe("head") {
+      it("should return the element in front of this list") {
+        numbersList.head shouldBe 1
+      }
+
+      it("should throw an exception for empty lists head") {
+        the[ApplicationException] thrownBy {
+          emptyList.head
+        } should have message "*** Exception: List.head: empty list"
       }
     }
 
-    describe("Patter match") {
-      it("should match the empty list") {
-        val res = emptyList match {
-          case List() => true
-          case _      => false
-        }
-        res shouldBe true
+    describe("headMaybe") {
+      import Maybe._
+      it("should return None for empty list head") {
+        emptyList.headMaybe shouldBe none
       }
 
-      it("should match the constructed list") {
-        val res = List(1, 2, 3) match {
-          case List(1, 2, 3) => true
-          case _             => false
-        }
-        res shouldBe true
+      it("should return the element in front of this list") {
+        numbersList.head shouldBe 1
+        numbersList.headMaybe shouldBe just(1)
+      }
+
+      it("should throw an exception for empty lists head") {
+        the[ApplicationException] thrownBy {
+          emptyList.head
+        } should have message "*** Exception: List.head: empty list"
+      }
+    }
+
+    describe("tail") {
+      it("should throws an exception getting the list tail") {
+        the[ApplicationException] thrownBy {
+          emptyList.tail
+        } should have message "*** Exception: List.tail: empty list"
+      }
+
+      it("should return the tail for the list") {
+        val list = numbersList.tail
+        list.length shouldBe (numbersList.length - 1)
+        list shouldBe List(2, 3, 4, 5, 6, 7, 8, 9, 10)
       }
     }
 
@@ -267,6 +286,30 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("scanLeft") {
+      it("should return the list with just the initial value for the empty list") {
+        val res = emptyList.scanLeft(0)(_ * _)
+        res shouldBe List(0)
+      }
+
+      it("should return the incremental values") {
+        val res = numbersList.scanLeft(0)(_ + _)
+        res shouldBe List(0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55)
+      }
+    }
+
+    describe("scanRight") {
+      it("should return the list with just the initial value for the empty list") {
+        val res = emptyList.scanRight(0)(_ * _)
+        res shouldBe List(0)
+      }
+
+      it("should return the incremental values") {
+        val res = numbersList.scanRight(0)(_ + _)
+        res shouldBe List(55, 54, 52, 49, 45, 40, 34, 27, 19, 10, 0)
+      }
+    }
+
     describe("isEmpty") {
       it("should return true for empty lists") {
         emptyList.isEmpty shouldBe true
@@ -276,38 +319,6 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should return false for non empty lists") {
         numbersList.isEmpty shouldBe false
         numbersList.nonEmpty shouldBe true
-      }
-    }
-
-    describe("head") {
-      import Maybe._
-      it("should return None for empty list head") {
-        emptyList.headMaybe shouldBe none
-      }
-
-      it("should return the element in front of this list") {
-        numbersList.head shouldBe 1
-        numbersList.headMaybe shouldBe just(1)
-      }
-
-      it("should throw an exception for empty lists head") {
-        the[ApplicationException] thrownBy {
-          emptyList.head
-        } should have message "*** Exception: List.head: empty list"
-      }
-    }
-
-    describe("tail") {
-      it("should throws an exception getting the list tail") {
-        the[ApplicationException] thrownBy {
-          emptyList.tail
-        } should have message "*** Exception: List.tail: empty list"
-      }
-
-      it("should return the tail for the list") {
-        val list = numbersList.tail
-        list.length shouldBe (numbersList.length - 1)
-        list shouldBe List(2, 3, 4, 5, 6, 7, 8, 9, 10)
       }
     }
 
@@ -357,6 +368,19 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("foldLeft1") {
+      it("should throw an exception for empty lists") {
+        the[ApplicationException] thrownBy {
+          val result = emptyList.foldLeft1(_ - _)
+        } should have message "*** Exception: List.foldLeft1: empty list"
+      }
+
+      it("should apply a binary operator to list elements, from left to right") {
+        val result = numbersList.foldLeft1(_ + _)
+        result shouldBe 55
+      }
+    }
+
     describe("foldRight") {
       it("should return the seed value for empty lists") {
         val result = emptyList.foldRight(100)(_ - _)
@@ -366,6 +390,19 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       it("should apply a binary operator to list elements, from right to left") {
         val result = numbersList.foldRight(100)(_ - _)
         result shouldBe 95
+      }
+    }
+
+    describe("foldRight1") {
+      it("should throw an exception for empty lists") {
+        the[ApplicationException] thrownBy {
+          val result = emptyList.foldRight1(_ - _)
+        } should have message "*** Exception: List.foldRight1: empty list"
+      }
+
+      it("should apply a binary operator to list elements, from left to right") {
+        val result = numbersList.foldRight1(_ + _)
+        result shouldBe 55
       }
     }
 
@@ -525,17 +562,17 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
-    //    describe("flatten") {
-    //      it("should produce an empty list, flattening empty lists") {
-    //        val empty: List[List[Int]] = Nil
-    //        empty.flatten shouldBe empty
-    //      }
-    //
-    //      it("should produce a list, after the elements have been flatten") {
-    //        val list = List(List(1, 2), List(3), List(4, 5))
-    //        list.flatten shouldBe List(1, 2, 3, 4, 5)
-    //      }
-    //    }
+    describe("concat") {
+      it("should produce an empty list, flattening empty lists") {
+        val empty: List[List[Int]] = Nil
+        empty.concat shouldBe empty
+      }
+
+      it("should produce a list, after the elements have been flatten") {
+        val list = List(List(1, 2), List(3), List(4, 5))
+        list.concat shouldBe List(1, 2, 3, 4, 5)
+      }
+    }
 
     describe("all") {
       it("should return true for the empty list") {
@@ -620,6 +657,31 @@ class ListSpec extends AbstractTestSpec with SampleLists {
         ordInstance.compare(numbersList, emptyList) shouldBe Ordering.GT
         ordInstance.compare(numbersList, randomList) shouldBe Ordering.LT
         ordInstance.compare(randomList, numbersList) shouldBe Ordering.GT
+      }
+    }
+
+    describe("Show") {
+      it("should make an instance") {
+        import Show.ops._
+        List(1, 2, 23, 4).show shouldBe "[1, 2, 23, 4]"
+      }
+    }
+
+    describe("Patter match") {
+      it("should match the empty list") {
+        val res = emptyList match {
+          case List() => true
+          case _      => false
+        }
+        res shouldBe true
+      }
+
+      it("should match the constructed list") {
+        val res = List(1, 2, 3) match {
+          case List(1, 2, 3) => true
+          case _             => false
+        }
+        res shouldBe true
       }
     }
   }

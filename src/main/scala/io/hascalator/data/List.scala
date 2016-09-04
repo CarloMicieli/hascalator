@@ -37,7 +37,7 @@ sealed trait List[+A] {
   def head: A
 
   /** Optionally returns the first element of a list.
-    * @return `Some(head)` if the list is not empty; `None` otherwise
+    * @return ''just(head)'' if the list is not empty; ''none'' otherwise
     */
   def headMaybe: Maybe[A] = {
     import Maybe._
@@ -107,7 +107,7 @@ sealed trait List[+A] {
     * @tparam A1 the list element type
     * @return a new list, with the element appended
     */
-  def ::[A1 >: A](x: A1): List[A1] = Cons(x, this)
+  @inline def ::[A1 >: A](x: A1): List[A1] = Cons(x, this)
 
   /** Decompose a list into its head and tail. If the list is empty, returns a ''None''.
     * If the list is non-empty, returns ''just (x, xs)'', where `x` is the head of the list
@@ -291,6 +291,29 @@ sealed trait List[+A] {
     def withFilter(q: A => Boolean): WithFilter = new WithFilter(x => p(x) && q(x))
   }
 
+  /** Is the right-to-left dual of [[scanLeft]].
+    *
+    * Note that
+    * {{{
+    * xs.scanRight(zero)(f).head === xs.foldRight(zero)(f)
+    * }}}
+    * @param z the start value
+    * @param f the binary operator
+    * @tparam B the result type of the binary operator
+    * @return
+    */
+  def scanRight[B](z: B)(f: (A, B) => B): List[B] = {
+    var out = List(z)
+
+    foldRight(z)((a, b) => {
+      val next = f(a, b)
+      out = next :: out
+      next
+    })
+
+    out
+  }
+
   /** Applies a binary operator to a start value and all elements of this sequence, going right to left.
     * @param z the start value
     * @param f the binary operator
@@ -301,7 +324,44 @@ sealed trait List[+A] {
     reverse.foldLeft(z)((xs, x) => f(x, xs))
   }
 
-  /** Applies a binary operator to a start value and all elements of this sequence, going left to right.
+  /** A variant of [[foldRight]] that has no base case, and thus may only be applied to non-empty structures.
+    * @param f the binary operator
+    * @tparam A1
+    * @return
+    */
+  def foldRight1[A1 >: A](f: (A, A1) => A1): A1 = {
+    this match {
+      case h :: t => t.foldRight[A1](h)(f)
+      case _      => error("List.foldRight1: empty list")
+    }
+  }
+
+  /** Similar to [[foldLeft]], but returns a list of successive reduced values from the left.
+    *
+    * Note that:
+    * {{{
+    * xs.scanLeft(zero)(f).last === xs.foldLeft(zero)(f)
+    * }}}
+    * @param z
+    * @param f
+    * @tparam B
+    * @return
+    */
+  def scanLeft[B](z: B)(f: (B, A) => B): List[B] = {
+    val builder = new ListBuilder[B]
+    builder += z
+
+    this.foldLeft(z)((b, a) => {
+      val next = f(b, a)
+      builder += next
+      next
+    })
+
+    builder.result()
+  }
+
+  /** Applies a binary operator to a start value and all elements of this sequence, going left
+    * to right.
     * @param z the start value
     * @param f the binary operator
     * @tparam B the result type of the binary operator
@@ -315,6 +375,21 @@ sealed trait List[+A] {
     }
 
     go(this, z)
+  }
+
+  /** A variant of [[foldLeft]] that has no base case, and thus may only be applied to non-empty structures.
+    * @usecase def foldLeft1(f: (A, A) => A): A
+    * @inheritdoc
+    * @param f the binary operator
+    * @tparam A1 the result type
+    * @return left-associative fold of this list
+    */
+  def foldLeft1[A1 >: A](f: (A1, A) => A1): A1 = {
+    unCons.map {
+      case (h, t) => t.foldLeft[A1](h)(f)
+    } getOrElse {
+      error("List.foldLeft1: empty list")
+    }
   }
 
   /** Returns the elements of this list in reverse order.
@@ -661,15 +736,24 @@ sealed trait List[+A] {
     loop(prefix, this)
   }
 
-  /** Converts this list of lists into a list formed by the elements of these lists.
-    * @usecase def flatten: List[A]
+  /** Returns the concatenation of all the elements of a container of lists.
+    * @usecase def concat: List[A]
     * @inheritdoc
     * @param ev
     * @tparam B
     * @return
     */
-  def flatten[B](implicit ev: A => List[B]): List[B] = {
+  def concat[B](implicit ev: A => List[B]): List[B] = {
     foldRight(List.empty[B])((xss, xs) => xss ++ xs)
+  }
+
+  /** Map a function over all the elements of a container and concatenate the resulting lists.
+    * @param f the function to apply
+    * @tparam B the result type
+    * @return
+    */
+  @inline def concatMap[B](f: A => List[B]): List[B] = {
+    this flatMap f
   }
 
   /** Takes two lists and returns a list of corresponding pairs. If one input

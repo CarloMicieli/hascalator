@@ -317,5 +317,21 @@ class ListProperties extends AbstractPropertySpec {
     })
   }
 
+  property("scanLeft and foldLeft relation") {
+    check(forAll { (xs: List[Int]) =>
+      val zero = 0
+      val f = (a: Int, b: Int) => a + b
+      xs.scanLeft(zero)(f).last === xs.foldLeft(zero)(f)
+    })
+  }
+
+  property("scanRight and foldRight relation") {
+    check(forAll { (xs: List[Int]) =>
+      val zero = 0
+      val f = (a: Int, b: Int) => a + b
+      xs.scanRight(zero)(f).head === xs.foldRight(zero)(f)
+    })
+  }
+
   def intLists(implicit a: Arbitrary[List[Int]]): Gen[List[Int]] = a.arbitrary
 }
