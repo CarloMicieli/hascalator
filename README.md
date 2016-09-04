@@ -1,6 +1,7 @@
 ![Logo](img/logo.png)  
 (Logo design by *Sandro Stucky* - retrivied from the Martin Odersky's talk _The Evolution of Scala_, 2015).
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build Status](https://travis-ci.org/CarloMicieli/hascalator.png?branch=master)](https://travis-ci.org/CarloMicieli/hascalator)
 [![Coverage Status](https://coveralls.io/repos/github/CarloMicieli/hascalator/badge.svg?branch=master)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
 [![Dependencies](https://app.updateimpact.com/badge/763721648812724224/hascalator.svg?config=compile)](https://app.updateimpact.com/latest/763721648812724224/hascalator)
@@ -24,6 +25,12 @@ and the following typeclasses:
 ## Layout ##
 
 The project has the following layout:
+
+```
++ bench... JMH benchmarks
++ core.... core sources
++ docs.... tutorial
+```
 
 ```
 + src
@@ -139,7 +146,8 @@ the implementation is heavy on implicit values.
 * Larry LIU Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
 * Haskell docs: `Prelude`. Retried from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
 * Haskell docs:`Data.List`. Retried from [here](https://hackage.haskell.org/package/base-4.9.0.0/docs/Data-List.html)
-* Dogs: data structures for pure functional programming in scala. [https://github.com/stew/dogs](https://github.com/stew/dogs)
+* Typelevel `Cats`: Lightweight, modular, and extensible library for functional programming. [https://github.com/typelevel/cats](https://github.com/typelevel/cats)
+* Typelevel `Dogs`: data structures for pure functional programming in scala. [https://github.com/stew/dogs](https://github.com/stew/dogs)
 
 ## Contribution policy ##
 
