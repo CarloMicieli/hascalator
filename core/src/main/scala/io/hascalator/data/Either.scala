@@ -103,7 +103,7 @@ sealed trait Either[+A, +B] {
     * @param f the function to apply
     * @tparam B1 the resulting value type
     * @return if this is a ''Right'', the result of applying the given function to the contained value
-    *  wrapped in a ''Right''; a ''Left'' otherwise
+    * wrapped in a ''Right''; a ''Left'' otherwise
     */
   def map[B1](f: B => B1): Either[A, B1] = {
     this match {
@@ -121,7 +121,7 @@ sealed trait Either[+A, +B] {
     * @tparam A1 the ''Left'' type
     * @tparam B1 the ''Right'' type
     * @return if this is a ''Right'', the result of applying the given function to the contained value
-    *  wrapped in a ''Right''; a ''Left'' otherwise
+    * wrapped in a ''Right''; a ''Left'' otherwise
     */
   def flatMap[A1 >: A, B1](f: B => Either[A1, B1]): Either[A1, B1] = {
     this match {
