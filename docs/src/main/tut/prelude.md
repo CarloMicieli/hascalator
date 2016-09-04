@@ -35,7 +35,5 @@ f.flip("hello", "world")
 `until` yields the result of applying `f` until the predicate holds.
 
 ```tut
-until(_ > 10)(_ + 1)(0)
+until[Int](_ > 10)(_ + 1)(0)
 ```
-
-

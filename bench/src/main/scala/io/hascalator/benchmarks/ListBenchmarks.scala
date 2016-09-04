@@ -23,6 +23,7 @@ import org.openjdk.jmh.annotations.Benchmark
 class ListBenchmarks {
   @Benchmark
   def listLength(): Unit = {
+    val f = const(42)
     val l = List(1, 2, 3, 4, 5).length
   }
 }

@@ -51,18 +51,13 @@ lazy val commonScalacOptions = Seq(
   "-J-Xss6M"
 )
 
-scalacOptions in (Compile, console) ~= (_.filterNot(Set(
+lazy val additionalScalacOptions = Set(
   "-Yno-imports",
+  "-Yno-predef",
   "-Xfatal-warnings",
   "-Ywarn-dead-code",
   "-Ywarn-unused-import"
-)))
-
-scalacOptions in Test ~= (_.filterNot(Set(
-  "-Ywarn-unused-import",
-  "-Yno-imports",
-  "-Yno-predef"
-)))
+)
 
 lazy val core = (project in file("core")).
   settings(commonSettings).
@@ -98,18 +93,12 @@ lazy val core = (project in file("core")).
     Library.scalaTest % "test"
   )).
   settings(initialCommands := """|import io.hascalator._
+                                 |import Prelude._
                                  |""".stripMargin)
 
 lazy val bench = (project in file("bench")).
   settings(commonSettings).
   settings(scalacOptions ++= commonScalacOptions).
-  settings(scalacOptions in (Compile, console) ~= (_.filterNot(Set(
-      "-Yno-imports",
-      "-Yno-predef",
-      "-Xfatal-warnings",
-      "-Ywarn-dead-code",
-      "-Ywarn-unused-import"
-    )))).
   settings(scoverageSettings: _*).
   settings(automateHeaderPluginSettings: _*).
   settings(
@@ -125,15 +114,19 @@ lazy val bench = (project in file("bench")).
   enablePlugins(JmhPlugin).
   dependsOn(core)
 
-lazy val docs = project.
+lazy val docs = (project in file("docs")).
+  settings(commonSettings).
+  settings(scalacOptions ++= commonScalacOptions).
+  dependsOn(core).
   settings(noPublishSettings).
-  dependsOn(core)
+  settings(tutSettings)
 
 lazy val scalaProject = (project in file("."))
   .settings(moduleName := "root")
   .enablePlugins(GitVersioning)
   .enablePlugins(GitBranchPrompt)
-  .aggregate(core)
+  .settings(noPublishSettings)
+  .aggregate(core, docs, bench)
 
 fork in run := true
 
