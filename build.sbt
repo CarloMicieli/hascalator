@@ -61,7 +61,7 @@ lazy val additionalScalacOptions = Set(
 
 lazy val core = (project in file("core")).
   settings(commonSettings).
-  settings(scalacOptions ++= commonScalacOptions).
+  settings(scalacOptions ++= commonScalacOptions ++ additionalScalacOptions).
   settings(scalacOptions in (Compile, console) ~= (_.filterNot(Set(
       "-Yno-imports",
       "-Xfatal-warnings",
