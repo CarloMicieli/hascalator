@@ -4,6 +4,9 @@ import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import de.heikoseeberger.sbtheader.HeaderPlugin
 import de.heikoseeberger.sbtheader.license._
 import scoverage.ScoverageKeys
+import com.typesafe.sbt.SbtSite.SiteKeys._
+import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import sbtunidoc.Plugin.UnidocKeys._
 
 name := "hascalator"
 
@@ -119,7 +122,16 @@ lazy val docs = (project in file("docs")).
   settings(scalacOptions ++= commonScalacOptions).
   dependsOn(core).
   settings(noPublishSettings).
-  settings(tutSettings)
+  settings(
+    site.settings,
+    site.includeScaladoc(),
+    tutSettings,
+    ghpages.settings,
+    site.addMappingsToSiteDir(tut, "tut"),
+    ghpagesNoJekyll := false,
+    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md",
+    git.remoteRepo := "git@github.com:CarloMicieli/hascalator.git"
+  )
 
 lazy val scalaProject = (project in file("."))
   .settings(moduleName := "root")
@@ -131,3 +143,6 @@ lazy val scalaProject = (project in file("."))
 fork in run := true
 
 addCommandAlias("run-benchmarks", ";bench/jmh:run -i 10 -wi 10 -f1 -t1")
+
+addCommandAlias("build", ";core/compile ;core/test ;bench/test")
+addCommandAlias("validate", ";scalastyle ;build ;makeSite")
