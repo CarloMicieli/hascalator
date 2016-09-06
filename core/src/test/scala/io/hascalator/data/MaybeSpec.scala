@@ -194,6 +194,42 @@ class MaybeSpec extends AbstractTestSpec with MaybeValues {
       }
     }
 
+    describe("listToMaybe") {
+      it("should return a none for the empty list") {
+        Maybe.listToMaybe(List.empty[Int]) shouldBe Maybe.none[Int]
+      }
+
+      it("should return the only element wrapped in a just for a singleton list") {
+        Maybe.listToMaybe(List(just42.get)) shouldBe just42
+      }
+
+      it("should return the list head wrapped in a just for non empty lists") {
+        Maybe.listToMaybe(List(42, 43, 44)) shouldBe Maybe.just(42)
+      }
+    }
+
+    describe("maybeToList") {
+      it("should return the empty list from none values") {
+        Maybe.maybeToList(Maybe.none[Int]) shouldBe List.empty[Int]
+      }
+
+      it("should return a singleton list with the value wrapped in a just") {
+        Maybe.maybeToList(just42) shouldBe List(just42.get)
+      }
+    }
+
+    describe("mapMaybe") {
+      it("should return the empty list if all elements evaluate to none") {
+        val res = Maybe.mapMaybe(List(1, 2, 3, 4, 5))(x => if (x < 0) Maybe.just(x) else Maybe.none[Int])
+        res shouldBe List.empty[Int]
+      }
+
+      it("should return a list with only the elements that evaluate to just") {
+        val res = Maybe.mapMaybe(List(1, 2, 3, 4, 5))(x => if (x > 3) Maybe.just(x) else Maybe.none[Int])
+        res shouldBe List(4, 5)
+      }
+    }
+
     describe("Eq[Maybe]") {
       it("should be instance of the typeclass") {
         val eqInstance = implicitly[Eq[Maybe[Int]]]

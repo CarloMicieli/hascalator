@@ -58,4 +58,18 @@ class PreludeTestSuite extends AbstractTestSuite {
     until[Int](_ > 10)(_ + 1)(1) shouldBe 11
     until[Int](_ < 10)(_ + 1)(1) shouldBe 1
   }
+
+  "undefined" should "always throw an exception" in {
+    the[NotImplementedError] thrownBy {
+      undefined
+    } should have message "an implementation is missing"
+  }
+
+  "fst" should "return the first element of a pair" in {
+    fst((1, 2)) shouldBe 1
+  }
+
+  "snd" should "return the second element of a pair" in {
+    snd((1, 2)) shouldBe 2
+  }
 }

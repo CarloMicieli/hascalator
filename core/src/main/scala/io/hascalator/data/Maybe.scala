@@ -164,22 +164,7 @@ object Maybe extends MaybeInstances {
     */
   def just[A](x: A): Maybe[A] = Just(x)
 
-  /** Creates a new `Just` value whether the provided `x` is not `null`; returns a `None` otherwise.
-    *
-    * @param x the value
-    * @tparam A the value type
-    * @return a new `Maybe` value
-    */
-  def apply[A](x: A): Maybe[A] = {
-    if (x == null) {
-      None
-    } else {
-      Just(x)
-    }
-  }
-
   /** It takes a list of `Maybe`s and returns a list of all the `Just` values.
-    *
     * @param xs
     * @tparam A
     * @return
@@ -264,18 +249,27 @@ object Maybe extends MaybeInstances {
     * @tparam A
     * @return
     */
-  def maybeToList[A](ma: Maybe[A]): List[A] = undefined
+  def maybeToList[A](ma: Maybe[A]): List[A] = {
+    ma.map(List(_)).getOrElse(List.empty[A])
+  }
 
-  /** is a version of map which can throw out elements. In particular, the functional argument returns something of type
-    * Maybe b. If this is Nothing, no element is added on to the result list. If it is Just b, then b is included in
+  /** A version of [[Maybe.map]] which can throw out elements. In particular, the functional argument returns something of type
+    * `Maybe[B]`. If this is ''Nothing'', no element is added on to the result list. If it is ''Just b'', then `b` is included in
     * the result list.
+    * {{{
+    * scala> mapMaybe(List(1, 2, 3, 4, 5)(x => if (x > 3) just(x) else none[Int])
+    * res0: List[Int] = [4, 5]
+    * }}}
     * @param as
     * @param f
     * @tparam A
     * @tparam B
     * @return
     */
-  def mapMaybe[A, B](as: List[A])(f: A => Maybe[B]): List[B] = undefined
+  def mapMaybe[A, B](as: List[A])(f: A => Maybe[B]): List[B] = {
+    //TODO: improve implementation
+    as.map(f).filter(_.isDefined).map(_.get)
+  }
 }
 
 trait MaybeInstances {
