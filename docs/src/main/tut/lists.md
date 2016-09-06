@@ -1,10 +1,15 @@
+---
+layout: default
+title:  "Data.List"
+---
+
 ## `Data.List`
 
-The `List` is an immutable, inductive data type defined either as 
-  
+The `List` is an immutable, inductive data type defined either as
+
   * the empty list `Nil`
   * the constructed list `Cons`, with an `head` and a `tail`
-  
+
 ```tut:silent
 import io.hascalator._
 import Prelude._
@@ -14,7 +19,7 @@ import Prelude._
 val xs = List(1, 23, 15, 42, 77)
 val ys = List(10, 34, 5, 55, 233)
 ```
- 
+
 `head` and `tail` are not total functions in this implementation therefore they will fail (throwing an exception) whether the current list is empty.
 
 ```tut:fail
@@ -33,7 +38,7 @@ xs ++ ys
 ```
 
 `head`: extract the first element of a list, which must be non-empty.
- 
+
 ```tut
 List(1, 2, 3).head
 ```
@@ -60,14 +65,14 @@ xs.tail
 List(1, 2, 3).init
 ```
 
-`unCons`: decompose a list into its `head` and `tail`. If the list is empty, returns `none`. 
+`unCons`: decompose a list into its `head` and `tail`. If the list is empty, returns `none`.
 If the list is non-empty, returns `just(x, xs)`, where `x` is the `head` of the list and `xs` its `tail`.
 
 ```tut
 xs.unCons
 ```
 
-`isEmpty` test whether the list is empty. 
+`isEmpty` test whether the list is empty.
 
 ```tut
 xs.isEmpty
@@ -88,7 +93,7 @@ List.empty[Int].length
 xs.map(_ * 2)
 ```
 
-`reverse` returns the elements of `xs` in reverse order. 
+`reverse` returns the elements of `xs` in reverse order.
 
 ```tut
 xs.reverse
@@ -130,14 +135,14 @@ List(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0)
 List(1, 2, 3, 4, 5, 6).dropWhile(_ % 2 == 0)
 ```
 
-`span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty) 
+`span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
 of `xs` of elements that satisfy `p` and second element is the remainder of the list:
 
 ```tut
 List(1, 2, 3, 4, 5, 6).span(_ < 3)
 ```
 
-The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not 
+The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
 satisfy the predicate, respectively; i.e.,
 
 ```tut
@@ -152,7 +157,7 @@ List(1, 2, 3, 4, 5, 6).filter(_ < 3)
 
 ### Zipping and unzipping lists
 
-`zip` takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the 
+`zip` takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the
 longer list are discarded.
 
 ```tut
