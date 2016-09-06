@@ -1,11 +1,16 @@
-## Maybe
+---
+layout: default
+title:  "Data.Maybe"
+---
 
-The Maybe type encapsulates an optional value. A value of type Maybe a either contains a value 
-of type a (represented as Just a), or it is empty (represented as Nothing). Using Maybe is a 
-good way to deal with errors or exceptional cases without resorting to drastic measures 
+## `Data.Maybe`
+
+The Maybe type encapsulates an optional value. A value of type Maybe a either contains a value
+of type a (represented as Just a), or it is empty (represented as Nothing). Using Maybe is a
+good way to deal with errors or exceptional cases without resorting to drastic measures
 such as error.
 
-The Maybe type is also a monad. It is a simple kind of error monad, where all errors are 
+The Maybe type is also a monad. It is a simple kind of error monad, where all errors are
 represented by Nothing. A richer error monad can be built using the Either type.
 
 ```scala
@@ -41,7 +46,7 @@ io.hascalator.ApplicationException: *** Exception: Maybe.get: a value doesn't ex
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.None$.get(Maybe.scala:305)
   at io.hascalator.data.None$.get(Maybe.scala:304)
-  ... 262 elided
+  ... 278 elided
 ```
 
 The best way to use `Maybe` values is through the combinators:
@@ -50,5 +55,3 @@ The best way to use `Maybe` values is through the combinators:
 scala> Maybe.just(42).map(_ * 2)
 res4: io.hascalator.data.Maybe[Int] = Just(84)
 ```
-
-

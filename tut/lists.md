@@ -1,10 +1,15 @@
+---
+layout: default
+title:  "Data.List"
+---
+
 ## `Data.List`
 
-The `List` is an immutable, inductive data type defined either as 
-  
+The `List` is an immutable, inductive data type defined either as
+
   * the empty list `Nil`
   * the constructed list `Cons`, with an `head` and a `tail`
-  
+
 ```scala
 import io.hascalator._
 import Prelude._
@@ -17,7 +22,7 @@ xs: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
 scala> val ys = List(10, 34, 5, 55, 233)
 ys: io.hascalator.data.List[Int] = [10, 34, 5, 55, 233]
 ```
- 
+
 `head` and `tail` are not total functions in this implementation therefore they will fail (throwing an exception) whether the current list is empty.
 
 ```scala
@@ -26,7 +31,7 @@ io.hascalator.ApplicationException: *** Exception: List.head: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.Nil$.head(List.scala:997)
   at io.hascalator.data.Nil$.head(List.scala:996)
-  ... 210 elided
+  ... 230 elided
 ```
 
 ```scala
@@ -35,7 +40,7 @@ io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.Nil$.tail(List.scala:998)
   at io.hascalator.data.Nil$.tail(List.scala:996)
-  ... 226 elided
+  ... 246 elided
 ```
 ### Basic functions
 
@@ -47,7 +52,7 @@ res2: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77, 10, 34, 5, 55, 233]
 ```
 
 `head`: extract the first element of a list, which must be non-empty.
- 
+
 ```scala
 scala> List(1, 2, 3).head
 res3: Int = 1
@@ -82,7 +87,7 @@ scala> List(1, 2, 3).init
 res7: io.hascalator.data.List[Int] = [1, 2]
 ```
 
-`unCons`: decompose a list into its `head` and `tail`. If the list is empty, returns `none`. 
+`unCons`: decompose a list into its `head` and `tail`. If the list is empty, returns `none`.
 If the list is non-empty, returns `just(x, xs)`, where `x` is the `head` of the list and `xs` its `tail`.
 
 ```scala
@@ -90,7 +95,7 @@ scala> xs.unCons
 res8: io.hascalator.data.Maybe[(Int, io.hascalator.data.List[Int])] = Just((1,[23, 15, 42, 77]))
 ```
 
-`isEmpty` test whether the list is empty. 
+`isEmpty` test whether the list is empty.
 
 ```scala
 scala> xs.isEmpty
@@ -118,7 +123,7 @@ scala> xs.map(_ * 2)
 res13: io.hascalator.data.List[Int] = [2, 46, 30, 84, 154]
 ```
 
-`reverse` returns the elements of `xs` in reverse order. 
+`reverse` returns the elements of `xs` in reverse order.
 
 ```scala
 scala> xs.reverse
@@ -174,7 +179,7 @@ scala> List(1, 2, 3, 4, 5, 6).dropWhile(_ % 2 == 0)
 res23: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5, 6]
 ```
 
-`span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty) 
+`span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
 of `xs` of elements that satisfy `p` and second element is the remainder of the list:
 
 ```scala
@@ -182,7 +187,7 @@ scala> List(1, 2, 3, 4, 5, 6).span(_ < 3)
 res24: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
 ```
 
-The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not 
+The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
 satisfy the predicate, respectively; i.e.,
 
 ```scala
@@ -199,7 +204,7 @@ res26: io.hascalator.data.List[Int] = [1, 2]
 
 ### Zipping and unzipping lists
 
-`zip` takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the 
+`zip` takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the
 longer list are discarded.
 
 ```scala
