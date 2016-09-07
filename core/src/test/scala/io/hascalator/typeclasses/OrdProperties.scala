@@ -23,6 +23,47 @@ import org.scalacheck.Prop.forAll
 import io.hascalator.AbstractPropertySpec
 
 class OrdProperties extends AbstractPropertySpec with OrdLaws {
+
+  property("Ord: lte and gt") {
+    check(forAll { (x: Int, y: Int) =>
+      Ord[Int].lte(x, y) === !Ord[Int].gt(x, y)
+    })
+  }
+
+  property("Ord: gte and lt") {
+    check(forAll { (x: Int, y: Int) =>
+      Ord[Int].gte(x, y) === !Ord[Int].lt(x, y)
+    })
+  }
+
+  property("Ord: min returns one of the two arguments") {
+    check(forAll { (x: Int, y: Int) =>
+      val minValue = Ord[Int].min(x, y)
+      minValue === x || minValue === y
+    })
+  }
+
+  property("Ord: min returns the min value of the two arguments") {
+    check(forAll { (x: Int, y: Int) =>
+      val minValue = Ord[Int].min(x, y)
+      minValue <= x && minValue <= y
+    })
+  }
+
+  property("Ord: max returns one of the two arguments") {
+    check(forAll { (x: Int, y: Int) =>
+      val maxValue = Ord[Int].max(x, y)
+      maxValue === x || maxValue === y
+    })
+  }
+
+  property("Ord: max returns the min value of the two arguments") {
+    check(forAll { (x: Int, y: Int) =>
+      val maxValue = Ord[Int].max(x, y)
+      maxValue >= x && maxValue >= y
+    })
+  }
+
   property("Ord[Char] instance is lawful") {
     check(forAll { (x: Char, y: Char, z: Char) =>
       checkAllLaws(x, y, z)
