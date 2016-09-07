@@ -1,5 +1,5 @@
 name: Hascalator Documentation
-highlighter: pygments
+highlighter: rouge
 baseurl: /hascalator
 apidocs: /hascalator/api/
 sources: https://github.com/CarloMicieli/hascalator/blob/master/

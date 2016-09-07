@@ -44,8 +44,8 @@ while this will fail:
 scala> Maybe.none[Int].get
 io.hascalator.ApplicationException: *** Exception: Maybe.get: a value doesn't exist
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.None$.get(Maybe.scala:305)
-  at io.hascalator.data.None$.get(Maybe.scala:304)
+  at io.hascalator.data.None$.get(Maybe.scala:299)
+  at io.hascalator.data.None$.get(Maybe.scala:298)
   ... 282 elided
 ```
 
