@@ -30,6 +30,12 @@ class RatioSpec extends AbstractTestSpec with RatioValues {
         two.numerator shouldBe 2
       }
 
+      it("should construct whole numbers") {
+        val one = Ratio[Int](2, 2)
+        one.denominator shouldBe 1
+        one.numerator shouldBe 1
+      }
+
       it("should construct numbers") {
         val twoThirds = Ratio[Int](2, 3)
         twoThirds.numerator shouldBe 2
@@ -40,6 +46,16 @@ class RatioSpec extends AbstractTestSpec with RatioValues {
         val twoThirds = Ratio[Int](2 * 4, 3 * 4)
         twoThirds.numerator shouldBe 2
         twoThirds.denominator shouldBe 3
+      }
+    }
+
+    describe("toString") {
+      it("should produce a string for whole numbers") {
+        Ratio[Int](4).toString shouldBe "4"
+      }
+
+      it("should produce a string") {
+        Ratio[Int](3, 4).toString shouldBe "3/4"
       }
     }
 
