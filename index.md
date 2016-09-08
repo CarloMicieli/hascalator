@@ -14,3 +14,4 @@ section: "home"
 
 - [List](tut/list)
 - [Maybe](tut/maybe)
+- [Either](tut/either)
