@@ -5,7 +5,7 @@ title:  "Data.List"
 
 ## `Data.List`
 
-The `List` is an immutable, inductive data type defined either as
+Operations on lists. The `List` is an immutable, inductive data type defined either as
 
   * the empty list `Nil`
   * the constructed list `Cons`, with an `head` and a `tail`
@@ -87,16 +87,22 @@ List.empty[Int].length
 
 ### List transformations
 
-`xs.map(f) is the list obtained by applying `f` to each element of `xs`, i.e.,
+`xs.map(f)` is the list obtained by applying `f` to each element of `xs`, i.e.,
 
 ```tut
-xs.map(_ * 2)
+List(1, 2, 3, 4, 5, 6).map(_ * 2)
 ```
 
 `reverse` returns the elements of `xs` in reverse order.
 
 ```tut
-xs.reverse
+List(1, 2, 3, 4, 5, 6).reverse
+```
+
+`intersperse`: the `intersperse` function takes an element and a list and _"intersperses"_ that element between the elements of the list. For example,
+
+```tut
+List('h', 'e', 'l', 'l', 'o').intersperse('-')
 ```
 
 ### Sublists
