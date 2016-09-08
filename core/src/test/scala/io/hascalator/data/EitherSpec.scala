@@ -184,6 +184,41 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
       }
     }
 
+    describe("lefts") {
+      it("should return the empty list for list of only right values") {
+        val res = Either.lefts[String, Int](List(right(1), right(2)))
+        res shouldBe List.empty[String]
+      }
+
+      it("should return a list with only the left values") {
+        val res = Either.lefts[String, Int](List(right(1), left("one"), left("two"), right(2)))
+        res shouldBe List("one", "two")
+      }
+    }
+
+    describe("rights") {
+      it("should return the empty list for list of only left values") {
+        val res = Either.rights[String, Int](List(left("one"), left("two")))
+        res shouldBe List.empty[Int]
+      }
+
+      it("should return a list with only the right values") {
+        val res = Either.rights[String, Int](List(right(1), left("one"), left("two"), right(2)))
+        res shouldBe List(1, 2)
+      }
+    }
+
+    describe("partitionEithers") {
+      it("should return the empty list for empty list") {
+        partitionEithers(List.empty[Either[String, Int]]) shouldBe ((List.empty, List.empty))
+      }
+
+      it("should partition the list between lefts and rights") {
+        val xs = List[Either[String, Int]](left("foo"), right(3), left("bar"), right(7), left("baz"))
+        partitionEithers(xs) shouldBe ((List("foo", "bar", "baz"), List(3, 7)))
+      }
+    }
+
     describe("Show[Either]") {
       it("should be an instance of the typeclass") {
         import io.hascalator.typeclasses.Show.ops._

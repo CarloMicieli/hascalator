@@ -207,6 +207,45 @@ object Either extends EitherInstances {
     * @return the right value
     */
   def right[A, B](v: B): Either[A, B] = Right(v)
+
+  /** Extracts from a list of `Either` all the Left elements. All the Left elements are extracted in order.
+    * @param xs a list of `Either` values
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def lefts[A, B](xs: List[Either[A, B]]): List[A] = {
+    for { Left(x) <- xs } yield x
+  }
+
+  /** Extracts from a list of Either all the Right elements. All the Right elements are extracted in order.
+    * @param xs
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def rights[A, B](xs: List[Either[A, B]]): List[B] = {
+    for { Right(x) <- xs } yield x
+  }
+
+  /** Partitions a list of Either into two lists. All the Left elements are extracted, in order, to the first component
+    * of the output. Similarly the Right elements are extracted to the second component of the output.
+    * @param xs
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def partitionEithers[A, B](xs: List[Either[A, B]]): (List[A], List[B]) = {
+    val builderLeft = new ListBuilder[A]
+    val builderRight = new ListBuilder[B]
+
+    xs.foreach {
+      case Left(x)  => builderLeft += x
+      case Right(x) => builderRight += x
+    }
+
+    (builderLeft.result(), builderRight.result())
+  }
 }
 
 trait EitherInstances {
