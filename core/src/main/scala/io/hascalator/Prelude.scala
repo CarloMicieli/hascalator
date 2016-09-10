@@ -223,7 +223,7 @@ object Prelude {
   def println() = scala.Console.println()
   def println(x: Any) = scala.Console.println(x)
 
-  implicit class ArrowAssoc[A](private val a: A) extends AnyVal {
+  implicit class ArrowAssoc[A](val a: A) extends AnyVal {
     @inline def -> [B](b: B): Tuple2[A, B] = Tuple2(a, b)
   }
 }
