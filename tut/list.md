@@ -3,12 +3,12 @@ layout: default
 title:  "Data.List"
 ---
 
-## `Data.List`
+# `Data.List`
 
 Operations on lists. The `List` is an immutable, inductive data type defined either as
 
-  * the empty list `Nil`
-  * the constructed list `Cons`, with an `head` and a `tail`
+  * the empty list `Nil`;
+  * the constructed list `Cons`, with an `head` and a `tail`.
 
 ```scala
 import io.hascalator._
@@ -42,7 +42,76 @@ io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.data.Nil$.tail(List.scala:996)
   ... 238 elided
 ```
-### Basic functions
+
+## Abstract definition
+
+The abstract list type `L` with elements of some type `E` (a _monomorphic list_) is defined by the following functions:
+
+```
+nil: () → L
+cons: E × L → L
+first: L → E
+rest: L → L
+```
+
+with the axioms
+
+```
+first (cons (e, l)) = e
+rest (cons (e, l)) = l
+```
+
+for any element `e` and any list `l`. It is implicit that
+
+```
+cons (e, l) ≠ l
+cons (e, l) ≠ e
+cons (e1, l1) = cons (e2, l2) if e1 = e2 and l1 = l2
+```
+
+Note that first (nil ()) and rest (nil ()) are not defined.
+
+## Performance
+
+```
+FlatMapBenchmarks.flatMapArrayBenchmark      thrpt   10       4644.779 ±      34.243  ops/s
+FlatMapBenchmarks.flatMapListBenchmark       thrpt   10        780.974 ±       7.876  ops/s
+FlatMapBenchmarks.flatMapScalaListBenchmark  thrpt   10        840.812 ±      28.638  ops/s
+FoldBenchmarks.foldLeftArrayBenchmark        thrpt   10      23632.711 ±     145.108  ops/s
+FoldBenchmarks.foldLeftListBenchmark         thrpt   10      19286.125 ±     302.248  ops/s
+FoldBenchmarks.foldLeftScalaListBenchmark    thrpt   10      38322.952 ±     429.004  ops/s
+FoldBenchmarks.foldRightArrayBenchmark       thrpt   10      22591.765 ±     263.938  ops/s
+FoldBenchmarks.foldRightListBenchmark        thrpt   10       9076.899 ±     101.025  ops/s
+FoldBenchmarks.foldRightScalaListBenchmark   thrpt   10      12181.539 ±     220.144  ops/s
+LengthBenchmarks.lengthArrayBenchmark        thrpt   10  529300473.076 ± 4227815.389  ops/s
+LengthBenchmarks.lengthListBenchmark         thrpt   10      16629.287 ±     211.113  ops/s
+LengthBenchmarks.lengthScalaListBenchmark    thrpt   10      51903.725 ±     221.623  ops/s
+MapBenchmarks.mapArrayBenchmark              thrpt   10      14366.091 ±     324.271  ops/s
+MapBenchmarks.mapListBenchmark               thrpt   10      18217.327 ±     186.161  ops/s
+MapBenchmarks.mapScalaListBenchmark          thrpt   10      15619.095 ±     165.844  ops/s
+```
+
+Machine used for the benchmarks:
+```
+                                       OS: Ubuntu 16.04 xenial
+               ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.4.0-36-generic
+           .++ .:/++++++/-.+sss/`      CPU: Intel Core i7-6700K CPU @ 4.2GHz
+         .:++o:  /++++++++/:--:/-      GPU: GeForce GTX 760
+        o:+o+:++.`..```.-/oo+++++/     RAM: 32127MiB
+       .:+o:+o/.          `+sssoo+/    Java: Java(TM) SE Runtime Environment (build 1.8.0_91-b14)
+  .++/+:+oo+o:`             /sssooo.   Scala: 2.11.8
+ /+++//+:`oo+o               /::--:.   
+ \+/+o+++`o++o               ++////.   
+  .++.o+++oo+:`             /dddhhh.   
+       .+.o+oo:.          `oddhhhh+    
+        \+.++o+o``-````.:ohdhhhhh+     
+         `:o+++ `ohhhhhhhhyo++os:      
+           .o:`.syhhhhhhh/.oo++o`      
+               /osyyyyyyo++ooo+++/     
+
+```
+
+## Basic functions
 
 `++` append two lists
 
@@ -114,7 +183,7 @@ scala> List.empty[Int].length
 res12: io.hascalator.Prelude.Int = 0
 ```
 
-### List transformations
+## List transformations
 
 `xs.map(f)` is the list obtained by applying `f` to each element of `xs`, i.e.,
 
@@ -137,7 +206,7 @@ scala> List('h', 'e', 'l', 'l', 'o').intersperse('-')
 res15: io.hascalator.data.List[Char] = [h, -, e, -, l, -, l, -, o]
 ```
 
-### Sublists
+## Sublists
 
 `xs.take(n)`, applied to a list `xs`, returns the prefix of `xs` of length `n`, or `xs` itself if `n > xs.length`
 
@@ -209,7 +278,7 @@ scala> List(1, 2, 3, 4, 5, 6).filter(_ < 3)
 res27: io.hascalator.data.List[Int] = [1, 2]
 ```
 
-### Zipping and unzipping lists
+## Zipping and unzipping lists
 
 `zip` takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the
 longer list are discarded.

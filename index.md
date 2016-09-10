@@ -4,13 +4,13 @@ title:  "Home"
 section: "home"
 ---
 
-## hascalator
+# hascalator
 
-### Prelude
+## Prelude
 
 - [Prelude](tut/prelude)
 
-### DATA STRUCTURES
+## Data structures
 
 - [List](tut/list)
 - [Maybe](tut/maybe)
