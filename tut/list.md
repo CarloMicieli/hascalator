@@ -401,6 +401,7 @@ res44: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3
 scala> List(1, 2, 3, 4, 5, 6).filter(_ < 3)
 res45: io.hascalator.data.List[Int] = [1, 2]
 ```
+
 ## Searching lists
 
 ### Searching by equality
@@ -416,8 +417,8 @@ res46: io.hascalator.data.Maybe[Int] = Just(5)
 scala> List(1, 2, 3, 4, 5) find (_ != 5)
 res47: io.hascalator.data.Maybe[Int] = Just(1)
 
-scala> List(1, 2, 3, 4, 5) find (_ > 3)
-res48: io.hascalator.data.Maybe[Int] = Just(4)
+scala> List(1, 2, 3, 4, 5) find (_ > 9)
+res48: io.hascalator.data.Maybe[Int] = None
 ```
 
 `filter` applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
