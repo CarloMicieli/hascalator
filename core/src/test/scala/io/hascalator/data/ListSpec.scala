@@ -355,6 +355,16 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("group") {
+      it("should return the empty list when the argument is empty") {
+        emptyList.group shouldBe emptyList
+      }
+
+      it("should group the same elements together") {
+        List(1, 1, 2, 3, 3, 3, 4, 4, 5).group shouldBe List(List(1, 1), List(2), List(3, 3, 3), List(4, 4), List(5))
+      }
+    }
+
     describe("permutations") {
       it("should return the empty list when the argument is empty") {
         emptyList.permutations shouldBe emptyList
@@ -366,6 +376,14 @@ class ListSpec extends AbstractTestSpec with SampleLists {
           List('b', 'c', 'a'), List('c', 'a', 'b'), List('c', 'b', 'a')
         )
         List('a', 'b', 'c').permutations shouldBe expected
+      }
+
+      it("should manage also duplicated elements in producing the permutations") {
+        val expected = List(
+          List('a', 'a', 'c'), List('a', 'c', 'a'), List('a', 'a', 'c'),
+          List('a', 'c', 'a'), List('c', 'a', 'a'), List('c', 'a', 'a')
+        )
+        List('a', 'a', 'c').permutations shouldBe expected
       }
     }
 

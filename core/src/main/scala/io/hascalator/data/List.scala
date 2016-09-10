@@ -885,6 +885,25 @@ sealed trait List[+A] {
     * @return the list of permutations
     */
   def permutations: List[List[A]] = {
+    def removeFirst(as: List[A])(a: A): List[A] = {
+      val builder = new ListBuilder[A]
+      @tailrec def go(xs: List[A]): List[A] = {
+        xs match {
+          case h :: t =>
+            if (h == a) {
+              t
+            } else {
+              builder += h
+              go(t)
+            }
+          case _ => xs
+        }
+      }
+
+      val remaining = go(as)
+      builder.result() ++ remaining
+    }
+
     def perms(xs0: List[A]): List[List[A]] = {
       xs0 match {
         case List()  => List.empty
@@ -892,15 +911,71 @@ sealed trait List[+A] {
         case h :: t =>
           for {
             y <- xs0
-            ys = xs0.filter(_ != y)
+            ys = removeFirst(xs0)(y)
             zs <- perms(ys)
           } yield y :: zs
-
       }
     }
 
     perms(this)
   }
+
+  /** Takes a list and returns a list of lists such that the concatenation of the result is equal to the argument.
+    * @param eq
+    * @tparam A1
+    * @return
+    */
+  def group[A1 >: A](implicit eq: Eq[A1]): List[List[A1]] = {
+    def f(a: A1, xss: List[List[A1]]): List[List[A1]] = {
+      xss match {
+        case Nil => List(List(a))
+        case (f @ (x :: xs)) :: rest =>
+          if (Eq[A1].eq(x, a)) {
+            (a :: f) :: rest
+          } else {
+            List(a) :: xss
+          }
+      }
+    }
+    this.foldRight[List[List[A1]]](List.empty)(f)
+  }
+
+  /** Returns all initial segments of the argument, shortest first.
+    * @return
+    */
+  def inits: List[List[A]] = undefined
+
+  /** Returns all final segments of the argument, longest first.
+    * @return
+    */
+  def tails: List[List[A]] = undefined
+
+  /** Takes two lists and returns True iff the first list is a prefix of the second.
+    * @usecase def isPrefixOf(xs: List[A]): Boolean
+    * @param xs
+    * @param eq
+    * @tparam A1
+    * @return
+    */
+  def isPrefixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
+
+  /** Takes two lists and returns True iff the first list is a suffix of the second.
+    * @usecase def isSuffixOf(xs: List[A]): Boolean
+    * @param xs
+    * @param eq
+    * @tparam A1
+    * @return
+    */
+  def isSuffixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
+
+  /** Takes two lists and returns True iff the first list is contained, wholly and intact, anywhere within the second.
+    * @usecase def isInfixOf(xs: List[A]): Boolean
+    * @param xs
+    * @param eq
+    * @tparam A1
+    * @return
+    */
+  def isInfixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
 
   /** Displays all elements of this list in a string.
     * @param sep the elements separator

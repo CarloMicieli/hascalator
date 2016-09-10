@@ -309,11 +309,28 @@ of `xs` of elements that satisfy `p` and second element is the remainder of the 
 List(1, 2, 3, 4, 5, 6).span(_ < 3)
 ```
 
-`break`, applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list:
+`break`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
+of `xs` of elements that do not satisfy p and second element is the remainder of the list:
 
 ```tut
 List(1, 2, 3) break (_ < 9)
 List(1, 2, 3) break (_ > 9)
+```
+
+`stripPrefix`: The `stripPrefix` function drops the given prefix from a list. It returns ''None'' if the list did not start
+with the prefix given, or Just the list after the prefix, if it does.
+
+```tut
+List(1, 2, 3, 4, 5, 6).stripPrefix((List(1, 2, 3))
+List(1, 2, 3).stripPrefix((List(1, 2, 3))
+List(6, 5, 4, 1, 2, 3).stripPrefix((List(1, 2, 3))
+```
+
+`group` The group function takes a list and returns a list of lists such that the concatenation of the result is equal
+to the argument. Moreover, each sublist in the result contains only equal elements. For example,
+
+```tut
+List(1, 1, 2, 3, 3, 3, 4, 4, 5).group
 ```
 
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
