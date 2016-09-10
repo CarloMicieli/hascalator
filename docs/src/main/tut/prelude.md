@@ -3,7 +3,7 @@ layout: default
 title:  "Prelude"
 ---
 
-## `Prelude`
+# `Prelude`
 
 The `Prelude` must imported to access the library types and functions.
 

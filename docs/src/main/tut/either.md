@@ -3,13 +3,13 @@ layout: default
 title:  "Data.Either"
 ---
 
-## `Data.Either`
+# `Data.Either`
 
 The `Either` type represents values with two possibilities: a value of type `Either[A, B]` is either _Left(a)_ or _Right(b)_.
 
 The `Either` type is sometimes used to represent a value which is either correct or an error; by convention, the _Left_ constructor is used to hold an error value and the _Right_ constructor is used to hold a correct value (mnemonic: "right" also means "correct").
 
-### Examples
+## Examples
 
 The type `Either[String, Int]` is the type of values which can be either a `String` or an `Int`. The _Left_ constructor can be used only on `String`s, and the _Right_ constructor can be used only on `Int`s:
 

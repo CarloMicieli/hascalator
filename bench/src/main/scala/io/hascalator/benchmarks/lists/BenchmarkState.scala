@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package io.hascalator
-package benchmarks
+package io.hascalator.benchmarks
+package lists
 
-import Prelude._
-import org.openjdk.jmh.annotations.Benchmark
+import io.hascalator.Prelude._
 
-class ListBenchmarks {
-  @Benchmark
-  def listLength(): Unit = {
-    val f = const(42)
-    val l = List(1, 2, 3, 4, 5).length
+import org.openjdk.jmh.annotations.{ State, Scope }
+
+object BenchmarkState {
+  @State(Scope.Thread)
+  object sample {
+    val list = List.fromRange(1 to 10000)
+    val array = (1 to 10000).toArray
+    val scalaList = (1 to 10000).toList
   }
 }
