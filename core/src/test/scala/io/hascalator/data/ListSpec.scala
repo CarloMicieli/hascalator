@@ -355,6 +355,20 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("permutations") {
+      it("should return the empty list when the argument is empty") {
+        emptyList.permutations shouldBe emptyList
+      }
+
+      it("should return the list permutations") {
+        val expected = List(
+          List('a', 'b', 'c'), List('a', 'c', 'b'), List('b', 'a', 'c'),
+          List('b', 'c', 'a'), List('c', 'a', 'b'), List('c', 'b', 'a')
+        )
+        List('a', 'b', 'c').permutations shouldBe expected
+      }
+    }
+
     describe("map") {
       it("should return an empty list, when the function is applied to empty lists") {
         val l = emptyList map { _ * 2 }

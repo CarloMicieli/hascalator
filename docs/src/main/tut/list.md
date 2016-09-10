@@ -170,6 +170,12 @@ List('h', 'e', 'l', 'l', 'o').intersperse('-')
 List(List(1, 2), List(4), List(5, 6)).intercalate(List(0))
 ```
 
+`permutations`: the `permutations` function returns the list of all permutations of the argument.
+
+```tut
+List('a', 'b', 'c').permutations
+```
+
 ## Reducing lists (folds)
 
 `foldLeft`: Left-associative fold of a structure. In the case of lists, `foldLeft`, when applied to a binary operator, a starting value (typically the left-identity

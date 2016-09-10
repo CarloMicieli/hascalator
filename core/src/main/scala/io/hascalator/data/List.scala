@@ -845,7 +845,7 @@ sealed trait List[+A] {
     case x :: xs => p(x) || xs.any(p)
   }
 
-  /** `O(n)` Takes an element and a list and "intersperses" that element between the elements of the list.
+  /** Takes an element and a list and "intersperses" that element between the elements of the list.
     *
     * Example:
     * {{{
@@ -879,6 +879,27 @@ sealed trait List[+A] {
     */
   def intercalate[A1 >: A, B](xs: A1)(implicit ev: A1 => List[B]): List[B] = {
     (this intersperse xs).concat
+  }
+
+  /** Returns the list of all permutations of the argument.
+    * @return the list of permutations
+    */
+  def permutations: List[List[A]] = {
+    def perms(xs0: List[A]): List[List[A]] = {
+      xs0 match {
+        case List()  => List.empty
+        case List(x) => List(List(x))
+        case h :: t =>
+          for {
+            y <- xs0
+            ys = xs0.filter(_ != y)
+            zs <- perms(ys)
+          } yield y :: zs
+
+      }
+    }
+
+    perms(this)
   }
 
   /** Displays all elements of this list in a string.
