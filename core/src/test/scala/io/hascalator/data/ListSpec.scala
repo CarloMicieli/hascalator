@@ -264,6 +264,22 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("dropWhileEnd") {
+      it("should remove the suffix until the predicate matches") {
+        val l = numbersList dropWhileEnd (_ > 6)
+        l shouldBe List(1, 2, 3, 4, 5, 6)
+      }
+
+      it("should return the original list if no element in the suffix matches the predicate") {
+        val l = numbersList dropWhileEnd (_ > 10)
+        l shouldBe numbersList
+      }
+
+      it("should produce an empty list, from empty lists") {
+        emptyList.dropWhileEnd(_ != 2) shouldBe Nil
+      }
+    }
+
     describe("++") {
       it("should produce a new list, concatenating the two lists elements") {
         val l1 = List(5, 6, 7, 8, 9, 10)
@@ -329,6 +345,13 @@ class ListSpec extends AbstractTestSpec with SampleLists {
 
       it("should return 0 for empty lists") {
         emptyList should have length 0
+      }
+    }
+
+    describe("intercalate") {
+      it("should intercalate a list") {
+        val res = List(List(1, 2), List(3, 4)).intercalate(List(0))
+        res shouldBe List(1, 2, 0, 3, 4)
       }
     }
 

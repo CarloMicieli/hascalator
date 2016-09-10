@@ -548,7 +548,9 @@ sealed trait List[+A] {
     * @param p
     * @return
     */
-  def dropWhileEnd(p: A => Boolean): List[A] = undefined
+  def dropWhileEnd(p: A => Boolean): List[A] = {
+    this.reverse.dropWhile(p).reverse
+  }
 
   /** Returns a tuple where first element is the prefix of length `m`
     * and second element is the remainder of the list.
@@ -744,7 +746,17 @@ sealed trait List[+A] {
     * @return
     */
   def concat[B](implicit ev: A => List[B]): List[B] = {
-    foldRight(List.empty[B])((xss, xs) => xss ++ xs)
+    //foldRight(List.empty[B])((xss, xs) => xss ++ xs)
+    val builder = new ListBuilder[B]
+
+    for {
+      xs <- this
+      x <- xs
+    } yield {
+      builder += x
+    }
+
+    builder.result()
   }
 
   /** Map a function over all the elements of a container and concatenate the resulting lists.
@@ -791,7 +803,7 @@ sealed trait List[+A] {
     builder.result()
   }
 
-  /** `O(n)` Takes two lists and returns a list applying `f` to each corresponding pair. If one input
+  /** Takes two lists and returns a list applying `f` to each corresponding pair. If one input
     * list is short, excess elements of the longer list are discarded.
     * @param that the second list
     * @param f the function to produce elements in the resulting list
@@ -815,7 +827,7 @@ sealed trait List[+A] {
     builder.result()
   }
 
-  /** `O(n)` Determines whether all elements of this list satisfy the predicate.
+  /** Determines whether all elements of this list satisfy the predicate.
     * @param p the predicate to match
     * @return `true` if all elements match the predicate; `false` otherwise
     */
@@ -824,7 +836,7 @@ sealed trait List[+A] {
     case x :: xs => p(x) && xs.all(p)
   }
 
-  /** `O(n)` Determines whether any elements of this list satisfy the predicate.
+  /** Determines whether any elements of this list satisfy the predicate.
     * @param p the predicate to match
     * @return `true` if any elements match the predicate; `false` otherwise
     */
@@ -858,7 +870,18 @@ sealed trait List[+A] {
     }
   }
 
-  /** `O(n)` Displays all elements of this list in a string.
+  /** Inserts the list `xs` in between the lists in `this` and concatenates the result.
+    * @param xs the list to intercalate
+    * @param ev
+    * @tparam A1
+    * @tparam B
+    * @return
+    */
+  def intercalate[A1 >: A, B](xs: A1)(implicit ev: A1 => List[B]): List[B] = {
+    (this intersperse xs).concat
+  }
+
+  /** Displays all elements of this list in a string.
     * @param sep the elements separator
     * @param start the starting element
     * @param end the ending element

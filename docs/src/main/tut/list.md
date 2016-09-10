@@ -56,7 +56,7 @@ cons (e, l) ≠ e
 cons (e1, l1) = cons (e2, l2) if e1 = e2 and l1 = l2
 ```
 
-Note that first (nil ()) and rest (nil ()) are not defined.
+Note that `first (nil ())` and `rest (nil ())` are not defined.
 
 ## Performance
 
@@ -79,24 +79,14 @@ MapBenchmarks.mapScalaListBenchmark          thrpt   10      15619.095 ±     16
 ```
 
 Machine used for the benchmarks:
-```
-                                       OS: Ubuntu 16.04 xenial
-               ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.4.0-36-generic
-           .++ .:/++++++/-.+sss/`      CPU: Intel Core i7-6700K CPU @ 4.2GHz
-         .:++o:  /++++++++/:--:/-      GPU: GeForce GTX 760
-        o:+o+:++.`..```.-/oo+++++/     RAM: 32127MiB
-       .:+o:+o/.          `+sssoo+/    Java: Java(TM) SE Runtime Environment (build 1.8.0_91-b14)
-  .++/+:+oo+o:`             /sssooo.   Scala: 2.11.8
- /+++//+:`oo+o               /::--:.   
- \+/+o+++`o++o               ++////.   
-  .++.o+++oo+:`             /dddhhh.   
-       .+.o+oo:.          `oddhhhh+    
-        \+.++o+o``-````.:ohdhhhhh+     
-         `:o+++ `ohhhhhhhhyo++os:      
-           .o:`.syhhhhhhh/.oo++o`      
-               /osyyyyyyo++ooo+++/     
 
-```
+* OS: Ubuntu 16.04 xenial
+* Kernel: x86_64 Linux 4.4.0-36-generic
+* CPU: Intel Core i7-6700K CPU @ 4.2GHz
+* GPU: GeForce GTX 760
+* RAM: 32127MiB
+* Java: Java(TM) SE Runtime Environment (build 1.8.0_91-b14)
+* Scala: 2.11.8
 
 ## Basic functions
 
@@ -172,6 +162,88 @@ List(1, 2, 3, 4, 5, 6).reverse
 
 ```tut
 List('h', 'e', 'l', 'l', 'o').intersperse('-')
+```
+
+`intercalate`: `xss.intercalate(xs)` is equivalent to `(xss intersperse xs).concat`. It inserts the list `xs` in between the lists in `xss` and concatenates the result.
+
+```tut
+List(List(1, 2), List(4), List(5, 6)).intercalate(List(0))
+```
+
+## Reducing lists (folds)
+
+`foldLeft`: Left-associative fold of a structure. In the case of lists, `foldLeft`, when applied to a binary operator, a starting value (typically the left-identity
+of the operator), and a list, reduces the list using the binary operator, from left to right:
+
+```
+List(x1, x2, ..., xn).foldLeft(z)(f)  == (...((z `f` x1) `f` x2) `f`...) `f` xn
+```
+                                                  
+Note that to produce the outermost application of the operator the entire input list must be traversed.
+
+```tut
+List(1, 2, 3, 4, 5).foldLeft(10)(_ + _)
+```
+
+`foldLeft1`: a variant of `foldLeft` that has no base case, and thus may only be applied to non-empty structures.
+
+```
+List(1, 2, 3, 4, 5).foldLeft1(_ + _)
+```
+
+`foldRight`: Right-associative fold of a structure. In the case of lists, `foldRight`, when applied to a binary operator, a starting value (typically the right-identity
+of the operator), and a list, reduces the list using the binary operator, from right to left:
+
+```
+List(x1, x2, ..., xn).foldRight(z)(f)  == x1 `f` (x2 `f` ... (xn `f` z)...)
+```
+             
+```tut
+List(1, 2, 3, 4, 5).foldRight(10)(_ + _)
+```
+
+`foldRight1`: a variant of `foldRight` that has no base case, and thus may only be applied to non-empty structures.
+
+```tut
+List(1, 2, 3, 4, 5).foldRight1(_ + _)
+```
+
+## Special folds
+
+`concat`: the concatenation of all the elements of a container of lists.
+
+```tut
+List(List(1, 2), List(3), List(4, 5)).concat
+```
+
+`concatMap`: Map a function over all the elements of a container and concatenate the resulting lists.
+             
+```tut
+List(1, 2, 3, 4, 5).concatMap(x => List(x, x * 2))
+```
+
+## Building lists
+
+### Scans
+
+`scanLeft` is similar to `foldLeft`, but returns a list of successive reduced values from the left:
+
+```
+List(x1, x2, ...).scanLeft(z)(f) == [z, z `f` x1, (z `f` x1) `f` x2, ...]
+```
+
+```tut
+List(1, 2, 3, 4, 5).scanLeft(0)(_ + _)
+```
+
+`scanRight`: is the right-to-left dual of `scanLeft`. Note that:
+
+```
+xs.scanRight(z)(f).head == xs.foldRight(z)(f)
+```
+
+```tut
+List(1, 2, 3, 4, 5).scanRight(0)(_ + _)
 ```
 
 ## Sublists
