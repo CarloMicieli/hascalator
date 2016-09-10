@@ -3,7 +3,7 @@ layout: default
 title:  "Data.List"
 ---
 
-# `Data.List`
+# List
 
 Operations on lists. The `List` is an immutable, inductive data type defined either as
 
@@ -254,26 +254,33 @@ List(1, 2, 3, 4, 5).scanRight(0)(_ + _)
 
 ## Sublists
 
-`xs.take(n)`, applied to a list `xs`, returns the prefix of `xs` of length `n`, or `xs` itself if `n > xs.length`
+### Extracting sublists
+
+`take(n)`, applied to a list `xs`, returns the prefix of `xs` of length `n`, or `xs` itself if `n > xs.length`
 
 ```tut
-xs.take(0)
-xs.take(2)
-xs.take(10)
+List(1, 2, 3, 4, 5) take 3
+List(1, 2) take 3
+List.empty[Int] take 3
+List(1, 2).take(-1)
+List(1, 2) take 0
 ```
 
 `xs.drop(n)` returns the suffix of `xs` after the first `n` elements, or the empty list if `n > xs.length`
 
 ```tut
-xs.drop(0)
-xs.drop(2)
-xs.drop(10)
+List(1, 2, 3, 4, 5) drop 3
+List(1, 2) drop 3
+List.empty[Int] drop 3
+List(1, 2).drop(-1)
+List(1, 2) drop 0
 ```
 
 `xs.splitAt(n)` returns a tuple where first element is `xs` prefix of length `n` and second element is the remainder of the list
 
 ```tut
-List(1, 2, 3, 4, 5, 6).splitAt(3)
+List(1, 2, 3, 4, 5, 6) splitAt 3
+List(1, 2, 3) splitAt 0
 ```
 
 `takeWhile`, applied to a predicate `p` and a list `xs`, returns the longest prefix (possibly empty) of `xs` of elements that satisfy `p`:
@@ -288,11 +295,25 @@ List(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0)
 List(1, 2, 3, 4, 5, 6).dropWhile(_ % 2 == 0)
 ```
 
+`dropWhileEnd`: the `dropWhileEnd` function drops the largest suffix of a list in which the given predicate holds for all elements. For example:
+
+```tut
+List(1, 2, 3, 4, 5, 6).dropWhileEnd(_ < 5)
+List(1, 2, 3, 4, 5, 6).dropWhileEnd(_ > 5)
+```
+
 `span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
 of `xs` of elements that satisfy `p` and second element is the remainder of the list:
 
 ```tut
 List(1, 2, 3, 4, 5, 6).span(_ < 3)
+```
+
+`break`, applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list:
+
+```tut
+List(1, 2, 3) break (_ < 9)
+List(1, 2, 3) break (_ > 9)
 ```
 
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
@@ -306,6 +327,34 @@ List(1, 2, 3, 4, 5, 6).partition(_ < 3)
 
 ```tut
 List(1, 2, 3, 4, 5, 6).filter(_ < 3)
+```
+
+## Searching lists
+
+### Searching by equality
+
+### Searching with a predicate
+
+`find`: The find function takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element.
+
+```tut
+List(1, 2, 3, 4, 5) find (_ == 5)
+List(1, 2, 3, 4, 5) find (_ != 5)
+List(1, 2, 3, 4, 5) find (_ > 9)
+```
+
+`filter` applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
+
+```tut
+List(1, 2, 3, 4, 5) filter (_ != 0)
+List(1, 2, 3, 4, 5) filter (_ == 0)
+```
+
+`partition` The partition function takes a predicate a list and returns the pair of lists of elements which do and do not satisfy the predicate, respectively; i.e.,
+
+```tut
+List(1, 2, 3, 4, 5) partition (x => x / 2 != 0)
+List(1, 2, 3, 4, 5) partition (x => x / 2 == 0)
 ```
 
 ## Zipping and unzipping lists
