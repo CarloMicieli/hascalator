@@ -92,24 +92,14 @@ MapBenchmarks.mapScalaListBenchmark          thrpt   10      15619.095 ±     16
 ```
 
 Machine used for the benchmarks:
-```
-                                       OS: Ubuntu 16.04 xenial
-               ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.4.0-36-generic
-           .++ .:/++++++/-.+sss/`      CPU: Intel Core i7-6700K CPU @ 4.2GHz
-         .:++o:  /++++++++/:--:/-      GPU: GeForce GTX 760
-        o:+o+:++.`..```.-/oo+++++/     RAM: 32127MiB
-       .:+o:+o/.          `+sssoo+/    Java: Java(TM) SE Runtime Environment (build 1.8.0_91-b14)
-  .++/+:+oo+o:`             /sssooo.   Scala: 2.11.8
- /+++//+:`oo+o               /::--:.   
- \+/+o+++`o++o               ++////.   
-  .++.o+++oo+:`             /dddhhh.   
-       .+.o+oo:.          `oddhhhh+    
-        \+.++o+o``-````.:ohdhhhhh+     
-         `:o+++ `ohhhhhhhhyo++os:      
-           .o:`.syhhhhhhh/.oo++o`      
-               /osyyyyyyo++ooo+++/     
 
-```
+* OS: Ubuntu 16.04 xenial
+* Kernel: x86_64 Linux 4.4.0-36-generic
+* CPU: Intel Core i7-6700K CPU @ 4.2GHz
+* GPU: GeForce GTX 760
+* RAM: 32127MiB
+* Java: Java(TM) SE Runtime Environment (build 1.8.0_91-b14)
+* Scala: 2.11.8
 
 ## Basic functions
 
