@@ -69,7 +69,7 @@ cons (e, l) ≠ e
 cons (e1, l1) = cons (e2, l2) if e1 = e2 and l1 = l2
 ```
 
-Note that first (nil ()) and rest (nil ()) are not defined.
+Note that `first (nil ())` and `rest (nil ())` are not defined.
 
 ## Performance
 
