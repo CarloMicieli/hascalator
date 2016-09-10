@@ -3,7 +3,7 @@ layout: default
 title:  "Data.List"
 ---
 
-# `Data.List`
+# List
 
 Operations on lists. The `List` is an immutable, inductive data type defined either as
 
@@ -31,7 +31,7 @@ io.hascalator.ApplicationException: *** Exception: List.head: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.Nil$.head(List.scala:1041)
   at io.hascalator.data.Nil$.head(List.scala:1040)
-  ... 222 elided
+  ... 234 elided
 ```
 
 ```scala
@@ -40,7 +40,7 @@ io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.Nil$.tail(List.scala:1042)
   at io.hascalator.data.Nil$.tail(List.scala:1040)
-  ... 238 elided
+  ... 250 elided
 ```
 
 ## Abstract definition
@@ -295,51 +295,78 @@ res24: io.hascalator.data.List[Int] = [15, 14, 12, 9, 5, 0]
 
 ## Sublists
 
-`xs.take(n)`, applied to a list `xs`, returns the prefix of `xs` of length `n`, or `xs` itself if `n > xs.length`
+### Extracting sublists
+
+`take(n)`, applied to a list `xs`, returns the prefix of `xs` of length `n`, or `xs` itself if `n > xs.length`
 
 ```scala
-scala> xs.take(0)
-res25: io.hascalator.data.List[Int] = []
+scala> List(1, 2, 3, 4, 5) take 3
+res25: io.hascalator.data.List[Int] = [1, 2, 3]
 
-scala> xs.take(2)
-res26: io.hascalator.data.List[Int] = [1, 23]
+scala> List(1, 2) take 3
+res26: io.hascalator.data.List[Int] = [1, 2]
 
-scala> xs.take(10)
-res27: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
+scala> List.empty[Int] take 3
+res27: io.hascalator.data.List[io.hascalator.Prelude.Int] = []
+
+scala> List(1, 2).take(-1)
+res28: io.hascalator.data.List[Int] = []
+
+scala> List(1, 2) take 0
+res29: io.hascalator.data.List[Int] = []
 ```
 
 `xs.drop(n)` returns the suffix of `xs` after the first `n` elements, or the empty list if `n > xs.length`
 
 ```scala
-scala> xs.drop(0)
-res28: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
+scala> List(1, 2, 3, 4, 5) drop 3
+res30: io.hascalator.data.List[Int] = [4, 5]
 
-scala> xs.drop(2)
-res29: io.hascalator.data.List[Int] = [15, 42, 77]
+scala> List(1, 2) drop 3
+res31: io.hascalator.data.List[Int] = []
 
-scala> xs.drop(10)
-res30: io.hascalator.data.List[Int] = []
+scala> List.empty[Int] drop 3
+res32: io.hascalator.data.List[io.hascalator.Prelude.Int] = []
+
+scala> List(1, 2).drop(-1)
+res33: io.hascalator.data.List[Int] = []
+
+scala> List(1, 2) drop 0
+res34: io.hascalator.data.List[Int] = [1, 2]
 ```
 
 `xs.splitAt(n)` returns a tuple where first element is `xs` prefix of length `n` and second element is the remainder of the list
 
 ```scala
-scala> List(1, 2, 3, 4, 5, 6).splitAt(3)
-res31: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3],[4, 5, 6])
+scala> List(1, 2, 3, 4, 5, 6) splitAt 3
+res35: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3],[4, 5, 6])
+
+scala> List(1, 2, 3) splitAt 0
+res36: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([],[1, 2, 3])
 ```
 
 `takeWhile`, applied to a predicate `p` and a list `xs`, returns the longest prefix (possibly empty) of `xs` of elements that satisfy `p`:
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0)
-res32: io.hascalator.data.List[Int] = []
+res37: io.hascalator.data.List[Int] = []
 ```
 
 `xs.dropWhile(p)` returns the suffix remaining after `xs.takeWhile(p)`:
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).dropWhile(_ % 2 == 0)
-res33: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5, 6]
+res38: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5, 6]
+```
+
+`dropWhileEnd`: the `dropWhileEnd` function drops the largest suffix of a list in which the given predicate holds for all elements. For example:
+
+```scala
+scala> List(1, 2, 3, 4, 5, 6).dropWhileEnd(_ < 5)
+res39: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5, 6]
+
+scala> List(1, 2, 3, 4, 5, 6).dropWhileEnd(_ > 5)
+res40: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5]
 ```
 
 `span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
@@ -347,7 +374,17 @@ of `xs` of elements that satisfy `p` and second element is the remainder of the 
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).span(_ < 3)
-res34: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
+res41: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
+```
+
+`break`, applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list:
+
+```scala
+scala> List(1, 2, 3) break (_ < 9)
+res42: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([],[1, 2, 3])
+
+scala> List(1, 2, 3) break (_ > 9)
+res43: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3],[])
 ```
 
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
@@ -355,14 +392,52 @@ satisfy the predicate, respectively; i.e.,
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).partition(_ < 3)
-res35: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
+res44: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
 ```
 
 `filter`, applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).filter(_ < 3)
-res36: io.hascalator.data.List[Int] = [1, 2]
+res45: io.hascalator.data.List[Int] = [1, 2]
+```
+## Searching lists
+
+### Searching by equality
+
+### Searching with a predicate
+
+`find`: The find function takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element.
+
+```scala
+scala> List(1, 2, 3, 4, 5) find (_ == 5)
+res46: io.hascalator.data.Maybe[Int] = Just(5)
+
+scala> List(1, 2, 3, 4, 5) find (_ != 5)
+res47: io.hascalator.data.Maybe[Int] = Just(1)
+
+scala> List(1, 2, 3, 4, 5) find (_ > 3)
+res48: io.hascalator.data.Maybe[Int] = Just(4)
+```
+
+`filter` applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
+
+```scala
+scala> List(1, 2, 3, 4, 5) filter (_ != 0)
+res49: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5]
+
+scala> List(1, 2, 3, 4, 5) filter (_ == 0)
+res50: io.hascalator.data.List[Int] = []
+```
+
+`partition` The partition function takes a predicate a list and returns the pair of lists of elements which do and do not satisfy the predicate, respectively; i.e.,
+
+```scala
+scala> List(1, 2, 3, 4, 5) partition (x => x / 2 != 0)
+res51: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([2, 3, 4, 5],[1])
+
+scala> List(1, 2, 3, 4, 5) partition (x => x / 2 == 0)
+res52: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1],[2, 3, 4, 5])
 ```
 
 ## Zipping and unzipping lists
@@ -372,5 +447,5 @@ longer list are discarded.
 
 ```scala
 scala> List(1, 2, 3, 4) zip List('a', 'b', 'c', 'd')
-res37: io.hascalator.data.List[(Int, Char)] = [(1,a), (2,b), (3,c), (4,d)]
+res53: io.hascalator.data.List[(Int, Char)] = [(1,a), (2,b), (3,c), (4,d)]
 ```
