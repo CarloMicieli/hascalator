@@ -29,8 +29,8 @@ ys: io.hascalator.data.List[Int] = [10, 34, 5, 55, 233]
 scala> List.empty[Int].head
 io.hascalator.ApplicationException: *** Exception: List.head: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.Nil$.head(List.scala:1020)
-  at io.hascalator.data.Nil$.head(List.scala:1019)
+  at io.hascalator.data.Nil$.head(List.scala:1041)
+  at io.hascalator.data.Nil$.head(List.scala:1040)
   ... 222 elided
 ```
 
@@ -38,8 +38,8 @@ io.hascalator.ApplicationException: *** Exception: List.head: empty list
 scala> List.empty[Int].tail
 io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.Nil$.tail(List.scala:1021)
-  at io.hascalator.data.Nil$.tail(List.scala:1019)
+  at io.hascalator.data.Nil$.tail(List.scala:1042)
+  at io.hascalator.data.Nil$.tail(List.scala:1040)
   ... 238 elided
 ```
 
@@ -203,6 +203,13 @@ scala> List(List(1, 2), List(4), List(5, 6)).intercalate(List(0))
 res16: io.hascalator.data.List[Int] = [1, 2, 0, 4, 0, 5, 6]
 ```
 
+`permutations`: the `permutations` function returns the list of all permutations of the argument.
+
+```scala
+scala> List('a', 'b', 'c').permutations
+res17: io.hascalator.data.List[io.hascalator.data.List[Char]] = [[a, b, c], [a, c, b], [b, a, c], [b, c, a], [c, a, b], [c, b, a]]
+```
+
 ## Reducing lists (folds)
 
 `foldLeft`: Left-associative fold of a structure. In the case of lists, `foldLeft`, when applied to a binary operator, a starting value (typically the left-identity
@@ -216,7 +223,7 @@ Note that to produce the outermost application of the operator the entire input 
 
 ```scala
 scala> List(1, 2, 3, 4, 5).foldLeft(10)(_ + _)
-res17: Int = 25
+res18: Int = 25
 ```
 
 `foldLeft1`: a variant of `foldLeft` that has no base case, and thus may only be applied to non-empty structures.
@@ -234,14 +241,14 @@ List(x1, x2, ..., xn).foldRight(z)(f)  == x1 `f` (x2 `f` ... (xn `f` z)...)
              
 ```scala
 scala> List(1, 2, 3, 4, 5).foldRight(10)(_ + _)
-res18: Int = 25
+res19: Int = 25
 ```
 
 `foldRight1`: a variant of `foldRight` that has no base case, and thus may only be applied to non-empty structures.
 
 ```scala
 scala> List(1, 2, 3, 4, 5).foldRight1(_ + _)
-res19: Int = 15
+res20: Int = 15
 ```
 
 ## Special folds
@@ -250,14 +257,14 @@ res19: Int = 15
 
 ```scala
 scala> List(List(1, 2), List(3), List(4, 5)).concat
-res20: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5]
+res21: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5]
 ```
 
 `concatMap`: Map a function over all the elements of a container and concatenate the resulting lists.
              
 ```scala
 scala> List(1, 2, 3, 4, 5).concatMap(x => List(x, x * 2))
-res21: io.hascalator.data.List[Int] = [1, 2, 2, 4, 3, 6, 4, 8, 5, 10]
+res22: io.hascalator.data.List[Int] = [1, 2, 2, 4, 3, 6, 4, 8, 5, 10]
 ```
 
 ## Building lists
@@ -272,7 +279,7 @@ List(x1, x2, ...).scanLeft(z)(f) == [z, z `f` x1, (z `f` x1) `f` x2, ...]
 
 ```scala
 scala> List(1, 2, 3, 4, 5).scanLeft(0)(_ + _)
-res22: io.hascalator.data.List[Int] = [0, 1, 3, 6, 10, 15]
+res23: io.hascalator.data.List[Int] = [0, 1, 3, 6, 10, 15]
 ```
 
 `scanRight`: is the right-to-left dual of `scanLeft`. Note that:
@@ -283,7 +290,7 @@ xs.scanRight(z)(f).head == xs.foldRight(z)(f)
 
 ```scala
 scala> List(1, 2, 3, 4, 5).scanRight(0)(_ + _)
-res23: io.hascalator.data.List[Int] = [15, 14, 12, 9, 5, 0]
+res24: io.hascalator.data.List[Int] = [15, 14, 12, 9, 5, 0]
 ```
 
 ## Sublists
@@ -292,47 +299,47 @@ res23: io.hascalator.data.List[Int] = [15, 14, 12, 9, 5, 0]
 
 ```scala
 scala> xs.take(0)
-res24: io.hascalator.data.List[Int] = []
+res25: io.hascalator.data.List[Int] = []
 
 scala> xs.take(2)
-res25: io.hascalator.data.List[Int] = [1, 23]
+res26: io.hascalator.data.List[Int] = [1, 23]
 
 scala> xs.take(10)
-res26: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
+res27: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
 ```
 
 `xs.drop(n)` returns the suffix of `xs` after the first `n` elements, or the empty list if `n > xs.length`
 
 ```scala
 scala> xs.drop(0)
-res27: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
+res28: io.hascalator.data.List[Int] = [1, 23, 15, 42, 77]
 
 scala> xs.drop(2)
-res28: io.hascalator.data.List[Int] = [15, 42, 77]
+res29: io.hascalator.data.List[Int] = [15, 42, 77]
 
 scala> xs.drop(10)
-res29: io.hascalator.data.List[Int] = []
+res30: io.hascalator.data.List[Int] = []
 ```
 
 `xs.splitAt(n)` returns a tuple where first element is `xs` prefix of length `n` and second element is the remainder of the list
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).splitAt(3)
-res30: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3],[4, 5, 6])
+res31: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3],[4, 5, 6])
 ```
 
 `takeWhile`, applied to a predicate `p` and a list `xs`, returns the longest prefix (possibly empty) of `xs` of elements that satisfy `p`:
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).takeWhile(_ % 2 == 0)
-res31: io.hascalator.data.List[Int] = []
+res32: io.hascalator.data.List[Int] = []
 ```
 
 `xs.dropWhile(p)` returns the suffix remaining after `xs.takeWhile(p)`:
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).dropWhile(_ % 2 == 0)
-res32: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5, 6]
+res33: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5, 6]
 ```
 
 `span`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
@@ -340,7 +347,7 @@ of `xs` of elements that satisfy `p` and second element is the remainder of the 
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).span(_ < 3)
-res33: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
+res34: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
 ```
 
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
@@ -348,14 +355,14 @@ satisfy the predicate, respectively; i.e.,
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).partition(_ < 3)
-res34: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
+res35: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
 ```
 
 `filter`, applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
 
 ```scala
 scala> List(1, 2, 3, 4, 5, 6).filter(_ < 3)
-res35: io.hascalator.data.List[Int] = [1, 2]
+res36: io.hascalator.data.List[Int] = [1, 2]
 ```
 
 ## Zipping and unzipping lists
@@ -365,5 +372,5 @@ longer list are discarded.
 
 ```scala
 scala> List(1, 2, 3, 4) zip List('a', 'b', 'c', 'd')
-res36: io.hascalator.data.List[(Int, Char)] = [(1,a), (2,b), (3,c), (4,d)]
+res37: io.hascalator.data.List[(Int, Char)] = [(1,a), (2,b), (3,c), (4,d)]
 ```
