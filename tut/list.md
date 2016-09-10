@@ -29,8 +29,8 @@ ys: io.hascalator.data.List[Int] = [10, 34, 5, 55, 233]
 scala> List.empty[Int].head
 io.hascalator.ApplicationException: *** Exception: List.head: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.Nil$.head(List.scala:1041)
-  at io.hascalator.data.Nil$.head(List.scala:1040)
+  at io.hascalator.data.Nil$.head(List.scala:1116)
+  at io.hascalator.data.Nil$.head(List.scala:1115)
   ... 234 elided
 ```
 
@@ -38,8 +38,8 @@ io.hascalator.ApplicationException: *** Exception: List.head: empty list
 scala> List.empty[Int].tail
 io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.Nil$.tail(List.scala:1042)
-  at io.hascalator.data.Nil$.tail(List.scala:1040)
+  at io.hascalator.data.Nil$.tail(List.scala:1117)
+  at io.hascalator.data.Nil$.tail(List.scala:1115)
   ... 250 elided
 ```
 
@@ -377,7 +377,8 @@ scala> List(1, 2, 3, 4, 5, 6).span(_ < 3)
 res41: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
 ```
 
-`break`, applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list:
+`break`, applied to a predicate `p` and a list `xs`, returns a tuple where first element is longest prefix (possibly empty)
+of `xs` of elements that do not satisfy p and second element is the remainder of the list:
 
 ```scala
 scala> List(1, 2, 3) break (_ < 9)
@@ -387,19 +388,33 @@ scala> List(1, 2, 3) break (_ > 9)
 res43: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3],[])
 ```
 
+`stripPrefix`: The `stripPrefix` function drops the given prefix from a list. It returns ''None'' if the list did not start
+with the prefix given, or Just the list after the prefix, if it does.
+
+```scala
+scala> List(1, 2, 3, 4, 5, 6).stripPrefix((List(1, 2, 3))
+     | List(1, 2, 3).stripPrefix((List(1, 2, 3))
+     | List(6, 5, 4, 1, 2, 3).stripPrefix((List(1, 2, 3))
+```
+
+`group` The group function takes a list and returns a list of lists such that the concatenation of the result is equal
+to the argument. Moreover, each sublist in the result contains only equal elements. For example,
+
+```scala
+     | List(1, 1, 2, 3, 3, 3, 4, 4, 5).group
+```
+
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
 satisfy the predicate, respectively; i.e.,
 
 ```scala
-scala> List(1, 2, 3, 4, 5, 6).partition(_ < 3)
-res44: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
+     | List(1, 2, 3, 4, 5, 6).partition(_ < 3)
 ```
 
 `filter`, applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
 
 ```scala
-scala> List(1, 2, 3, 4, 5, 6).filter(_ < 3)
-res45: io.hascalator.data.List[Int] = [1, 2]
+     | List(1, 2, 3, 4, 5, 6).filter(_ < 3)
 ```
 
 ## Searching lists
@@ -411,34 +426,23 @@ res45: io.hascalator.data.List[Int] = [1, 2]
 `find`: The find function takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element.
 
 ```scala
-scala> List(1, 2, 3, 4, 5) find (_ == 5)
-res46: io.hascalator.data.Maybe[Int] = Just(5)
-
-scala> List(1, 2, 3, 4, 5) find (_ != 5)
-res47: io.hascalator.data.Maybe[Int] = Just(1)
-
-scala> List(1, 2, 3, 4, 5) find (_ > 9)
-res48: io.hascalator.data.Maybe[Int] = None
+     | List(1, 2, 3, 4, 5) find (_ == 5)
+     | List(1, 2, 3, 4, 5) find (_ != 5)
+     | List(1, 2, 3, 4, 5) find (_ > 9)
 ```
 
 `filter` applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
 
 ```scala
-scala> List(1, 2, 3, 4, 5) filter (_ != 0)
-res49: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5]
-
-scala> List(1, 2, 3, 4, 5) filter (_ == 0)
-res50: io.hascalator.data.List[Int] = []
+     | List(1, 2, 3, 4, 5) filter (_ != 0)
+     | List(1, 2, 3, 4, 5) filter (_ == 0)
 ```
 
 `partition` The partition function takes a predicate a list and returns the pair of lists of elements which do and do not satisfy the predicate, respectively; i.e.,
 
 ```scala
-scala> List(1, 2, 3, 4, 5) partition (x => x / 2 != 0)
-res51: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([2, 3, 4, 5],[1])
-
-scala> List(1, 2, 3, 4, 5) partition (x => x / 2 == 0)
-res52: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1],[2, 3, 4, 5])
+     | List(1, 2, 3, 4, 5) partition (x => x / 2 != 0)
+     | List(1, 2, 3, 4, 5) partition (x => x / 2 == 0)
 ```
 
 ## Zipping and unzipping lists
@@ -447,6 +451,5 @@ res52: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1],[2, 3
 longer list are discarded.
 
 ```scala
-scala> List(1, 2, 3, 4) zip List('a', 'b', 'c', 'd')
-res53: io.hascalator.data.List[(Int, Char)] = [(1,a), (2,b), (3,c), (4,d)]
+     | List(1, 2, 3, 4) zip List('a', 'b', 'c', 'd')
 ```
