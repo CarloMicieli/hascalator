@@ -61,6 +61,14 @@ trait Queue[+A] {
     * @return the number of elements in this `Queue`
     */
   def size: Int
+
+  override def toString: String = {
+    if (isEmpty) {
+      "<emptyqueue>"
+    } else {
+      s"<queue:first = ${peek.get}>"
+    }
+  }
 }
 
 object Queue {
@@ -71,4 +79,6 @@ object Queue {
   def empty[A]: Queue[A] = BalancedQueue.empty[A]
 }
 
-class EmptyQueueException extends java.lang.Exception
+class EmptyQueueException extends java.lang.Exception("Queue is empty") {
+  override def toString: String = "EmptyQueueException"
+}

@@ -21,7 +21,7 @@ import Prelude._
 
 import io.hascalator.AbstractTestSpec
 
-class ListStackSpec extends AbstractTestSpec with StacksFixture {
+class StackSpec extends AbstractTestSpec with StacksFixture {
 
   describe("A Stack, backed by a list") {
     describe("size") {

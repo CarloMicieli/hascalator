@@ -78,6 +78,14 @@ trait Stack[+A] {
     * @tparam U
     */
   def foreach[U](f: A => U): Unit
+
+  override def toString: String = {
+    if (isEmpty) {
+      "<emptystack>"
+    } else {
+      s"<stack:top = ${top.get}>"
+    }
+  }
 }
 
 object Stack {

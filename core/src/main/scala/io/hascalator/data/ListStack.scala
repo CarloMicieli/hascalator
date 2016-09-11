@@ -50,12 +50,4 @@ private[this] class ListStack[+A](st: List[A]) extends Stack[A] {
     }
 
   override def foreach[U](f: (A) => U): Unit = st.foreach(f)
-
-  override def toString: String = {
-    if (isEmpty) {
-      "<emptystack>"
-    } else {
-      s"<stack:top = ${top.get}>"
-    }
-  }
 }

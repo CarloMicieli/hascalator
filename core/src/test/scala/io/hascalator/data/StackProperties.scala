@@ -14,10 +14,34 @@
  * limitations under the License.
  */
 
-package io.hascalator.data
+package io.hascalator
+package data
 
-/** Created by carlo on 15/08/16.
-  */
-class StackProperties {
+import Prelude._
+import tests.arbitrary.stack._
 
+import io.hascalator.AbstractPropertySpec
+import org.scalacheck.Prop.forAll
+
+class StackProperties extends AbstractPropertySpec {
+  property("push and pop: get the last inserted element") {
+    check(forAll { (x: Int, stack: Stack[Int]) =>
+      val s = stack push x
+      val (y, _) = s.pop.get
+      y === x
+    })
+  }
+
+  property("push increase size by 1") {
+    check(forAll { (x: Int, stack: Stack[Int]) =>
+      val s = stack push x
+      s.size === stack.size + 1
+    })
+  }
+
+  property("top: return the top element") {
+    check(forAll { (x: Int, stack: Stack[Int]) =>
+      (stack push x).top.get === x
+    })
+  }
 }
