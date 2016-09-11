@@ -29,18 +29,18 @@ ys: io.hascalator.data.List[Int] = [10, 34, 5, 55, 233]
 scala> List.empty[Int].head
 io.hascalator.ApplicationException: *** Exception: List.head: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.Nil$.head(List.scala:1116)
-  at io.hascalator.data.Nil$.head(List.scala:1115)
-  ... 234 elided
+  at io.hascalator.data.Nil$.head(List.scala:1137)
+  at io.hascalator.data.Nil$.head(List.scala:1136)
+  ... 238 elided
 ```
 
 ```scala
 scala> List.empty[Int].tail
 io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
-  at io.hascalator.data.Nil$.tail(List.scala:1117)
-  at io.hascalator.data.Nil$.tail(List.scala:1115)
-  ... 250 elided
+  at io.hascalator.data.Nil$.tail(List.scala:1138)
+  at io.hascalator.data.Nil$.tail(List.scala:1136)
+  ... 254 elided
 ```
 
 ## Abstract definition
@@ -402,6 +402,18 @@ to the argument. Moreover, each sublist in the result contains only equal elemen
 
 ```scala
      | List(1, 1, 2, 3, 3, 3, 4, 4, 5).group
+```
+
+`inits` The `inits` function returns all initial segments of the argument, shortest first. For example,
+
+```scala
+     | List(1, 2, 3).inits
+```
+
+`tails` The `tails` function returns all final segments of the argument, longest first. For example,
+
+```scala
+     | List(1, 2, 3).tails
 ```
 
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
