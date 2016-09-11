@@ -46,7 +46,7 @@ io.hascalator.ApplicationException: *** Exception: Maybe.get: a value doesn't ex
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.None$.get(Maybe.scala:300)
   at io.hascalator.data.None$.get(Maybe.scala:299)
-  ... 286 elided
+  ... 290 elided
 ```
 
 The best way to use `Maybe` values is through the combinators:

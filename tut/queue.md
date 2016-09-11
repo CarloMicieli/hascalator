@@ -17,14 +17,14 @@ import data.Queue
 
 ```scala
 scala> val queue = Queue.empty[Int]
-queue: io.hascalator.data.Queue[io.hascalator.Prelude.Int] = io.hascalator.data.BalancedQueue@68e06296
+queue: io.hascalator.data.Queue[io.hascalator.Prelude.Int] = <emptyqueue>
 ```
 
 `enqueue` inserts the new element to the last position of the `Queue`
 
 ```scala
 scala> val q2 = queue.enqueue(42).enqueue(41)
-q2: io.hascalator.data.Queue[Int] = io.hascalator.data.BalancedQueue@15ff8008
+q2: io.hascalator.data.Queue[Int] = <queue:first = 42>
 
 scala> q2.peek
 res0: io.hascalator.data.Maybe[Int] = Just(42)
@@ -34,17 +34,17 @@ res0: io.hascalator.data.Maybe[Int] = Just(42)
 
 ```scala
 scala> val q3 = queue.enqueue(42).enqueue(41)
-q3: io.hascalator.data.Queue[Int] = io.hascalator.data.BalancedQueue@49c283ac
+q3: io.hascalator.data.Queue[Int] = <queue:first = 42>
 
 scala> q3.dequeue
-res1: io.hascalator.data.Either[io.hascalator.data.EmptyQueueException,(Int, io.hascalator.data.Queue[Int])] = Right((42,io.hascalator.data.BalancedQueue@319b9007))
+res1: io.hascalator.data.Either[io.hascalator.data.EmptyQueueException,(Int, io.hascalator.data.Queue[Int])] = Right((42,<emptyqueue>))
 ```
 
 Returns a ''Left'' when the queue is empty:
 
 ```scala
 scala> queue.dequeue
-res2: io.hascalator.data.Either[io.hascalator.data.EmptyQueueException,(io.hascalator.Prelude.Int, io.hascalator.data.Queue[io.hascalator.Prelude.Int])] = Left(io.hascalator.data.BalancedQueue$$anon$1)
+res2: io.hascalator.data.Either[io.hascalator.data.EmptyQueueException,(io.hascalator.Prelude.Int, io.hascalator.data.Queue[io.hascalator.Prelude.Int])] = Left(EmptyQueueException)
 ```
 
 `peek` return the element in the front position, if exists.
