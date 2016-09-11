@@ -3,7 +3,7 @@ layout: default
 title:  "Data.Either"
 ---
 
-# `Data.Either`
+# Data.Either
 
 The `Either` type represents values with two possibilities: a value of type `Either[A, B]` is either _Left(a)_ or _Right(b)_.
 

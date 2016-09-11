@@ -3,7 +3,7 @@ layout: default
 title:  "Data.Maybe"
 ---
 
-# `Data.Maybe`
+# Data.Maybe
 
 The Maybe type encapsulates an optional value. A value of type Maybe a either contains a value
 of type a (represented as Just a), or it is empty (represented as Nothing). Using Maybe is a

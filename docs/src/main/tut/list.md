@@ -3,7 +3,7 @@ layout: default
 title:  "Data.List"
 ---
 
-# List
+# Data.List
 
 Operations on lists. The `List` is an immutable, inductive data type defined either as
 
@@ -321,9 +321,9 @@ List(1, 2, 3) break (_ > 9)
 with the prefix given, or Just the list after the prefix, if it does.
 
 ```tut
-List(1, 2, 3, 4, 5, 6).stripPrefix((List(1, 2, 3))
-List(1, 2, 3).stripPrefix((List(1, 2, 3))
-List(6, 5, 4, 1, 2, 3).stripPrefix((List(1, 2, 3))
+List(1, 2, 3, 4, 5, 6).stripPrefix((List(1, 2, 3)))
+List(1, 2, 3).stripPrefix((List(1, 2, 3)))
+List(6, 5, 4, 1, 2, 3).stripPrefix((List(1, 2, 3)))
 ```
 
 `group` The group function takes a list and returns a list of lists such that the concatenation of the result is equal
