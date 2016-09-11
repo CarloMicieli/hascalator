@@ -8,9 +8,11 @@
 
 This library implements the following types:
 
+* `Data.Either`
 * `Data.List`
 * `Data.Maybe`
-* `Data.Either`
+* `Data.Stack`
+* `Data.Queue`
 * `Data.Tuple`
 
 and the following typeclasses:

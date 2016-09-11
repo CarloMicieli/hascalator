@@ -30,7 +30,7 @@ import Prelude._
   * @since 0.0.1
   */
 trait Stack[+A] {
-  /** `O(1)` Creates a new `Stack` with the provided value `el` as its top element.
+  /** Creates a new `Stack` with the provided value `el` as its top element.
     *
     * @usecase def push(el: A): Stack[A]
     * @inheritdoc
@@ -40,8 +40,8 @@ trait Stack[+A] {
     */
   def push[A1 >: A](el: A1): Stack[A1]
 
-  /** `O(1)` If this `Stack` is not empty, it returns a pair with the top element and a new `Stack` without this element;
-    * else it returns an `EmptyStackException` wrapped in a `Bad` value.
+  /** If this `Stack` is not empty, it returns a pair with the top element and a new `Stack` without this element;
+    * else it returns an `EmptyStackException` wrapped in a ''Left'' value.
     * @return if not empty, a pair with the top element and a new `Stack`;
     * an `EmptyStackException` wrapped in a `Bad` value otherwise
     */

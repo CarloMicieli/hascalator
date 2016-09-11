@@ -23,7 +23,7 @@ import scala.util.control.NoStackTrace
 /** @author Carlo Micieli
   * @since 0.0.1
   */
-private[data] class BalancedQueue[+A](front: SizedList[A], rear: SizedList[A]) extends Queue[A] {
+private[this] class BalancedQueue[+A](front: SizedList[A], rear: SizedList[A]) extends Queue[A] {
 
   // O(1) amortized; [O(n) for some operation]
   override def enqueue[A1 >: A](x: A1): Queue[A1] = {
@@ -65,7 +65,7 @@ private[data] class BalancedQueue[+A](front: SizedList[A], rear: SizedList[A]) e
   }
 }
 
-object BalancedQueue {
+private[this] object BalancedQueue {
   def empty[A]: Queue[A] = BalancedQueue(SizedList.empty[A], SizedList.empty[A])
 
   private def apply[A](f: SizedList[A], r: SizedList[A]): BalancedQueue[A] =

@@ -12,7 +12,9 @@ section: "home"
 
 ## Data structures
 
+- [Either](tut/either)
 - [List](tut/list)
 - [Maybe](tut/maybe)
-- [Either](tut/either)
+- [Queue](tut/queue)
+- [Stack](tut/stack)
 - [Tuple](tut/tuple)

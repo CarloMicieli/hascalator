@@ -64,6 +64,10 @@ trait Queue[+A] {
 }
 
 object Queue {
+  /** Creates a new empty `Queue`
+    * @tparam A
+    * @return
+    */
   def empty[A]: Queue[A] = BalancedQueue.empty[A]
 }
 
