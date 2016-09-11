@@ -392,41 +392,51 @@ res43: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2, 3]
 with the prefix given, or Just the list after the prefix, if it does.
 
 ```scala
-scala> List(1, 2, 3, 4, 5, 6).stripPrefix((List(1, 2, 3))
-     | List(1, 2, 3).stripPrefix((List(1, 2, 3))
-     | List(6, 5, 4, 1, 2, 3).stripPrefix((List(1, 2, 3))
+scala> List(1, 2, 3, 4, 5, 6).stripPrefix((List(1, 2, 3)))
+res44: io.hascalator.data.Maybe[io.hascalator.data.List[Int]] = Just([4, 5, 6])
+
+scala> List(1, 2, 3).stripPrefix((List(1, 2, 3)))
+res45: io.hascalator.data.Maybe[io.hascalator.data.List[Int]] = Just([])
+
+scala> List(6, 5, 4, 1, 2, 3).stripPrefix((List(1, 2, 3)))
+res46: io.hascalator.data.Maybe[io.hascalator.data.List[Int]] = None
 ```
 
 `group` The group function takes a list and returns a list of lists such that the concatenation of the result is equal
 to the argument. Moreover, each sublist in the result contains only equal elements. For example,
 
 ```scala
-     | List(1, 1, 2, 3, 3, 3, 4, 4, 5).group
+scala> List(1, 1, 2, 3, 3, 3, 4, 4, 5).group
+res47: io.hascalator.data.List[io.hascalator.data.List[Int]] = [[1, 1], [2], [3, 3, 3], [4, 4], [5]]
 ```
 
 `inits` The `inits` function returns all initial segments of the argument, shortest first. For example,
 
 ```scala
-     | List(1, 2, 3).inits
+scala> List(1, 2, 3).inits
+res48: io.hascalator.data.List[io.hascalator.data.List[Int]] = [[], [1], [1, 2], [1, 2, 3]]
 ```
 
 `tails` The `tails` function returns all final segments of the argument, longest first. For example,
 
 ```scala
-     | List(1, 2, 3).tails
+scala> List(1, 2, 3).tails
+res49: io.hascalator.data.List[io.hascalator.data.List[Int]] = [[1, 2, 3], [2, 3], [3], []]
 ```
 
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
 satisfy the predicate, respectively; i.e.,
 
 ```scala
-     | List(1, 2, 3, 4, 5, 6).partition(_ < 3)
+scala> List(1, 2, 3, 4, 5, 6).partition(_ < 3)
+res50: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1, 2],[3, 4, 5, 6])
 ```
 
 `filter`, applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
 
 ```scala
-     | List(1, 2, 3, 4, 5, 6).filter(_ < 3)
+scala> List(1, 2, 3, 4, 5, 6).filter(_ < 3)
+res51: io.hascalator.data.List[Int] = [1, 2]
 ```
 
 ## Searching lists
@@ -438,23 +448,34 @@ satisfy the predicate, respectively; i.e.,
 `find`: The find function takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element.
 
 ```scala
-     | List(1, 2, 3, 4, 5) find (_ == 5)
-     | List(1, 2, 3, 4, 5) find (_ != 5)
-     | List(1, 2, 3, 4, 5) find (_ > 9)
+scala> List(1, 2, 3, 4, 5) find (_ == 5)
+res52: io.hascalator.data.Maybe[Int] = Just(5)
+
+scala> List(1, 2, 3, 4, 5) find (_ != 5)
+res53: io.hascalator.data.Maybe[Int] = Just(1)
+
+scala> List(1, 2, 3, 4, 5) find (_ > 9)
+res54: io.hascalator.data.Maybe[Int] = None
 ```
 
 `filter` applied to a predicate and a list, returns the list of those elements that satisfy the predicate; i.e.,
 
 ```scala
-     | List(1, 2, 3, 4, 5) filter (_ != 0)
-     | List(1, 2, 3, 4, 5) filter (_ == 0)
+scala> List(1, 2, 3, 4, 5) filter (_ != 0)
+res55: io.hascalator.data.List[Int] = [1, 2, 3, 4, 5]
+
+scala> List(1, 2, 3, 4, 5) filter (_ == 0)
+res56: io.hascalator.data.List[Int] = []
 ```
 
 `partition` The partition function takes a predicate a list and returns the pair of lists of elements which do and do not satisfy the predicate, respectively; i.e.,
 
 ```scala
-     | List(1, 2, 3, 4, 5) partition (x => x / 2 != 0)
-     | List(1, 2, 3, 4, 5) partition (x => x / 2 == 0)
+scala> List(1, 2, 3, 4, 5) partition (x => x / 2 != 0)
+res57: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([2, 3, 4, 5],[1])
+
+scala> List(1, 2, 3, 4, 5) partition (x => x / 2 == 0)
+res58: (io.hascalator.data.List[Int], io.hascalator.data.List[Int]) = ([1],[2, 3, 4, 5])
 ```
 
 ## Zipping and unzipping lists
@@ -463,5 +484,6 @@ satisfy the predicate, respectively; i.e.,
 longer list are discarded.
 
 ```scala
-     | List(1, 2, 3, 4) zip List('a', 'b', 'c', 'd')
+scala> List(1, 2, 3, 4) zip List('a', 'b', 'c', 'd')
+res59: io.hascalator.data.List[(Int, Char)] = [(1,a), (2,b), (3,c), (4,d)]
 ```
