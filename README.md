@@ -8,12 +8,12 @@
 
 This library implements the following types:
 
-* `Data.Either`
-* `Data.List`
-* `Data.Maybe`
-* `Data.Stack`
-* `Data.Queue`
-* `Data.Tuple`
+* `data.Either`
+* `data.List`
+* `data.Maybe`
+* `data.Queue`
+* `data.Stack`
+* `data.Tuple`
 
 and the following typeclasses:
 
