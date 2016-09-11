@@ -31,7 +31,7 @@ io.hascalator.ApplicationException: *** Exception: List.head: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.Nil$.head(List.scala:1137)
   at io.hascalator.data.Nil$.head(List.scala:1136)
-  ... 238 elided
+  ... 246 elided
 ```
 
 ```scala
@@ -40,7 +40,7 @@ io.hascalator.ApplicationException: *** Exception: List.tail: empty list
   at io.hascalator.Prelude$.error(Prelude.scala:159)
   at io.hascalator.data.Nil$.tail(List.scala:1138)
   at io.hascalator.data.Nil$.tail(List.scala:1136)
-  ... 254 elided
+  ... 262 elided
 ```
 
 ## Abstract definition
