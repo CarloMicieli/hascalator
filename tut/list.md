@@ -3,7 +3,7 @@ layout: default
 title:  "Data.List"
 ---
 
-# List
+# Data.List
 
 Operations on lists. The `List` is an immutable, inductive data type defined either as
 

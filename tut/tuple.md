@@ -3,7 +3,7 @@ layout: default
 title:  "Data.Tuple"
 ---
 
-# Tuple
+# Data.Tuple
 
 The tuple data types, and associated functions.
 
