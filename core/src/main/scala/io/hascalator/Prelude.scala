@@ -176,18 +176,6 @@ object Prelude {
     */
   @inline final def undefined[A]: A = throw new scala.NotImplementedError
 
-  /** Extract the first component of a pair.
-    * @param p a pair
-    * @return the first component
-    */
-  @inline final def fst[A, B](p: (A, B)): A = p._1
-
-  /** Extract the second component of a pair.
-    * @param p a pair
-    * @return the second component
-    */
-  @inline final def snd[A, B](p: (A, B)): B = p._2
-
   // Definitions from Scala.Predef
 
   @implicitNotFound(msg = "Cannot prove that ${From} <:< ${To}.")

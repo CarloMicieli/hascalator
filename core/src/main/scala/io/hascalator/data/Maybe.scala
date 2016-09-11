@@ -18,6 +18,7 @@ package io.hascalator
 package data
 
 import Prelude._
+import Tuple.fst
 
 /** The `Maybe` type encapsulates an optional value. A value of type `Maybe[A]`
   * either contains a value of type a (represented as `Just[A]`), or it is

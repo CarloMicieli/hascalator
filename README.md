@@ -11,6 +11,7 @@ This library implements the following types:
 * `Data.List`
 * `Data.Maybe`
 * `Data.Either`
+* `Data.Tuple`
 
 and the following typeclasses:
 
