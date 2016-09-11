@@ -12,6 +12,8 @@ This library implements the following types:
 * `data.List`
 * `data.Maybe`
 * `data.Queue`
+* `data.Ratio`
+* `data.Rational`
 * `data.Stack`
 * `data.Tuple`
 

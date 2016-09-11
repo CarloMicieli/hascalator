@@ -254,7 +254,7 @@ object Maybe extends MaybeInstances {
     ma.map(List(_)).getOrElse(List.empty[A])
   }
 
-  /** A version of [[Maybe.map]] which can throw out elements. In particular, the functional argument returns something of type
+  /** A version of `map` which can throw out elements. In particular, the functional argument returns something of type
     * `Maybe[B]`. If this is ''Nothing'', no element is added on to the result list. If it is ''Just b'', then `b` is included in
     * the result list.
     * {{{

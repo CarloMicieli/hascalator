@@ -15,7 +15,7 @@
  */
 
 package io.hascalator
-package math
+package data
 
 import io.hascalator.AbstractTestSpec
 

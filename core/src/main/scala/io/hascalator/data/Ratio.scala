@@ -15,13 +15,14 @@
  */
 
 package io.hascalator
-package math
+package data
 
 import Prelude._
+import Integral.ops._
 
 import scala.language.implicitConversions
 
-/** Rational numbers, with numerator and denominator of some Integral type.
+/** Rational numbers, with numerator and denominator of some `Integral` type.
   *
   * @param n the numerator
   * @param d the denominator
@@ -29,11 +30,11 @@ import scala.language.implicitConversions
   * @author Carlo Micieli
   * @since 0.0.1
   */
-class Ratio[A: typeclasses.Integral] protected (n: A, d: A) {
-  private val I = implicitly[typeclasses.Integral[A]]
+class Ratio[A: Integral] protected (n: A, d: A) {
+  private val I = implicitly[Integral[A]]
   private val g = gcd(n, d)
 
-  def this(n: A) = this(n, implicitly[typeclasses.Integral[A]].fromInteger(1))
+  protected def this(n: A) = this(n, implicitly[Integral[A]].fromInteger(1))
 
   /** Extract the numerator of the ratio in reduced form: the numerator and denominator
     * have no common factor and the denominator is positive.
@@ -45,36 +46,40 @@ class Ratio[A: typeclasses.Integral] protected (n: A, d: A) {
     */
   val denominator: A = I.div(d, g)
 
+  /** Returns the sum of `this` and `that`.
+    * @param that the second `Ratio` number
+    * @return the sum
+    */
   def +(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      {
-        import io.hascalator.typeclasses.Integral.ops._
-        new Ratio((a * d) + (b * c), b * d)
-      }
+      new Ratio((a * d) + (b * c), b * d)
   }
 
+  /** Returns the difference of `this` and `that`.
+    * @param that the second `Ratio` number
+    * @return the difference
+    */
   def -(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      {
-        import io.hascalator.typeclasses.Integral.ops._
-        new Ratio((a * d) - (b * c), b * d)
-      }
+      new Ratio((a * d) - (b * c), b * d)
   }
 
+  /** Returns the product of `this` and `that`.
+    * @param that the second `Ratio` number
+    * @return the product
+    */
   def *(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      {
-        import io.hascalator.typeclasses.Integral.ops._
-        new Ratio(a * c, b * d)
-      }
+      new Ratio(a * c, b * d)
   }
 
+  /** Returns the division of `this` and `that`.
+    * @param that the second `Ratio` number
+    * @return the division
+    */
   def /(that: Ratio[A]): Ratio[A] = compute(that) {
     (a, b, c, d) =>
-      {
-        import io.hascalator.typeclasses.Integral.ops._
-        new Ratio(a * d, b * c)
-      }
+      new Ratio(a * d, b * c)
   }
 
   override def toString: String = {
@@ -114,11 +119,24 @@ class Ratio[A: typeclasses.Integral] protected (n: A, d: A) {
 }
 
 object Ratio {
-  def apply[A](n: A)(implicit I: typeclasses.Integral[A]): Ratio[A] = {
+  /** Creates a new `Ratio` number with denominator equal to 1
+    * @param n the numerator
+    * @param I
+    * @tparam A
+    * @return a `Ratio` number
+    */
+  def apply[A](n: A)(implicit I: Integral[A]): Ratio[A] = {
     apply(n, I.fromInteger(1))
   }
 
-  def apply[A](n: A, d: A)(implicit I: typeclasses.Integral[A]): Ratio[A] = {
+  /** Creates a new `Ratio` number
+    * @param n the numerator
+    * @param d the denominator
+    * @param I
+    * @tparam A
+    * @return a `Ratio` number
+    */
+  def apply[A](n: A, d: A)(implicit I: Integral[A]): Ratio[A] = {
     require(d != I.fromInteger(0))
     if (n == d) {
       val one = I.fromInteger(1)
@@ -128,11 +146,11 @@ object Ratio {
     }
   }
 
-  implicit def integral2Ratio[A: typeclasses.Integral](x: A): Ratio[A] = {
+  implicit def integral2Ratio[A: Integral](x: A): Ratio[A] = {
     Ratio[A](x)
   }
 
-  private def compute[A: typeclasses.Integral](r1: Ratio[A], r2: Ratio[A])(f: (A, A, A, A) => Ratio[A]): Ratio[A] = {
+  private def compute[A: Integral](r1: Ratio[A], r2: Ratio[A])(f: (A, A, A, A) => Ratio[A]): Ratio[A] = {
     f(r1.numerator, r1.denominator, r2.numerator, r2.denominator)
   }
 }

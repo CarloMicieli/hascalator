@@ -18,7 +18,8 @@ package io.hascalator
 package typeclasses
 
 import Prelude._
-import io.hascalator.math.Rational
+import io.hascalator.data.Rational
+
 import scala.language.implicitConversions
 
 /** @tparam A the instance type

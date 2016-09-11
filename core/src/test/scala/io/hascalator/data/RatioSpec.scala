@@ -15,11 +15,10 @@
  */
 
 package io.hascalator
-package math
-
-import Prelude._
+package data
 
 import io.hascalator.AbstractTestSpec
+import Prelude._
 
 class RatioSpec extends AbstractTestSpec with RatioValues {
   describe("Ratio") {
