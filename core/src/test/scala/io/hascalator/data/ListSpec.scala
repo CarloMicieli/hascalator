@@ -387,6 +387,44 @@ class ListSpec extends AbstractTestSpec with SampleLists {
       }
     }
 
+    describe("inits") {
+      it("should return only the empty list for the empty list") {
+        emptyList.inits shouldBe List(List.empty[Int])
+      }
+
+      it("should returns the list prefixes") {
+        List(1, 2, 3, 4).inits shouldBe List(List(), List(1), List(1, 2), List(1, 2, 3), List(1, 2, 3, 4))
+      }
+    }
+
+    describe("tails") {
+      it("should return only the empty list for the empty list") {
+        emptyList.tails shouldBe List(List.empty[Int])
+      }
+
+      it("should returns the list prefixes") {
+        List(1, 2, 3, 4).tails shouldBe List(List(1, 2, 3, 4), List(2, 3, 4), List(3, 4), List(4), List())
+      }
+    }
+
+    describe("isPrefixOf") {
+      it("should consider the empty list as prefix") {
+        emptyList.isPrefixOf(emptyList) shouldBe true
+        emptyList.isPrefixOf(numbersList) shouldBe true
+      }
+
+      it("should return false when it's not a prefix") {
+        List(1, 2).isPrefixOf(emptyList) shouldBe false
+        List(1, 2, 4).isPrefixOf(numbersList) shouldBe false
+        List(1, 2, 3, 4).isPrefixOf(List(1, 2, 3)) shouldBe false
+      }
+
+      it("should return true when it's a prefix") {
+        List(1, 2).isPrefixOf(numbersList) shouldBe true
+        numbersList.isPrefixOf(numbersList) shouldBe true
+      }
+    }
+
     describe("map") {
       it("should return an empty list, when the function is applied to empty lists") {
         val l = emptyList map { _ * 2 }

@@ -333,6 +333,18 @@ to the argument. Moreover, each sublist in the result contains only equal elemen
 List(1, 1, 2, 3, 3, 3, 4, 4, 5).group
 ```
 
+`inits` The `inits` function returns all initial segments of the argument, shortest first. For example,
+
+```tut
+List(1, 2, 3).inits
+```
+
+`tails` The `tails` function returns all final segments of the argument, longest first. For example,
+
+```tut
+List(1, 2, 3).tails
+```
+
 The `partition` function takes a predicate a list and returns the pair of lists of elements which do and do not
 satisfy the predicate, respectively; i.e.,
 

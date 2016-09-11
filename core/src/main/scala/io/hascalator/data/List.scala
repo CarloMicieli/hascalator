@@ -943,12 +943,22 @@ sealed trait List[+A] {
   /** Returns all initial segments of the argument, shortest first.
     * @return
     */
-  def inits: List[List[A]] = undefined
+  def inits: List[List[A]] = {
+    List.empty :: this.foldRight(List.empty[List[A]])((y, ys) => List(y) :: ys.map(l => y :: l))
+  }
 
   /** Returns all final segments of the argument, longest first.
     * @return
     */
-  def tails: List[List[A]] = undefined
+  def tails: List[List[A]] = {
+    @tailrec def go(ys: List[A], acc: List[List[A]]): List[List[A]] = {
+      ys match {
+        case Nil => ys :: acc
+        case l   => go(l.tail, l :: acc)
+      }
+    }
+    go(this, List.empty[List[A]]).reverse
+  }
 
   /** Takes two lists and returns True iff the first list is a prefix of the second.
     * @usecase def isPrefixOf(xs: List[A]): Boolean
@@ -957,7 +967,18 @@ sealed trait List[+A] {
     * @tparam A1
     * @return
     */
-  def isPrefixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
+  def isPrefixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = {
+    @tailrec def go(list: List[A1], prefix: List[A1]): Boolean = {
+      (list, prefix) match {
+        case (h1 :: _, h2 :: _) if Eq[A1].neq(h1, h2) => false
+        case (_ :: t1, _ :: t2)                       => go(t1, t2)
+        case (Nil, _ :: _)                            => false
+        case _                                        => true
+      }
+    }
+
+    go(xs, this)
+  }
 
   /** Takes two lists and returns True iff the first list is a suffix of the second.
     * @usecase def isSuffixOf(xs: List[A]): Boolean
