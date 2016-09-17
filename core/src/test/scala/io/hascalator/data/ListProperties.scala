@@ -26,13 +26,13 @@ import tests.arbitrary.list._
 import tests.generator.list._
 
 class ListProperties extends AbstractPropertySpec {
-  //  property("intersperse: length increased") {
-  //    check(forAll { (x: Int, xs: List[Int]) =>
-  //      (xs.length > 1) ==> {
-  //        xs.intersperse(x).length === (xs.length + xs.length - 1)
-  //      }
-  //    })
-  //  }
+  //    property("intersperse: length increased") {
+  //      check(forAll { (x: Int, xs: List[Int]) =>
+  //        (xs.length > 1) ==> {
+  //          xs.intersperse(x).length === (xs.length + xs.length - 1)
+  //        }
+  //      })
+  //    }
 
   property(":: increase the list length by 1") {
     check(forAll { (x: Int, xs: List[Int]) =>

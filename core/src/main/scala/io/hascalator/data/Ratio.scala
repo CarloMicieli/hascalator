@@ -31,20 +31,30 @@ import scala.language.implicitConversions
   * @since 0.0.1
   */
 class Ratio[A: Integral] protected (n: A, d: A) {
-  private val I = implicitly[Integral[A]]
-  private val g = gcd(n, d)
-
-  protected def this(n: A) = this(n, implicitly[Integral[A]].fromInteger(1))
+  private val g = gcd(Integral[A].abs(n), Integral[A].abs(d))
+  protected def this(n: A) = this(n, Integral[A].fromInteger(1))
 
   /** Extract the numerator of the ratio in reduced form: the numerator and denominator
     * have no common factor and the denominator is positive.
     */
-  val numerator: A = I.div(n, g)
+  val numerator: A = {
+    val I = Integral[A]
+    val minus1 = I.fromInteger(-1)
+    val num = Integral[A].div(n, g)
+
+    if (I.eq(I.signum(d), minus1) && I.neq(I.signum(n), minus1)) {
+      I.mul(minus1, num)
+    } else {
+      num
+    }
+  }
 
   /** Extract the denominator of the ratio in reduced form: the numerator and denominator have no
     * common factor and the denominator is positive.
     */
-  val denominator: A = I.div(d, g)
+  val denominator: A = {
+    Integral[A].abs(Integral[A].div(d, g))
+  }
 
   /** Returns the sum of `this` and `that`.
     * @param that the second `Ratio` number
@@ -83,11 +93,7 @@ class Ratio[A: Integral] protected (n: A, d: A) {
   }
 
   override def toString: String = {
-    if (d == I.fromInteger(1)) {
-      n.toString
-    } else {
-      s"$n/$d"
-    }
+    Show[Ratio[A]].show(this)
   }
 
   override def equals(o: Any): Boolean = {
@@ -110,15 +116,15 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 
   @tailrec
   private def gcd(a: A, b: A): A = {
-    if (b == I.fromInteger(0)) {
+    if (b == Integral[A].fromInteger(0)) {
       a
     } else {
-      gcd(b, I.mod(a, b))
+      gcd(b, Integral[A].mod(a, b))
     }
   }
 }
 
-object Ratio {
+object Ratio extends RatioInstances {
   /** Creates a new `Ratio` number with denominator equal to 1
     * @param n the numerator
     * @param I
@@ -138,12 +144,7 @@ object Ratio {
     */
   def apply[A](n: A, d: A)(implicit I: Integral[A]): Ratio[A] = {
     require(d != I.fromInteger(0))
-    if (n == d) {
-      val one = I.fromInteger(1)
-      new Ratio(one, one)
-    } else {
-      new Ratio(n, d)
-    }
+    new Ratio(n, d)
   }
 
   implicit def integral2Ratio[A: Integral](x: A): Ratio[A] = {
@@ -152,5 +153,20 @@ object Ratio {
 
   private def compute[A: Integral](r1: Ratio[A], r2: Ratio[A])(f: (A, A, A, A) => Ratio[A]): Ratio[A] = {
     f(r1.numerator, r1.denominator, r2.numerator, r2.denominator)
+  }
+}
+
+trait RatioInstances {
+  implicit def toShowRatio[A](implicit s: Show[A], i: Integral[A]): Show[Ratio[A]] = Show {
+    (r: Ratio[A]) =>
+      {
+        val n = s.show(r.numerator)
+        val d = s.show(r.denominator)
+        if (r.denominator == Integral[A].fromInteger(1)) {
+          n
+        } else {
+          s"$n/$d"
+        }
+      }
   }
 }

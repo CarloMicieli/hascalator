@@ -46,6 +46,18 @@ class RatioSpec extends AbstractTestSpec with RatioValues {
         twoThirds.numerator shouldBe 2
         twoThirds.denominator shouldBe 3
       }
+
+      it("should preserve the sign and reduce numerator/denominator") {
+        val r = Ratio[Int](-6, -9)
+        r.numerator shouldBe -2
+        r.denominator shouldBe 3
+      }
+
+      it("should preserve the sign") {
+        val r = Ratio[Int](-1, -1)
+        r.numerator shouldBe -1
+        r.denominator shouldBe 1
+      }
     }
 
     describe("toString") {
@@ -54,7 +66,11 @@ class RatioSpec extends AbstractTestSpec with RatioValues {
       }
 
       it("should produce a string") {
-        Ratio[Int](3, 4).toString shouldBe "3/4"
+        Ratio[Int](6, 9).toString shouldBe "2/3"
+      }
+
+      it("should produce a string for negative ratio numbers") {
+        Ratio[Int](-6, -9).toString shouldBe "-2/3"
       }
     }
 

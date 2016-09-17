@@ -15,7 +15,8 @@
  */
 
 package io.hascalator
-package tests.arbitrary
+package tests
+package arbitrary
 
 import io.hascalator.data.Either
 import org.scalacheck.{ Arbitrary, Gen }

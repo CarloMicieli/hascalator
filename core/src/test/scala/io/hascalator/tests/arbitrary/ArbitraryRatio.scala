@@ -16,23 +16,21 @@
 
 package io.hascalator
 package tests
+package arbitrary
+
+import io.hascalator.data.Ratio
+import org.scalacheck.Arbitrary
 
 /** @author Carlo Micieli
   * @since 0.0.1
   */
-package object arbitrary {
-
-  object all extends ArbitraryList
-    with ArbitraryMaybe
-    with ArbitraryEither
-    with ArbitraryStack
-    with ArbitraryStackOp
-    with ArbitraryRatio
-
-  object list extends ArbitraryList
-  object maybe extends ArbitraryMaybe
-  object either extends ArbitraryEither
-  object stack extends ArbitraryStack
-  object stackOp extends ArbitraryStackOp
-  object ratio extends ArbitraryRatio
+trait ArbitraryRatio {
+  implicit def arbitraryRatio(implicit a: Arbitrary[Int], b: Arbitrary[Int]): Arbitrary[Ratio[Int]] = Arbitrary {
+    for {
+      n <- a.arbitrary
+      d <- b.arbitrary
+      if n != 0
+      if d != 0
+    } yield Ratio(n, d)
+  }
 }

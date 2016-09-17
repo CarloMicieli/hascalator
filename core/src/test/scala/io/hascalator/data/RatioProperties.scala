@@ -15,24 +15,15 @@
  */
 
 package io.hascalator
-package tests
+package data
 
-/** @author Carlo Micieli
-  * @since 0.0.1
-  */
-package object arbitrary {
+import tests.arbitrary.ratio._
+import org.scalacheck.Prop.forAll
 
-  object all extends ArbitraryList
-    with ArbitraryMaybe
-    with ArbitraryEither
-    with ArbitraryStack
-    with ArbitraryStackOp
-    with ArbitraryRatio
-
-  object list extends ArbitraryList
-  object maybe extends ArbitraryMaybe
-  object either extends ArbitraryEither
-  object stack extends ArbitraryStack
-  object stackOp extends ArbitraryStackOp
-  object ratio extends ArbitraryRatio
+class RatioProperties extends AbstractPropertySpec {
+  property("sum of Ratio: commutative property") {
+    check(forAll { (a: Ratio[Int], b: Ratio[Int]) =>
+      (a + b) === (b + a)
+    })
+  }
 }
