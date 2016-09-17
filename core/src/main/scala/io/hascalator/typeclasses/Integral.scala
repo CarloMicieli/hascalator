@@ -24,6 +24,8 @@ import scala.language.implicitConversions
 /** It represents the type class for types that implement the numeric operation for
   * whole numbers.
   *
+  * Minimal complete definition: [[quotRem]] and [[toInteger]].
+  *
   * @tparam A the type class instance type
   * @author Carlo Micieli
   * @since 0.0.1
@@ -31,26 +33,74 @@ import scala.language.implicitConversions
 @implicitNotFound("The type ${A} was not made an instance of the Integral type class")
 trait Integral[A] extends Any with Num[A] {
 
-  /** Returns the integer division operation
+  /** Returns the integer division truncated toward negative infinity
+    * @param a the first operand
+    * @param b the second operand
+    * @return
+    */
+  def div(a: A, b: A): A = {
+    val (q, _) = divMod(a, b)
+    q
+  }
+
+  /** Returns the integer division truncated toward zero
     * @param a the first operand
     * @param b the second operand
     * @return the division
     */
-  def div(a: A, b: A): A
+  def quot(a: A, b: A): A = {
+    val (q, _) = quotRem(a, b)
+    q
+  }
 
   /** Returns the integer remainder operation
     * @param a the first operand
     * @param b the second operand
     * @return the remainder
     */
-  def mod(a: A, b: A): A
+  def mod(a: A, b: A): A = {
+    val (_, r) = divMod(a, b)
+    r
+  }
+
+  /** Returns the integer remainder, satisfying:
+    * `(x quot y) * y + (x rem y) == x`
+    *
+    * @param a the first operand
+    * @param b the second operand
+    * @return
+    */
+  def rem(a: A, b: A): A = {
+    val (_, r) = quotRem(a, b)
+    r
+  }
+
+  /** Returns simultaneous [[quot]] and [[rem]].
+    * @param a the first operand
+    * @param b the second operand
+    * @return
+    */
+  def quotRem(a: A, b: A): (A, A)
 
   /** Returns the integer division and remainder operation
     * @param a the first operand
     * @param b the second operand
     * @return a pair with division and remainder
     */
-  def divMod(a: A, b: A): (A, A) = (div(a, b), mod(a, b))
+  def divMod(a: A, b: A): (A, A) = {
+    val qr @ (q, r) = quotRem(a, b)
+    if (signum(r) == negate(signum(b))) {
+      (sub(q, fromInteger(1)), add(r, b))
+    } else {
+      qr
+    }
+  }
+
+  /** Returns the conversion to `Integer`
+    * @param a the number to convert
+    * @return an `Integer`
+    */
+  def toInteger(a: A): Integer
 }
 
 object Integral {
@@ -81,14 +131,19 @@ object Integral {
   implicit val short2Integral: Integral[Short] = new Integral[Short] {
     override def add(x: Short, y: Short): Short = toS(x + y)
     override def mul(x: Short, y: Short): Short = toS(x * y)
-    override def div(a: Short, b: Short): Short = toS(a / b)
-    override def mod(a: Short, b: Short): Short = {
+    override def quotRem(a: Short, b: Short): (Short, Short) = {
+      val q = toS(a / b)
       val res = a % b
-      val m = if (res < 0) res + b else res
-      toS(m)
+      val m = if (res < 0) {
+        res + b
+      } else {
+        res
+      }
+      (q, toS(m))
     }
 
     override def negate(x: Short): Short = toS(-x)
+    override def toInteger(s: Short): Integer = Integer(s.toInt)
     override def fromInteger(n: Int): Short = toS(n)
     override def signum(x: Short): Short = x match {
       case 0          => 0
@@ -105,14 +160,20 @@ object Integral {
   implicit val int2Integral: Integral[Int] = new Integral[Int] {
     override def add(x: Int, y: Int): Int = x + y
     override def mul(x: Int, y: Int): Int = x * y
-    override def div(a: Int, b: Int): Int = a / b
-    override def mod(a: Int, b: Int): Int = {
+    override def quotRem(a: Int, b: Int): (Int, Int) = {
+      val q = a / b
       val res = a % b
-      if (res < 0) res + b else res
+      if (res < 0) {
+        res + b
+      } else {
+        res
+      }
+      (q, res)
     }
 
     override def negate(x: Int): Int = -x
     override def fromInteger(n: Int): Int = n
+    override def toInteger(n: Int): Integer = Integer(n)
     override def signum(x: Int): Int = x match {
       case 0          => 0
       case _ if x < 0 => -1
@@ -126,14 +187,20 @@ object Integral {
   implicit val long2Integral: Integral[Long] = new Integral[Long] {
     override def add(x: Long, y: Long): Long = x + y
     override def mul(x: Long, y: Long): Long = x * y
-    override def div(a: Long, b: Long): Long = a / b
-    override def mod(a: Long, b: Long): Long = {
+    override def quotRem(a: Long, b: Long): (Long, Long) = {
+      val q = a / b
       val res = a % b
-      if (res < 0) res + b else res
+      if (res < 0) {
+        res + b
+      } else {
+        res
+      }
+      (q, res)
     }
 
     override def negate(x: Long): Long = -x
     override def fromInteger(n: Int): Long = n.toLong
+    override def toInteger(s: Long): Integer = Integer(s)
     override def signum(x: Long): Long = x match {
       case 0          => 0
       case _ if x < 0 => -1
