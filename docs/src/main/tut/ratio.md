@@ -93,8 +93,8 @@ Eq[Ratio[Int]].eq(oneThird, twoThirds)
 ```
 
 ```tut
-Ord[Ratio[Int]].show(twoThirds, twoThirds)
-Ord[Ratio[Int]].show(twoThirds, oneThird)
-Ord[Ratio[Int]].show(oneThird, twoThirds)
+Ord[Ratio[Int]].compare(twoThirds, twoThirds)
+Ord[Ratio[Int]].compare(twoThirds, oneThird)
+Ord[Ratio[Int]].compare(oneThird, twoThirds)
 ```
 
