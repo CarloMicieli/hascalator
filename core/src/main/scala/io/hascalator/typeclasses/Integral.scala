@@ -210,4 +210,35 @@ object Integral {
     override def show(x: Long): String = x.toString
     override def eq(lhs: Long, rhs: Long): Boolean = lhs equals rhs
   }
+
+  implicit val integer2Integral: Integral[Integer] = new Integral[Integer] {
+    override def add(x: Integer, y: Integer): Integer = x + y
+    override def mul(x: Integer, y: Integer): Integer = x * y
+    override def quotRem(a: Integer, b: Integer): (Integer, Integer) = {
+      val q = a / b
+      val res = a % b
+      if (res < 0) {
+        res + b
+      } else {
+        res
+      }
+      (q, res)
+    }
+
+    override def negate(x: Integer): Integer = -x
+    override def fromInteger(n: Int): Integer = Integer(n)
+    override def toInteger(s: Integer): Integer = s
+    override def signum(x: Integer): Integer = {
+      if (x == 0) {
+        0
+      } else if (x < 0) {
+        -1
+      } else {
+        1
+      }
+    }
+
+    override def show(x: Integer): String = x.toString
+    override def eq(lhs: Integer, rhs: Integer): Boolean = lhs equals rhs
+  }
 }

@@ -16,5 +16,6 @@ section: "home"
 - [List](tut/list)
 - [Maybe](tut/maybe)
 - [Queue](tut/queue)
+- [Ratio](tut/ratio)
 - [Stack](tut/stack)
 - [Tuple](tut/tuple)

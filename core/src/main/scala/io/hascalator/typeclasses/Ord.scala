@@ -145,6 +145,7 @@ object Ord {
   implicit val byteOrd: Ord[Byte] = fromCompare((x, y) => java.lang.Byte.compare(x, y))
   implicit val shortOrd: Ord[Short] = fromCompare((x, y) => java.lang.Short.compare(x, y))
   implicit val intOrd: Ord[Int] = fromCompare((x, y) => java.lang.Integer.compare(x, y))
+  implicit val integerOrd: Ord[Integer] = fromCompare((x, y) => x.compare(y))
   implicit val longOrd: Ord[Long] = fromCompare((x, y) => java.lang.Long.compare(x, y))
   implicit val floatOrd: Ord[Float] = fromCompare((x, y) => java.lang.Float.compare(x, y))
   implicit val doubleOrd: Ord[Double] = fromCompare((x, y) => java.lang.Double.compare(x, y))

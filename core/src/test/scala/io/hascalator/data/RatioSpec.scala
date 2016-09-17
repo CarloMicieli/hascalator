@@ -91,6 +91,29 @@ class RatioSpec extends AbstractTestSpec with RatioValues {
         (twoThirds / fourFifths) shouldBe Ratio[Int](10, 12)
       }
     }
+
+    describe("unapply") {
+      it("should deconstruct ration numbers") {
+        val Ratio(n, d) = twoThirds
+        n shouldBe twoThirds.numerator
+        d shouldBe twoThirds.denominator
+      }
+    }
+
+    describe("Ord[Ratio]") {
+      it("should be an instance of the Show typeclass") {
+        Ord[Ratio[Int]].compare(twoThirds, twoThirds) shouldBe Ordering.EQ
+        Ord[Ratio[Int]].compare(twoThirds, fourFifths) shouldBe Ordering.LT
+        Ord[Ratio[Int]].compare(fourFifths, twoThirds) shouldBe Ordering.GT
+      }
+    }
+
+    describe("Show[Ratio]") {
+      it("should be an instance of the Show typeclass") {
+        Show[Ratio[Int]].show(twoThirds) shouldBe "2/3"
+        Show[Ratio[Int]].show(Ratio(42)) shouldBe "42"
+      }
+    }
   }
 }
 

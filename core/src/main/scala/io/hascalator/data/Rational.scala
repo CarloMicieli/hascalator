@@ -19,39 +19,23 @@ package data
 
 import Prelude._
 
-/** Arbitrary-precision rational numbers, represented as a ratio of two `Int` values.
+/** Arbitrary-precision rational numbers, represented as a ratio of two `Integer` values.
   * A rational number may be constructed using the `%%` operator.
-  *
-  * @param n the numerator
-  * @param d the denominator
   * @author Carlo Micieli
   * @since 0.0.1
   */
-final class Rational private (n: Int, d: Int) extends Ratio[Int](n, d) {
-  override def equals(o: Any): Boolean = {
-    o match {
-      case that: Rational =>
-        this.denominator == that.denominator && this.numerator == that.numerator
-      case _ => false
-    }
-  }
-
-  override def hashCode(): Int = {
-    //TODO: to be checked
-    17 * (37 * d.##) * (37 * n.##)
-  }
-}
+final class Rational(n: Integer, d: Integer) extends Ratio[Integer](n, d)
 
 object Rational {
-  def apply(n: Int): Rational = {
+  def apply(n: Integer): Rational = {
     new Rational(n, 1)
   }
 
-  def apply(n: Int, d: Int): Rational = {
+  def apply(n: Integer, d: Integer): Rational = {
     new Rational(n, d)
   }
 
-  implicit class int2Rational(val n: Int) extends AnyVal {
-    def %%(d: Int): Rational = Rational(n, d)
+  implicit class int2Rational(val n: Integer) extends AnyVal {
+    def %%(d: Integer): Rational = apply(n, d)
   }
 }

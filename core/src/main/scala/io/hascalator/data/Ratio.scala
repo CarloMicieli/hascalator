@@ -40,7 +40,7 @@ class Ratio[A: Integral] protected (n: A, d: A) {
   val numerator: A = {
     val I = Integral[A]
     val minus1 = I.fromInteger(-1)
-    val num = Integral[A].div(n, g)
+    val num = Integral[A].quot(n, g)
 
     if (I.eq(I.signum(d), minus1) && I.neq(I.signum(n), minus1)) {
       I.mul(minus1, num)
@@ -53,7 +53,7 @@ class Ratio[A: Integral] protected (n: A, d: A) {
     * common factor and the denominator is positive.
     */
   val denominator: A = {
-    Integral[A].abs(Integral[A].div(d, g))
+    Integral[A].abs(Integral[A].quot(d, g))
   }
 
   /** Returns the sum of `this` and `that`.
@@ -125,7 +125,13 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 }
 
 object Ratio extends RatioInstances {
+
+  def unapply[A: Integral](ratio: Ratio[A]): scala.Option[(A, A)] = {
+    scala.Option((ratio.numerator, ratio.denominator))
+  }
+
   /** Creates a new `Ratio` number with denominator equal to 1
+    *
     * @param n the numerator
     * @param I
     * @tparam A
@@ -157,6 +163,32 @@ object Ratio extends RatioInstances {
 }
 
 trait RatioInstances {
+  // implicit def toFractionalRatio[A: Integral]: Fractional[Ratio[A]] = undefined
+
+  implicit def toEnumRatio[A: Integral]: Enum[Ratio[A]] = new Enum[Ratio[A]] {
+    override def toEnum(x: Int): Maybe[Ratio[A]] = {
+      Maybe.just(Ratio[A](Integral[A].fromInteger(x)))
+    }
+
+    //TODO: to be implemented
+    override def fromEnum(x: Ratio[A]): Int = {
+      //import Integral.ops._
+      //val c: A = (x.numerator / x.denominator)
+      0
+    }
+  }
+
+  implicit def toOrdRatio[A](implicit i: Integral[A], o: Ord[A]): Ord[Ratio[A]] = Ord {
+    (x, y) =>
+      {
+        val Ratio(a, b) = x
+        val Ratio(c, d) = y
+
+        import Integral.ops._
+        Ord[A].compare(a * d, b * c)
+      }
+  }
+
   implicit def toShowRatio[A](implicit s: Show[A], i: Integral[A]): Show[Ratio[A]] = Show {
     (r: Ratio[A]) =>
       {
