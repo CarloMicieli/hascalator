@@ -17,6 +17,7 @@
 package io.hascalator
 
 import Prelude._
+import io.hascalator.data.Ratio
 
 class PreludeTestSuite extends AbstractTestSuite {
 
@@ -59,9 +60,30 @@ class PreludeTestSuite extends AbstractTestSuite {
     until[Int](_ < 10)(_ + 1)(1) shouldBe 1
   }
 
+  "fromIntegral" should "convert between number types" in {
+    fromIntegral[Int, Double](42) shouldBe 42.0
+    fromIntegral[Int, Ratio[Int]](42) shouldBe Ratio[Int](42)
+  }
+
   "undefined" should "always throw an exception" in {
     the[NotImplementedError] thrownBy {
       undefined
     } should have message "an implementation is missing"
+  }
+
+  "even" should "check wheter a number is even" in {
+    even(42) shouldBe true
+    even(43) shouldBe false
+  }
+
+  "odd" should "check wheter a number is odd" in {
+    odd(43) shouldBe true
+    odd(42) shouldBe false
+  }
+
+  "gcd" should "return the greatest common divisor" in {
+    gcd(4, 2) shouldBe 2
+    gcd(-4, 6) shouldBe 2
+    gcd(0, 0) shouldBe 0
   }
 }

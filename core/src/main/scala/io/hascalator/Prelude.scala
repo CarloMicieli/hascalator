@@ -199,6 +199,52 @@ object Prelude {
 
   @inline def implicitly[T](implicit e: T): T = e
 
+  /** General coercion from integral types
+    * @param a
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def fromIntegral[A: Integral, B: Num](a: A): B = {
+    (Num[B].fromInteger _ compose Integral[A].toInteger)(a)
+  }
+
+  def realToFrac[A: Real, B: Fractional](a: A): B = {
+    (Fractional[B].fromRational _ compose Real[A].toRational)(a)
+  }
+
+  /** Checks whether `a` is an even number
+    * @param a
+    * @tparam A
+    * @return `true` if even; `false` otherwise
+    */
+  def even[A: Integral](a: A): Boolean = {
+    Integral[A].rem(a, Integral[A].fromInteger(2)) == Integral[A].fromInteger(0)
+  }
+
+  /** Checks whether `a` is an odd number
+    * @param a
+    * @tparam A
+    * @return `true` if odd; `false` otherwise
+    */
+  def odd[A: Integral](a: A): Boolean = {
+    !even(a)
+  }
+
+  /** `gcd` is the non-negative factor of both `x` and `y` of which every common factor of `x` and `y` is also a factor
+    * @param a
+    * @param b
+    * @tparam A
+    * @return
+    */
+  @tailrec final def gcd[A: Integral](a: A, b: A): A = {
+    if (b == Integral[A].fromInteger(0)) {
+      a
+    } else {
+      gcd(b, Integral[A].mod(a, b))
+    }
+  }
+
   implicit class Function2Flip[A, B, C](val f: (A, B) => C) extends AnyVal {
     def flip: (B, A) => C = Prelude.flip(f)
   }

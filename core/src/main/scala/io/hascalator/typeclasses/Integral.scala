@@ -144,7 +144,7 @@ object Integral {
 
     override def negate(x: Short): Short = toS(-x)
     override def toInteger(s: Short): Integer = Integer(s.toInt)
-    override def fromInteger(n: Int): Short = toS(n)
+    override def fromInteger(n: Integer): Short = toS(n)
     override def signum(x: Short): Short = x match {
       case 0          => 0
       case _ if x < 0 => -1
@@ -154,6 +154,7 @@ object Integral {
     override def show(x: Short): String = x.toString
     override def eq(lhs: Short, rhs: Short): Boolean = lhs equals rhs
 
+    private def toS(n: Integer): Short = n.toShort
     private def toS(n: Int): Short = n.toShort
   }
 
@@ -172,7 +173,7 @@ object Integral {
     }
 
     override def negate(x: Int): Int = -x
-    override def fromInteger(n: Int): Int = n
+    override def fromInteger(n: Integer): Int = n.toInt
     override def toInteger(n: Int): Integer = Integer(n)
     override def signum(x: Int): Int = x match {
       case 0          => 0
@@ -199,7 +200,7 @@ object Integral {
     }
 
     override def negate(x: Long): Long = -x
-    override def fromInteger(n: Int): Long = n.toLong
+    override def fromInteger(n: Integer): Long = n.toLong
     override def toInteger(s: Long): Integer = Integer(s)
     override def signum(x: Long): Long = x match {
       case 0          => 0
@@ -226,7 +227,7 @@ object Integral {
     }
 
     override def negate(x: Integer): Integer = -x
-    override def fromInteger(n: Int): Integer = Integer(n)
+    override def fromInteger(n: Integer): Integer = n
     override def toInteger(s: Integer): Integer = s
     override def signum(x: Integer): Integer = {
       if (x == 0) {

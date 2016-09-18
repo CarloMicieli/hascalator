@@ -3,7 +3,7 @@ layout: default
 title:  "Prelude"
 ---
 
-# `Prelude`
+# Prelude
 
 The `Prelude` must imported to access the library types and functions.
 
@@ -41,4 +41,29 @@ f.flip("hello", "world")
 
 ```tut
 until[Int](_ > 10)(_ + 1)(0)
+```
+
+## Numeric functions
+
+`even` checks whether the argument is an _even_ number
+
+```tut
+even(42)
+even(43)
+```
+
+`odd` checks whether the argument is an _odd_ number
+
+```tut
+odd(42)
+odd(43)
+```
+
+`gcd`: `gcd(x, y)` is the non-negative factor of both `x` and `y` of which
+every common factor of `x` and `y` is also a factor:
+
+```tut
+gcd(4, 2)
+gcd(-4, 6)
+gcd(0, 0)
 ```

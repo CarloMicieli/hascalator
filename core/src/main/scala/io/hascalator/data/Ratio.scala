@@ -98,8 +98,8 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 
   override def equals(o: Any): Boolean = {
     o match {
-      case that: Ratio[_] =>
-        this.numerator == that.numerator && this.denominator == that.denominator
+      case that: Ratio[A] =>
+        Eq[Ratio[A]].eq(this, that)
       case _ =>
         false
     }
@@ -112,15 +112,6 @@ class Ratio[A: Integral] protected (n: A, d: A) {
 
   private def compute(that: Ratio[A])(f: (A, A, A, A) => Ratio[A]): Ratio[A] = {
     Ratio.compute(this, that)(f)
-  }
-
-  @tailrec
-  private def gcd(a: A, b: A): A = {
-    if (b == Integral[A].fromInteger(0)) {
-      a
-    } else {
-      gcd(b, Integral[A].mod(a, b))
-    }
   }
 }
 
@@ -162,8 +153,41 @@ object Ratio extends RatioInstances {
   }
 }
 
-trait RatioInstances {
+trait RatioInstances extends LowRatioInstances {
   // implicit def toFractionalRatio[A: Integral]: Fractional[Ratio[A]] = undefined
+
+  implicit def toNumRatio[A: Integral]: Num[Ratio[A]] = new Num[Ratio[A]] {
+    override def fromInteger(n: Integer): Ratio[A] = {
+      Ratio(Integral[A].fromInteger(n))
+    }
+
+    override def add(x: Ratio[A], y: Ratio[A]): Ratio[A] = x + y
+
+    override def mul(x: Ratio[A], y: Ratio[A]): Ratio[A] = x * y
+
+    override def negate(x: Ratio[A]): Ratio[A] = {
+      Ratio(Integral[A].fromInteger(-1)) * x
+    }
+
+    override def signum(x: Ratio[A]): Ratio[A] = undefined
+
+    override def show(x: Ratio[A]): String = {
+      val n = Integral[A].show(x.numerator)
+      val d = Integral[A].show(x.denominator)
+      if (x.denominator == Integral[A].fromInteger(1)) {
+        n
+      } else {
+        s"$n/$d"
+      }
+    }
+
+    override def eq(lhs: Ratio[A], rhs: Ratio[A]): Boolean = {
+      val Ratio(a, b) = lhs
+      val Ratio(c, d) = rhs
+      import Integral.ops._
+      Integral[A].eq(a * d, b * c)
+    }
+  }
 
   implicit def toEnumRatio[A: Integral]: Enum[Ratio[A]] = new Enum[Ratio[A]] {
     override def toEnum(x: Int): Maybe[Ratio[A]] = {
@@ -177,7 +201,9 @@ trait RatioInstances {
       0
     }
   }
+}
 
+trait LowRatioInstances {
   implicit def toOrdRatio[A](implicit i: Integral[A], o: Ord[A]): Ord[Ratio[A]] = Ord {
     (x, y) =>
       {
@@ -186,19 +212,6 @@ trait RatioInstances {
 
         import Integral.ops._
         Ord[A].compare(a * d, b * c)
-      }
-  }
-
-  implicit def toShowRatio[A](implicit s: Show[A], i: Integral[A]): Show[Ratio[A]] = Show {
-    (r: Ratio[A]) =>
-      {
-        val n = s.show(r.numerator)
-        val d = s.show(r.denominator)
-        if (r.denominator == Integral[A].fromInteger(1)) {
-          n
-        } else {
-          s"$n/$d"
-        }
       }
   }
 }

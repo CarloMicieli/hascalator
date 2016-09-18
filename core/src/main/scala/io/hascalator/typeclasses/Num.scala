@@ -36,7 +36,7 @@ trait Num[A] extends Any with Eq[A] with Show[A] {
     * @param n the `Int` value to convert
     * @return a new value of type `A`
     */
-  def fromInteger(n: Int): A
+  def fromInteger(n: Integer): A
 
   /** The sum operation
     * @param x the first operand

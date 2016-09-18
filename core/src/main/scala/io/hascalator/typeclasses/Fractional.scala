@@ -18,6 +18,7 @@ package io.hascalator
 package typeclasses
 
 import Prelude._
+import io.hascalator.data.Rational
 
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
@@ -29,8 +30,24 @@ import scala.language.implicitConversions
   */
 @implicitNotFound("The type ${A} was not made an instance of the Fractional type class")
 trait Fractional[A] extends Any with Num[A] {
+  /** Returns the fractional division
+    * @param x
+    * @param y
+    * @return
+    */
   def div(x: A, y: A): A
+
+  /** Returns the reciprocal fraction
+    * @param x
+    * @return
+    */
   def recip(x: A): A = div(fromInteger(1), x)
+
+  /** Conversion from a `Rational` (that is `Ratio[Integer]`)
+    * @param r
+    * @return
+    */
+  def fromRational(r: Rational): A
 }
 
 object Fractional {
@@ -63,9 +80,10 @@ object Fractional {
     override def div(x: Float, y: Float): Float = x / y
     override def mul(x: Float, y: Float): Float = x * y
     override def negate(x: Float): Float = -x
-    override def fromInteger(n: Int): Float = n.toFloat
+    override def fromInteger(n: Integer): Float = n.toFloat
     override def signum(x: Float): Float = scala.math.signum(x)
     override def eq(lhs: Float, rhs: Float): Boolean = lhs equals rhs
+    override def fromRational(r: Rational): Float = (r.numerator / r.denominator).toFloat
   }
 
   implicit val double2Fractional: Fractional[Double] = new Fractional[Double] {
@@ -74,8 +92,9 @@ object Fractional {
     override def div(x: Double, y: Double): Double = x / y
     override def mul(x: Double, y: Double): Double = x * y
     override def negate(x: Double): Double = -x
-    override def fromInteger(n: Int): Double = n.toDouble
+    override def fromInteger(n: Integer): Double = n.toDouble
     override def signum(x: Double): Double = scala.math.signum(x)
     override def eq(lhs: Double, rhs: Double): Boolean = lhs equals rhs
+    override def fromRational(r: Rational): Double = (r.numerator / r.denominator).toDouble
   }
 }
