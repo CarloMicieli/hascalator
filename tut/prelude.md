@@ -3,7 +3,7 @@ layout: default
 title:  "Prelude"
 ---
 
-# `Prelude`
+# Prelude
 
 The `Prelude` must imported to access the library types and functions.
 
@@ -50,4 +50,40 @@ res4: String = world hello
 ```scala
 scala> until[Int](_ > 10)(_ + 1)(0)
 res5: io.hascalator.Prelude.Int = 11
+```
+
+## Numeric functions
+
+`even` checks whether the argument is an _even_ number
+
+```scala
+scala> even(42)
+res6: io.hascalator.Prelude.Boolean = true
+
+scala> even(43)
+res7: io.hascalator.Prelude.Boolean = false
+```
+
+`odd` checks whether the argument is an _odd_ number
+
+```scala
+scala> odd(42)
+res8: io.hascalator.Prelude.Boolean = false
+
+scala> odd(43)
+res9: io.hascalator.Prelude.Boolean = true
+```
+
+`gcd`: `gcd(x, y)` is the non-negative factor of both `x` and `y` of which
+every common factor of `x` and `y` is also a factor:
+
+```scala
+scala> gcd(4, 2)
+res10: Int = 2
+
+scala> gcd(-4, 6)
+res11: Int = 2
+
+scala> gcd(0, 0)
+res12: Int = 0
 ```

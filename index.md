@@ -10,6 +10,10 @@ section: "home"
 
 - [Prelude](tut/prelude)
 
+## Typeclasses
+
+- [Numbers](tut/numbers)
+
 ## Data structures
 
 - [Either](tut/either)

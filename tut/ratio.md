@@ -29,8 +29,8 @@ scala> Ratio[Int](4, 0)
 java.lang.IllegalArgumentException: requirement failed
   at scala.Predef$.require(Predef.scala:212)
   at io.hascalator.Prelude$.require(Prelude.scala:193)
-  at io.hascalator.data.Ratio$.apply(Ratio.scala:152)
-  ... 246 elided
+  at io.hascalator.data.Ratio$.apply(Ratio.scala:143)
+  ... 250 elided
 ```
 
 Since _denominator_ may be equal to one, every integer is a `Ratio` number:
