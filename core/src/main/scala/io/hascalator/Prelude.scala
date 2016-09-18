@@ -95,6 +95,8 @@ object Prelude {
   val Integral = io.hascalator.typeclasses.Integral
   type Fractional[A] = io.hascalator.typeclasses.Fractional[A]
   val Fractional = io.hascalator.typeclasses.Fractional
+  type RealFrac[A] = io.hascalator.typeclasses.RealFrac[A]
+  val RealFrac = io.hascalator.typeclasses.RealFrac
 
   /** The identity function
     *

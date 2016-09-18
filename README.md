@@ -19,13 +19,16 @@ This library implements the following types:
 
 and the following typeclasses:
 
-* `Show`
-* `Eq`
-* `Ord`
-* `Num`
-* `Integral`
-* `Fractional`
+* `Bounded`
 * `Enum`
+* `Eq`
+* `Fractional`
+* `Integral`
+* `Num`
+* `Ord`
+* `Real`
+* `RealFrac`
+* `Show`
 
 ## Layout ##
 
