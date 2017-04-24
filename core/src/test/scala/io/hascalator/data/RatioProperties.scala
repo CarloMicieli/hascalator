@@ -21,7 +21,7 @@ import tests.arbitrary.ratio._
 import org.scalacheck.Prop.forAll
 
 class RatioProperties extends AbstractPropertySpec {
-  property("sum of Ratio: commutative property") {
+  ignore("sum of Ratio: commutative property") {
     check(forAll { (a: Ratio[Int], b: Ratio[Int]) =>
       (a + b) === (b + a)
     })
