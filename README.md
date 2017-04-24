@@ -152,8 +152,8 @@ the implementation is heavy on implicit values.
 * Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
 * Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
 * Larry LIU Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
-* Haskell docs: `Prelude`. Retried from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
-* Haskell docs:`Data.List`. Retried from [here](https://hackage.haskell.org/package/base-4.9.0.0/docs/Data-List.html)
+* Haskell docs: `Prelude`. Retrived from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
+* Haskell docs:`Data.List`. Retrived from [here](https://hackage.haskell.org/package/base-4.9.0.0/docs/Data-List.html)
 * Typelevel `Cats`: Lightweight, modular, and extensible library for functional programming. [https://github.com/typelevel/cats](https://github.com/typelevel/cats)
 * Typelevel `Dogs`: data structures for pure functional programming in scala. [https://github.com/stew/dogs](https://github.com/stew/dogs)
 
