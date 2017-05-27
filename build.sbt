@@ -5,7 +5,6 @@ import de.heikoseeberger.sbtheader.HeaderPlugin
 import de.heikoseeberger.sbtheader.license._
 import scoverage.ScoverageKeys
 import com.typesafe.sbt.SbtSite.SiteKeys._
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
 name := "hascalator"
 
@@ -80,7 +79,7 @@ lazy val bench = (project in file("bench"))
   enablePlugins(JmhPlugin)
   dependsOn(core)
 */
-
+/*
 lazy val docs = (project in file("docs"))
   .settings(commonSettings)
   .settings(scalacOptions ++= ScalacOptions.BenchmarkDefault)
@@ -92,18 +91,18 @@ lazy val docs = (project in file("docs"))
     tutSettings,
     ghpages.settings,
     site.addMappingsToSiteDir(tut, "tut"),
-    ghpagesNoJekyll := false,
+    //ghpagesNoJekyll := false,
     includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md",
     git.remoteRepo := "git@github.com:CarloMicieli/hascalator.git"
   )
-
+*/
 lazy val scalaProject = (project in file("."))
   .settings(moduleName := "root")
   .settings(commonSettings)
   .enablePlugins(GitVersioning)
   .enablePlugins(GitBranchPrompt)
   .settings(noPublishSettings)
-  .aggregate(core, docs/*, bench*/)
+  .aggregate(core/*, docs, bench*/)
 
 fork in run := true
 
