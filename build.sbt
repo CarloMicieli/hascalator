@@ -6,7 +6,6 @@ import de.heikoseeberger.sbtheader.license._
 import scoverage.ScoverageKeys
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
-import sbtunidoc.Plugin.UnidocKeys._
 
 name := "hascalator"
 
@@ -28,6 +27,15 @@ lazy val automateHeaderPluginSettings = Seq(
   HeaderPlugin.autoImport.headers := Map("scala" -> Apache2_0("2016", "Carlo Micieli"))
 )
 
+lazy val scalariformPluginSettings = Seq(
+  ScalariformKeys.preferences := ScalariformKeys.preferences.value
+    .setPreference(AlignSingleLineCaseStatements, true)
+    .setPreference(DoubleIndentClassDeclaration, true)
+    .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
+    .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
+    .setPreference(DanglingCloseParenthesis, Preserve)
+)
+
 lazy val commonSettings = Seq(
   organization := "io.hascalator",
   organizationName := "CarloMicieli",
@@ -37,93 +45,48 @@ lazy val commonSettings = Seq(
   licenses := Seq(("Apache License, Version 2.0", url("http://www.apache.org/licenses/LICENSE-2.0")))
 )
 
-lazy val commonScalacOptions = Seq(
-  "-target:jvm-1.8",
-  "-encoding", "UTF-8",
-  "-deprecation",
-  "-feature",
-  "-unchecked",
-  "-Xfatal-warnings",
-  "-Xlint",
-  "-Yno-adapted-args",
-  "-Ywarn-unused-import",
-  "-Ywarn-numeric-widen",
-  "-Ywarn-infer-any",
-  "-Ywarn-value-discard",
-  "-Ywarn-inaccessible",
-  "-Ywarn-dead-code",
-  "-J-Xss6M"
-)
-
-lazy val additionalScalacOptions = Set(
-  "-Yno-imports",
-  "-Yno-predef",
-  "-Xfatal-warnings",
-  "-Ywarn-dead-code",
-  "-Ywarn-unused-import"
-)
-
-lazy val core = (project in file("core")).
-  settings(commonSettings).
-  settings(scalacOptions ++= commonScalacOptions ++ additionalScalacOptions).
-  settings(scalacOptions in (Compile, console) ~= (_.filterNot(Set(
-      "-Yno-imports",
-      "-Xfatal-warnings",
-      "-Ywarn-dead-code",
-      "-Ywarn-unused-import"
-    ))),
-    scalacOptions in Test ~= (_.filterNot(Set(
-      "-Ywarn-unused-import",
-      "-Yno-imports",
-      "-Yno-predef"
-    )))).
-  settings(automateHeaderPluginSettings: _*).
-  settings(scoverageSettings: _*).
-  settings(
-    SbtScalariform.scalariformSettings,
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-      .setPreference(AlignSingleLineCaseStatements, true)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
-      .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
-      .setPreference(PreserveDanglingCloseParenthesis, true)).
-  enablePlugins(SbtScalariform).
-  enablePlugins(AutomateHeaderPlugin).
-  settings(libraryDependencies ++= Seq(
+lazy val core = (project in file("core"))
+  .settings(commonSettings)
+  .settings(
+    scalacOptions ++= ScalacOptions.Default,
+    scalacOptions in (Compile, console) ~= ScalacOptions.ConsoleDefault,
+    scalacOptions in Test ~= ScalacOptions.TestDefault)
+  .settings(automateHeaderPluginSettings: _*)
+  .settings(scoverageSettings: _*)
+  .settings(SbtScalariform.scalariformSettings)
+  .settings(scalariformPluginSettings: _*)
+  .enablePlugins(SbtScalariform)
+  .enablePlugins(AutomateHeaderPlugin)
+  .settings(libraryDependencies ++= Seq(
     Library.scalaLogging,
     Library.typesafeConfig,
     Library.logback,
     Library.scalaCheck % "test",
     Library.scalaTest % "test"
-  )).
-  settings(initialCommands := """|import io.hascalator._
+  ))
+  .settings(initialCommands := """|import io.hascalator._
                                  |import Prelude._
                                  |""".stripMargin)
-
-lazy val bench = (project in file("bench")).
-  settings(commonSettings).
-  settings(scalacOptions ++= commonScalacOptions).
-  settings(scoverageSettings: _*).
-  settings(automateHeaderPluginSettings: _*).
-  settings(
-    SbtScalariform.scalariformSettings,
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-      .setPreference(AlignSingleLineCaseStatements, true)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
-      .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
-      .setPreference(PreserveDanglingCloseParenthesis, true)).
-  enablePlugins(SbtScalariform).
-  enablePlugins(AutomateHeaderPlugin).
-  enablePlugins(JmhPlugin).
+/*
+lazy val bench = (project in file("bench"))
+  .settings(commonSettings)
+  .settings(scalacOptions ++= ScalacOptions.BenchmarkDefault)
+  .settings(scoverageSettings: _*)
+  .settings(automateHeaderPluginSettings: _*)
+  .settings(SbtScalariform.scalariformSettings)
+  .settings(scalariformPluginSettings: _*)
+  enablePlugins(SbtScalariform)
+  enablePlugins(AutomateHeaderPlugin)
+  enablePlugins(JmhPlugin)
   dependsOn(core)
+*/
 
-lazy val docs = (project in file("docs")).
-  settings(commonSettings).
-  settings(scalacOptions ++= commonScalacOptions).
-  dependsOn(core).
-  settings(noPublishSettings).
-  settings(
+lazy val docs = (project in file("docs"))
+  .settings(commonSettings)
+  .settings(scalacOptions ++= ScalacOptions.BenchmarkDefault)
+  .dependsOn(core)
+  .settings(noPublishSettings)
+  .settings(
     site.settings,
     site.includeScaladoc(),
     tutSettings,
@@ -136,10 +99,11 @@ lazy val docs = (project in file("docs")).
 
 lazy val scalaProject = (project in file("."))
   .settings(moduleName := "root")
+  .settings(commonSettings)
   .enablePlugins(GitVersioning)
   .enablePlugins(GitBranchPrompt)
   .settings(noPublishSettings)
-  .aggregate(core, docs, bench)
+  .aggregate(core, docs/*, bench*/)
 
 fork in run := true
 
