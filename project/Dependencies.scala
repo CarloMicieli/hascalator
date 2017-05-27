@@ -11,11 +11,9 @@ object Version {
 }
 
 object Library {
-  val logback        = "ch.qos.logback" %  "logback-classic" % Version.Logback
-  val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging" % Version.ScalaLogging
-
-  val typesafeConfig = "com.typesafe"   % "config" % Version.TypesafeConfig
-
-  val scalaTest      = "org.scalatest"  %% "scalatest" % Version.ScalaTest
-  val scalaCheck     = "org.scalacheck" %% "scalacheck" % Version.ScalaCheck
+  val logback: ModuleID        = "ch.qos.logback" %  "logback-classic" % Version.Logback
+  val scalaLogging: ModuleID   = "com.typesafe.scala-logging" %% "scala-logging" % Version.ScalaLogging
+  val typesafeConfig: ModuleID = "com.typesafe"   % "config" % Version.TypesafeConfig
+  val scalaTest: ModuleID      = "org.scalatest"  %% "scalatest" % Version.ScalaTest
+  val scalaCheck: ModuleID     = "org.scalacheck" %% "scalacheck" % Version.ScalaCheck
 }

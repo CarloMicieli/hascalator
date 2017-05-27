@@ -4,14 +4,13 @@ import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import de.heikoseeberger.sbtheader.HeaderPlugin
 import de.heikoseeberger.sbtheader.license._
 import scoverage.ScoverageKeys
-import com.typesafe.sbt.SbtSite.SiteKeys._
 
 name := "hascalator"
 
 lazy val scoverageSettings = Seq(
-  ScoverageKeys.coverageMinimum := 60,
+  ScoverageKeys.coverageMinimum       := 60,
   ScoverageKeys.coverageFailOnMinimum := false,
-  ScoverageKeys.coverageHighlighting := true,
+  ScoverageKeys.coverageHighlighting  := true,
   ScoverageKeys.coverageExcludedPackages := "io\\.hascalator\\.benchmarks\\..*"
 )
 
@@ -63,9 +62,7 @@ lazy val core = (project in file("core"))
     Library.scalaCheck % "test",
     Library.scalaTest % "test"
   ))
-  .settings(initialCommands := """|import io.hascalator._
-                                 |import Prelude._
-                                 |""".stripMargin)
+
 /*
 lazy val bench = (project in file("bench"))
   .settings(commonSettings)
@@ -79,30 +76,27 @@ lazy val bench = (project in file("bench"))
   enablePlugins(JmhPlugin)
   dependsOn(core)
 */
-/*
+
 lazy val docs = (project in file("docs"))
   .settings(commonSettings)
-  .settings(scalacOptions ++= ScalacOptions.BenchmarkDefault)
-  .dependsOn(core)
+  .settings(moduleName := "hascalator-docs")
+  .settings(scalacOptions ++= ScalacOptions.SiteDefault)
   .settings(noPublishSettings)
-  .settings(
-    site.settings,
-    site.includeScaladoc(),
-    tutSettings,
-    ghpages.settings,
-    site.addMappingsToSiteDir(tut, "tut"),
-    //ghpagesNoJekyll := false,
-    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md",
-    git.remoteRepo := "git@github.com:CarloMicieli/hascalator.git"
-  )
-*/
+  .enablePlugins(ScalaUnidocPlugin)
+  .enablePlugins(SiteScaladocPlugin)
+  .aggregate(core)
+  .dependsOn(core)
+
 lazy val scalaProject = (project in file("."))
   .settings(moduleName := "root")
   .settings(commonSettings)
   .enablePlugins(GitVersioning)
   .enablePlugins(GitBranchPrompt)
   .settings(noPublishSettings)
-  .aggregate(core/*, docs, bench*/)
+  .dependsOn(core, docs)
+  .settings(initialCommands := """|import io.hascalator._
+                                  |import Prelude._
+                                  |""".stripMargin)
 
 fork in run := true
 

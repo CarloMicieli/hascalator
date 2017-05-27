@@ -17,6 +17,12 @@ object ScalacOptions {
     "-J-Xss6M"
   )
 
+  lazy val SiteDefault = Seq(
+    "-target:jvm-1.8",
+    "-encoding", "UTF-8",
+    "-J-Xss6M"
+  )
+
   lazy val Default = Seq(
     "-target:jvm-1.8",
     "-encoding", "UTF-8",
