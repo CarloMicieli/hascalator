@@ -48,7 +48,7 @@ The project has the following layout:
 ---------+ hascalator
 ------------+ Prelude.scala   // the entry point
 ------------+ data            // basic data types (ie Maybe, Either, List...)
-------------+ dst             // immutable, purely function data structures
+------------+ dst             // immutable, purely functional data structures
 ------------+ math            // math types
 ------------+ typeclasses     // typeclasses
 ```
@@ -72,7 +72,7 @@ final case class Just[A](value: A) extends Maybe[A]
      case object None              extends Maybe[Nothing]
 ```
 
-To avoid to publish in the public API all the types, the only public type is
+To avoid to publish as public API all the types, the only public type is
 the trait one, the more specific types are kept private. New values are created
 using smart constructors defined in the companion object for the trait.
 
@@ -83,7 +83,7 @@ object Maybe {
 }
 ```
 
-with explicit return types, the type for the constructed value will be the trait one.
+with explicit return types, the type for the constructed value will always be the trait.
 
 ### Strict vs Lazy ###
 
@@ -94,7 +94,7 @@ translation they are kept in the API.
 For instance, `(++) :: [a] -> [a] -> [a]` (the function that appends two lists) allows
 infinite lists. The `data.List` implemented in Scala is not infinite and it's strictly
 evaluated. Technically it's still possible to build an infinite list, but with the
-strict evaluation the append operation will be rather useless (ie, the append operation
+strict evaluation the append operation will be rather useless (ie, the `append` operation
 will never terminate).
 
 Other functions, `iterate :: (a -> a) -> a -> [a]`, are not working in a strict
@@ -102,7 +102,7 @@ evaluated context and therefore were left out of the API.
 
 ### Total functions ###
 
-Even if Haskell is much pure language than Scala, there are in the Prelude
+Even if Haskell is much pure language than Scala, there are in the `Prelude`
 example of non-total functions (ie `head :: [a] -> a`). The corresponding methods
 have the same semantics throwing an `Exception`.
 
