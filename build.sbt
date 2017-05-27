@@ -94,6 +94,7 @@ lazy val scalaProject = (project in file("."))
   .enablePlugins(GitBranchPrompt)
   .settings(noPublishSettings)
   .dependsOn(core, docs)
+  .aggregate(core)
   .settings(initialCommands := """|import io.hascalator._
                                   |import Prelude._
                                   |""".stripMargin)
