@@ -51,6 +51,30 @@ sealed trait NonEmpty[A] {
     */
   def init: List[A] = fold(_ => List.empty, (x, xs) => x :: xs.init)
 
+  /** Returns the first n elements of xs.
+    * @param n the number of elements to take
+    * @return
+    */
+  def take(n: Int): List[A] = {
+    if (n <= 0) {
+      List.empty
+    } else {
+      fold(_ => this.toList, (x, xs) => x :: xs.take(n - 1))
+    }
+  }
+
+  /** Drops the first n elements off the front of the sequence xs.
+    * @param n the number of elements to drop
+    * @return
+    */
+  def drop(n: Int): List[A] = {
+    if (n <= 0) {
+      toList
+    } else {
+      fold(_ => List.empty, (_, xs) => xs.drop(n - 1))
+    }
+  }
+
   /** Produces the first element of the NonEmpty list, and a NonEmpty list of the remaining elements, if any.
     * @return
     */
@@ -63,7 +87,7 @@ sealed trait NonEmpty[A] {
     * @return a new NonEmpty list
     */
   def map[B](f: A => B): NonEmpty[B] = {
-    NonEmptyCons(f(head), tail map f)
+    fold(x => NonEmpty.singleton(f(x)), (x, xs) => NonEmptyCons(f(x), xs map f))
   }
 
   /** Map a function over a NonEmpty list.
@@ -115,9 +139,36 @@ sealed trait NonEmpty[A] {
     */
   def toList: List[A] = head :: tail
 
+  /** Takes two streams and returns a stream of corresponding pairs.
+    * @param that the second NonEmpty list
+    * @return a new NonEmpty list
+    */
+  def zip[B](that: NonEmpty[B]): NonEmpty[(A, B)] = {
+    this.zipWith(that)((a, b) => (a, b))
+  }
+
+  /** Takes two lists and returns a list applying `f` to each corresponding pair. If one input
+    * list is short, excess elements of the longer list are discarded.
+    * @param that the second list
+    * @param f the function to produce elements in the resulting list
+    * @tparam B the second list element type
+    * @tparam C the resulting list element type
+    * @return a new NonEmpty list
+    */
+  def zipWith[B, C](that: NonEmpty[B])(f: (A, B) => C): NonEmpty[C] = {
+    val newHead: C = f(this.head, that.head)
+    if (this.isSingleton || that.isSingleton) {
+      Singleton(newHead)
+    } else {
+      NonEmptyCons(newHead, this.tail.zipWith(that.tail)(f))
+    }
+  }
+
   override def toString: String = {
     fold(x => s"$x :| []", (x, xs) => s"$x :| [${xs.mkString(",")}]")
   }
+
+  protected def isSingleton: Boolean
 
   private def fold[B](singletonF: A => B, listF: (A, List[A]) => B): B = {
     this match {
@@ -128,6 +179,24 @@ sealed trait NonEmpty[A] {
 }
 
 object NonEmpty {
+
+  /** Produces a new NonEmpty list by repeatedly applying the unfolding function to the seed value to produce
+    * an element of type b and a new seed value. When the unfolding function returns None instead of a new seed value,
+    * the list ends.
+    *
+    * @param seed the seed
+    * @param f the generator function
+    * @tparam A
+    * @tparam B
+    * @return a new NonEmpty list
+    */
+  def unfold[A, B](seed: A)(f: A => (B, Maybe[A])): NonEmpty[B] = {
+    f(seed) match {
+      case (x, None)    => singleton(x)
+      case (x, Just(a)) => NonEmptyCons(x, unfold(a)(f).toList)
+    }
+  }
+
   /** nonEmpty efficiently turns a normal list into a NonEmpty list, producing None if the input is empty.
     * @param list
     * @tparam A
@@ -158,7 +227,13 @@ object NonEmpty {
     * @tparam A the element type
     * @return a new NonEmpty list
     */
-  def apply[A](x: A, xs: A*): NonEmpty[A] = NonEmptyCons(x, List(xs: _*))
+  def apply[A](x: A, xs: A*): NonEmpty[A] = {
+    if (xs.isEmpty) {
+      singleton(x)
+    } else {
+      NonEmptyCons(x, List(xs: _*))
+    }
+  }
 
   /** Returns a singleton, non empty list
     *
@@ -171,8 +246,12 @@ object NonEmpty {
 
 /* Represents a cons non empty list
  */
-private[this] case class NonEmptyCons[A](x: A, xs: List[A]) extends NonEmpty[A]
+private[this] case class NonEmptyCons[A](x: A, xs: List[A]) extends NonEmpty[A] {
+  override protected def isSingleton: Boolean = false
+}
 
 /* Represents the singleton, non empty list
  */
-private[this] case class Singleton[A](x: A) extends NonEmpty[A]
+private[this] case class Singleton[A](x: A) extends NonEmpty[A] {
+  override protected def isSingleton: Boolean = true
+}
