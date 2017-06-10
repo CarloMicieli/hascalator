@@ -249,8 +249,8 @@ object Either extends EitherInstances {
 }
 
 trait EitherInstances {
-  implicit def toShowEither[A: Show, B: Show]: Show[Either[A, B]] = Show {
-    (x: Either[A, B]) =>
+  implicit def toShowEither[A: Show, B: Show]: Show[Either[A, B]] = Show.fromFunction {
+    x =>
       {
         val l = (a: A) => s"Left(${implicitly[Show[A]].show(a)})"
         val r = (b: B) => s"Right(${implicitly[Show[B]].show(b)})"
@@ -258,8 +258,8 @@ trait EitherInstances {
       }
   }
 
-  implicit def toOrdEither[A, B](implicit ordA: Ord[A], ordB: Ord[B]): Ord[Either[A, B]] = {
-    val cmp: (Either[A, B], Either[A, B]) => Ordering = (x, y) =>
+  implicit def toOrdEither[A, B](implicit ordA: Ord[A], ordB: Ord[B]): Ord[Either[A, B]] = Ord.fromFunction {
+    (x, y) =>
       {
         (x, y) match {
           case (Right(a), Right(b)) => ordB.compare(a, b)
@@ -268,8 +268,6 @@ trait EitherInstances {
           case (Left(a), Left(b))   => ordA.compare(a, b)
         }
       }
-
-    Ord(cmp)
   }
 }
 

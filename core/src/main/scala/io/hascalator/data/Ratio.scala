@@ -204,7 +204,7 @@ trait RatioInstances extends LowRatioInstances {
 }
 
 trait LowRatioInstances {
-  implicit def toOrdRatio[A](implicit i: Integral[A], o: Ord[A]): Ord[Ratio[A]] = Ord {
+  implicit def toOrdRatio[A](implicit i: Integral[A], o: Ord[A]): Ord[Ratio[A]] = Ord.fromFunction {
     (x, y) =>
       {
         val Ratio(a, b) = x

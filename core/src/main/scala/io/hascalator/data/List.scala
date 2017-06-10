@@ -76,7 +76,7 @@ sealed trait List[+A] {
       @tailrec
       def loop(xs: List[A]): Unit = {
         xs match {
-          case x :: Nil =>
+          case _ :: Nil =>
             ()
           case h :: t =>
             builder += h
@@ -525,9 +525,9 @@ sealed trait List[+A] {
     */
   @tailrec final def dropWhile(p: A => Boolean): List[A] = {
     this match {
-      case Nil              => Nil
-      case x :: xs if !p(x) => this
-      case _ :: xs          => xs.dropWhile(p)
+      case Nil             => Nil
+      case x :: _ if !p(x) => this
+      case _ :: xs         => xs.dropWhile(p)
     }
   }
 
@@ -587,7 +587,7 @@ sealed trait List[+A] {
       (n, xs) match {
         case (i, _) if i < 0   => xs
         case (0, _) | (_, Nil) => xs
-        case (i, h :: t) =>
+        case (_, h :: t) =>
           builder += h
           loop(n - 1, t)
       }
@@ -609,7 +609,7 @@ sealed trait List[+A] {
   def partition(p: A => Boolean): (List[A], List[A]) = {
     this match {
       case Nil => (Nil, Nil)
-      case x :: xs =>
+      case _ :: _ =>
         val fstBuilder = new ListBuilder[A]
         val sndBuilder = new ListBuilder[A]
 
@@ -908,7 +908,7 @@ sealed trait List[+A] {
       xs0 match {
         case List()  => List.empty
         case List(x) => List(List(x))
-        case h :: t =>
+        case _ :: _ =>
           for {
             y <- xs0
             ys = removeFirst(xs0)(y)
@@ -929,7 +929,7 @@ sealed trait List[+A] {
     def f(a: A1, xss: List[List[A1]]): List[List[A1]] = {
       xss match {
         case Nil => List(List(a))
-        case (f @ (x :: xs)) :: rest =>
+        case (f @ (x :: _)) :: rest =>
           if (Eq[A1].eq(x, a)) {
             (a :: f) :: rest
           } else {
@@ -980,23 +980,23 @@ sealed trait List[+A] {
     go(xs, this)
   }
 
-  /** Takes two lists and returns True iff the first list is a suffix of the second.
+  /* Takes two lists and returns True iff the first list is a suffix of the second.
     * @usecase def isSuffixOf(xs: List[A]): Boolean
     * @param xs
     * @param eq
     * @tparam A1
     * @return
     */
-  def isSuffixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
+  //def isSuffixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
 
-  /** Takes two lists and returns True iff the first list is contained, wholly and intact, anywhere within the second.
+  /* Takes two lists and returns True iff the first list is contained, wholly and intact, anywhere within the second.
     * @usecase def isInfixOf(xs: List[A]): Boolean
     * @param xs
     * @param eq
     * @tparam A1
     * @return
     */
-  def isInfixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
+  //def isInfixOf[A1 >: A](xs: List[A1])(implicit eq: Eq[A1]): Boolean = undefined
 
   /** Displays all elements of this list in a string.
     * @param sep the elements separator
@@ -1094,11 +1094,11 @@ object List extends ListInstances {
 }
 
 trait ListInstances {
-  implicit def toShowList[A: Show]: Show[List[A]] = Show {
-    (x: List[A]) => Show[A].showList(x)
+  implicit def toShowList[A: Show]: Show[List[A]] = Show.fromFunction {
+    x => Show[A].showList(x)
   }
 
-  implicit def toOrdList[A: Ord](implicit ordA: Ord[A]): Ord[List[A]] = {
+  implicit def toOrdList[A: Ord](implicit ordA: Ord[A]): Ord[List[A]] = Ord.fromFunction {
     @tailrec
     def compareLists(xs: List[A], ys: List[A]): Ordering = {
       (xs, ys) match {
@@ -1114,8 +1114,7 @@ trait ListInstances {
           }
       }
     }
-
-    Ord(compareLists _)
+    (xs, ys) => compareLists(xs, ys)
   }
 }
 
@@ -1146,7 +1145,7 @@ final private[this] class ListBuilder[A] extends mutable.Builder[A, List[A]] {
 
   override def +=(elem: A): ListBuilder.this.type = {
     out match {
-      case Cons(h, t) =>
+      case Cons(_, _) =>
         val newEnd = Cons(elem, List.empty)
         end._tail = newEnd
         end = newEnd

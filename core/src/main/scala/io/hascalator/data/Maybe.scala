@@ -274,13 +274,12 @@ object Maybe extends MaybeInstances {
 }
 
 trait MaybeInstances {
-  implicit def toShowMaybe[A: Show]: Show[Maybe[A]] = Show {
-    (x: Maybe[A]) =>
-      x.map(v => implicitly[Show[A]].show(v)).toString
+  implicit def toShowMaybe[A: Show]: Show[Maybe[A]] = Show.fromFunction {
+    _.map(v => implicitly[Show[A]].show(v)).toString
   }
 
-  implicit def toOrdMaybe[A](implicit ordA: Ord[A]): Ord[Maybe[A]] = Ord {
-    (x: Maybe[A], y: Maybe[A]) =>
+  implicit def toOrdMaybe[A](implicit ordA: Ord[A]): Ord[Maybe[A]] = Ord.fromFunction {
+    (x, y) =>
       {
         (x, y) match {
           case (None, None)       => Ordering.EQ

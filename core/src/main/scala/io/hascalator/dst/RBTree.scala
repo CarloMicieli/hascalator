@@ -24,8 +24,8 @@ import scala.NoSuchElementException
 private[dst] sealed trait RBTree[+K, +V] extends Any with Tree[K, V] {
   override def lookup[K1 >: K](key: K1)(implicit ord: Ord[K1]): Maybe[V] = {
     this match {
-      case EmptyRBTree                              => none
-      case RBNode(_, left, k, v, right) if k == key => just(v)
+      case EmptyRBTree                       => none
+      case RBNode(_, _, k, v, _) if k == key => just(v)
       case RBNode(_, left, k, _, right) =>
         import Ord.ops._
         if (key < k) {
@@ -162,7 +162,7 @@ object RBTree {
     * @tparam V the value type
     * @return an empty tree
     */
-  def empty[K, V](implicit ord: Ord[K]): Tree[K, V] = EmptyRBTree
+  def empty[K: Ord, V]: Tree[K, V] = EmptyRBTree
 
   /** It creates a new red-black tree, initialized with the provided list elements.
     * @param xs the initial elements of the tree
@@ -174,7 +174,7 @@ object RBTree {
     xs.foldLeft(RBTree.empty[K, V])((tree, x) => tree insert x)
   }
 
-  private def balance[K, V](color: Color, left: RBTree[K, V], key: K, value: V, right: RBTree[K, V])(implicit ord: Ord[K]): RBTree[K, V] = {
+  private def balance[K: Ord, V](color: Color, left: RBTree[K, V], key: K, value: V, right: RBTree[K, V]): RBTree[K, V] = {
     (color, left, key, value, right) match {
       case (Black, RBNode(Red, RBNode(Red, a, kx, vx, b), ky, vy, c), kz, vz, d) =>
         RBNode(Red, RBNode(Black, a, kx, vx, b), ky, vy, RBNode(Black, c, kz, vz, d))
@@ -184,7 +184,7 @@ object RBTree {
         RBNode(Red, RBNode(Black, a, kx, vx, b), ky, vy, RBNode(Black, c, kz, vz, d))
       case (Black, a, kx, vx, RBNode(Red, RBNode(Red, b, ky, vy, c), kz, vz, d)) =>
         RBNode(Red, RBNode(Black, a, kx, vx, b), ky, vy, RBNode(Black, c, kz, vz, d))
-      case (c, l, k, v, r) => RBNode(color, l, k, v, r)
+      case (_, l, k, v, r) => RBNode(color, l, k, v, r)
     }
   }
 }

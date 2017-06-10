@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.hascalator.typeclasses
+package io.hascalator
+package typeclasses
 
-import io.hascalator.Prelude._
+import Prelude._
 
 /** @author Carlo Micieli
   * @since 0.0.1
@@ -24,19 +25,19 @@ import io.hascalator.Prelude._
 sealed trait Ordering
 
 object Ordering {
-  case object LT extends Ordering
   case object EQ extends Ordering
+  case object LT extends Ordering
   case object GT extends Ordering
 
-  def apply(i: Int): Ordering = {
-    i match {
-      case 0          => Ordering.EQ
-      case n if n < 0 => Ordering.LT
-      case n if n > 0 => Ordering.GT
-    }
-  }
-
   def apply[A](cmp: (A, A) => Int): (A, A) => Ordering = {
-    (x, y) => Ordering(cmp(x, y))
+    (x, y) =>
+      {
+        val i = cmp(x, y)
+        i match {
+          case 0          => EQ
+          case n if n < 0 => LT
+          case n if n > 0 => GT
+        }
+      }
   }
 }

@@ -23,33 +23,8 @@ object ScalacOptions {
     "-J-Xss6M"
   )
 
-  lazy val Default = Seq(
-    "-target:jvm-1.8",
-    "-encoding", "UTF-8",
-    "-deprecation",
-    "-feature",
-    "-unchecked",
-    "-Xfatal-warnings",
-    "-Xlint",
-    "-Yno-adapted-args",
-    "-Ywarn-unused-import",
-    "-Ywarn-numeric-widen",
-    "-Ywarn-infer-any",
-    "-Ywarn-value-discard",
-    "-Ywarn-inaccessible",
-    "-Ywarn-dead-code",
-    "-J-Xss6M",
-    "-Yno-imports",
-    "-Yno-predef",
-    "-Xfatal-warnings",
-    "-Ywarn-dead-code",
-    "-Ywarn-unused-import"
-  )
-
-
-
   // https://tpolecat.github.io/2017/04/25/scalac-flags.html
-  val Default2_12: Seq[String] = Seq(
+  val Default: Seq[String] = Seq(
     "-target:jvm-1.8",
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                // Specify character encoding used by source files.
@@ -81,9 +56,9 @@ object ScalacOptions {
     "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
     "-Xlint:unsound-match",              // Pattern match may not be typesafe.
     "-Yno-adapted-args",                 // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
-  //  "-Ypartial-unification",             // Enable partial unification in type constructor inference
+    "-Ypartial-unification",             // Enable partial unification in type constructor inference
     "-Ywarn-dead-code",                  // Warn when dead code is identified.
- //   "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
+    "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
     "-Ywarn-inaccessible",               // Warn about inaccessible types in method signatures.
     "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
     "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
@@ -91,10 +66,7 @@ object ScalacOptions {
     "-Ywarn-numeric-widen",              // Warn when numerics are widened.
     "-Ywarn-unused:implicits",           // Warn if an implicit parameter is unused.
     "-Ywarn-unused:imports",             // Warn if an import selector is not referenced.
-    "-Ywarn-unused:locals",              // Warn if a local definition is unused.
-    "-Ywarn-unused:params",              // Warn if a value parameter is unused.
     "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
-    "-Ywarn-unused:privates",            // Warn if a private member is unused.
     "-Ywarn-value-discard",              // Warn when non-Unit expression results are unused.
     "-Yno-imports",
     "-Yno-predef"

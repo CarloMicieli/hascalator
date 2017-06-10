@@ -113,9 +113,18 @@ trait Ord[A] extends Any with Eq[A] { self =>
 object Ord {
   def apply[A](implicit o: Ord[A]): Ord[A] = o
 
-  def apply[A](cmp: (A, A) => Ordering): Ord[A] = new Ord[A] {
-    override def compare(lhs: A, rhs: A): Ordering = cmp(lhs, rhs)
-    override def eq(lhs: A, rhs: A): Boolean = compare(lhs, rhs) == Ordering.EQ
+  def fromFunction[A](cmp: (A, A) => Ordering): Ord[A] = new Ord[A] {
+    override def compare(lhs: A, rhs: A): Ordering = {
+      cmp(lhs, rhs)
+    }
+
+    override def eq(lhs: A, rhs: A): Boolean = {
+      compare(lhs, rhs) == Ordering.EQ
+    }
+  }
+
+  private def fromCompare[A](cmp: (A, A) => Int): Ord[A] = {
+    fromFunction(Ordering(cmp))
   }
 
   trait OrdOps[A] {
@@ -136,7 +145,6 @@ object Ord {
   object ops {
     implicit def toOrdOps[A: Ord](x: A): OrdOps[A] = new OrdOps[A] {
       override def self: A = x
-
       override def ordInstance: Ord[A] = implicitly[Ord[A]]
     }
   }
@@ -152,7 +160,6 @@ object Ord {
   implicit val charOrd: Ord[Char] = fromCompare((x, y) => java.lang.Character.compare(x, y))
   implicit val stringOrd: Ord[String] = fromCompare((x, y) => x.compareTo(y))
 
-  private def fromCompare[A: Eq](cmp: (A, A) => Int): Ord[A] = Ord(Ordering(cmp))
 }
 
 protected[typeclasses] trait OrdLaws {
