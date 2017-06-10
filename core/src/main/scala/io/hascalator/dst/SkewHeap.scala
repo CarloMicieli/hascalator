@@ -26,7 +26,7 @@ import Prelude._
   * @author Carlo Micieli
   * @since 0.0.1
   */
-sealed trait SkewHeap[+A] {
+private[dst] sealed trait SkewHeap[+A] {
   def get: A
 
   def isEmpty: Boolean
@@ -56,7 +56,7 @@ sealed trait SkewHeap[+A] {
   def removeMin[A1 >: A](implicit ord: Ord[A1]): SkewHeap[A1] = {
     this match {
       case EmptyHeap     => EmptyHeap
-      case Fork(x, l, r) => l.merge[A1](r)
+      case Fork(_, l, r) => l.merge[A1](r)
     }
   }
 

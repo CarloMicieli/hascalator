@@ -19,7 +19,7 @@ package data
 
 import Prelude._
 
-/** It represents a FIFO data structure, the first element
+/** It represents a FIFO (first-in first-out) data structure, the first element
   * added to the queue will be the first one to be removed.
   *
   * @tparam A the `Queue` element type
