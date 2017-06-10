@@ -10,6 +10,7 @@ This library implements the following types:
 
 * `data.Either`
 * `data.List`
+* `data.NonEmpty`
 * `data.Maybe`
 * `data.Queue`
 * `data.Ratio`
@@ -29,6 +30,8 @@ and the following typeclasses:
 * `Real`
 * `RealFrac`
 * `Show`
+* `Semigroup`
+* `Monoid`
 
 ## Layout ##
 

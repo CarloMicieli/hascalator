@@ -19,6 +19,23 @@ package data
 
 class NonEmptySpec extends AbstractTestSpec with SampleNonEmptyLists {
   describe("A NonEmpty") {
+    describe("unfold") {
+      it("should generate the singleton NonEmpty list when generator function return a None") {
+        NonEmpty.unfold(42)(x => ("one", Maybe.none)) shouldBe NonEmpty("one")
+      }
+
+      it("should generate NonEmpty lists") {
+        val f: Int => (String, Maybe[Int]) = {
+          case 1 => ("I", Maybe.just(2))
+          case 2 => ("II", Maybe.just(3))
+          case 3 => ("III", Maybe.just(4))
+          case 4 => ("IV", Maybe.none)
+        }
+
+        NonEmpty.unfold(1)(f) shouldBe NonEmpty("I", "II", "III", "IV")
+      }
+    }
+
     describe("singleton") {
       it("should create a new NonEmpty list") {
         val l = NonEmpty.singleton(42)
@@ -60,6 +77,42 @@ class NonEmptySpec extends AbstractTestSpec with SampleNonEmptyLists {
 
         l.head shouldBe 1
         l.tail shouldBe tail
+      }
+    }
+
+    describe("drop") {
+      it("should drop 0 elements from singleton NonEmpty lists") {
+        singleton.drop(0) shouldBe List(42)
+      }
+
+      it("should drop n elements from singleton NonEmpty lists") {
+        singleton.drop(10) shouldBe List.empty
+      }
+
+      it("should drop 0 elements from NonEmpty lists") {
+        numbersList.drop(0) shouldBe List(1, 2, 3)
+      }
+
+      it("should drop n elements from NonEmpty lists") {
+        numbersList.drop(2) shouldBe List(3)
+      }
+    }
+
+    describe("take") {
+      it("should take 0 elements from singleton NonEmpty lists") {
+        singleton.take(0) shouldBe List.empty[Int]
+      }
+
+      it("should take n elements from singleton NonEmpty lists") {
+        singleton.take(10) shouldBe List(42)
+      }
+
+      it("should take 0 elements from NonEmpty lists") {
+        numbersList.take(0) shouldBe List.empty[Int]
+      }
+
+      it("should take n elements from NonEmpty lists") {
+        numbersList.take(2) shouldBe List(1, 2)
       }
     }
 
@@ -176,6 +229,39 @@ class NonEmptySpec extends AbstractTestSpec with SampleNonEmptyLists {
 
       it("should apply a function to NonEmpty lists") {
         numbersList.foldRight(0)(_ + _) shouldBe 6
+      }
+    }
+
+    describe("append") {
+      it("should append two NonEmpty lists") {
+        (numbersList append numbersList) shouldBe NonEmpty(1, 2, 3, 1, 2, 3)
+        (singleton append numbersList) shouldBe NonEmpty(42, 1, 2, 3)
+        (numbersList append singleton) shouldBe NonEmpty(1, 2, 3, 42)
+        (singleton append singleton) shouldBe NonEmpty(42, 42)
+      }
+    }
+
+    describe("zip") {
+      it("should zip two NonEmpty lists") {
+        (numbersList zip numbersList) shouldBe NonEmpty((1, 1), (2, 2), (3, 3))
+        (singleton zip numbersList) shouldBe NonEmpty((42, 1))
+        (numbersList zip singleton) shouldBe NonEmpty((1, 42))
+        (singleton zip singleton) shouldBe NonEmpty((42, 42))
+      }
+    }
+
+    describe("zipWith") {
+      it("should zip two NonEmpty lists") {
+        numbersList.zipWith(numbersList)(_ + _) shouldBe NonEmpty(2, 4, 6)
+        singleton.zipWith(numbersList)(_ + _) shouldBe NonEmpty(43)
+        numbersList.zipWith(singleton)(_ + _) shouldBe NonEmpty(43)
+        singleton.zipWith(singleton)(_ + _) shouldBe NonEmpty(84)
+      }
+    }
+
+    describe("apply") {
+      it("should construct a Singleton NonEmpty list when provided one element") {
+        NonEmpty("one") shouldBe NonEmpty.singleton("one")
       }
     }
   }
