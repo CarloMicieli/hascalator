@@ -46,7 +46,9 @@ trait Eq[A] extends Any {
 }
 
 object Eq {
-  def apply[A](implicit ev: Eq[A]) = ev
+  def apply[A](implicit ev: Eq[A]): Eq[A] = ev
+
+  def fromFunction[A](comp: (A, A) => Boolean): Eq[A] = (lhs: A, rhs: A) => comp(lhs, rhs)
 
   trait EqOps[A] {
     def self: A
@@ -62,21 +64,17 @@ object Eq {
     }
   }
 
-  def apply[A](comp: (A, A) => Boolean): Eq[A] = new Eq[A] {
-    override def eq(lhs: A, rhs: A): Boolean = comp(lhs, rhs)
-  }
+  implicit val floatEq: Eq[Float] = fromFunction(_ equals _)
+  implicit val doubleEq: Eq[Double] = fromFunction(_ equals _)
+  implicit val shortEq: Eq[Short] = fromFunction(_ equals _)
+  implicit val byteEq: Eq[Byte] = fromFunction(_ equals _)
+  implicit val intEq: Eq[Int] = fromFunction(_ equals _)
+  implicit val longEq: Eq[Long] = fromFunction(_ equals _)
 
-  implicit val floatEq: Eq[Float] = apply(_ equals _)
-  implicit val doubleEq: Eq[Double] = apply(_ equals _)
-  implicit val shortEq: Eq[Short] = apply(_ equals _)
-  implicit val byteEq: Eq[Byte] = apply(_ equals _)
-  implicit val intEq: Eq[Int] = apply(_ equals _)
-  implicit val longEq: Eq[Long] = apply(_ equals _)
+  implicit val booleanEq: Eq[Boolean] = fromFunction(_ equals _)
 
-  implicit val booleanEq: Eq[Boolean] = apply(_ equals _)
-
-  implicit val charEq: Eq[Char] = apply(_ equals _)
-  implicit val stringEq: Eq[String] = apply(_ equals _)
+  implicit val charEq: Eq[Char] = fromFunction(_ equals _)
+  implicit val stringEq: Eq[String] = fromFunction(_ equals _)
 }
 
 /** Laws Eq instances should have are the following:

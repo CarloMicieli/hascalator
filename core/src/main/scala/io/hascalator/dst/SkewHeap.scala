@@ -124,7 +124,7 @@ private[dst] sealed trait SkewHeap[+A] {
   def smaller[A1 >: A](x: A1, t: SkewHeap[A1])(implicit ord: Ord[A1]): Boolean = {
     t match {
       case EmptyHeap => true
-      case Fork(y, l, r) =>
+      case Fork(y, _, _) =>
         import Ord.ops._
         x <= y && t.invariant
     }

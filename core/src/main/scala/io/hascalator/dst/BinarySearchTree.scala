@@ -90,7 +90,7 @@ private[this] sealed trait BinarySearchTree[+K, +V] extends Any with Tree[K, V] 
         }
       case Node(k, v, left, EmptyTree) if k == key  => (just(v), left)
       case Node(k, v, EmptyTree, right) if k == key => (just(v), right)
-      case node @ Node(k, v, left, right) =>
+      case Node(_, v, left, right) =>
         val minKey = right.min.get
         val (minVal, r) = right.delete[K1](minKey)(ord)
         (just(v), Node(minKey, minVal.get, left, r))

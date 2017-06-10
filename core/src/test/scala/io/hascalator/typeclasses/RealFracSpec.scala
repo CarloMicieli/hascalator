@@ -17,8 +17,6 @@
 package io.hascalator
 package typeclasses
 
-import Prelude._
-
 class RealFracSpec extends AbstractTestSpec {
   describe("RealFrac") {
 

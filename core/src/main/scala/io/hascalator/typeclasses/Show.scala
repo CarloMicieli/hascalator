@@ -36,9 +36,7 @@ trait Show[A] extends Any {
 object Show {
   def apply[A](implicit S: Show[A]): Show[A] = S
 
-  def apply[A](toStr: A => String): Show[A] = new Show[A] {
-    override def show(x: A): String = toStr(x)
-  }
+  def fromFunction[A](toStr: A => String): Show[A] = (x: A) => toStr(x)
 
   trait ShowOps[A] {
     def self: A
@@ -53,14 +51,14 @@ object Show {
     }
   }
 
-  implicit val booleanShow: Show[Boolean] = apply(_.toString)
-  implicit val byteShow: Show[Byte] = apply(_.toString)
-  implicit val intShow: Show[Int] = apply(_.toString)
-  implicit val shortShow: Show[Short] = apply(_.toString)
-  implicit val longShow: Show[Long] = apply(_.toString)
-  implicit val floatShow: Show[Float] = apply(_.toString)
-  implicit val doubleShow: Show[Double] = apply(_.toString)
-  implicit val stringShow: Show[String] = apply(x => s""""$x"""")
+  implicit val booleanShow: Show[Boolean] = fromFunction((x: Boolean) => x.toString)
+  implicit val byteShow: Show[Byte] = fromFunction((x: Byte) => x.toString)
+  implicit val intShow: Show[Int] = fromFunction((x: Int) => x.toString)
+  implicit val shortShow: Show[Short] = fromFunction((x: Short) => x.toString)
+  implicit val longShow: Show[Long] = fromFunction((x: Long) => x.toString)
+  implicit val floatShow: Show[Float] = fromFunction((x: Float) => x.toString)
+  implicit val doubleShow: Show[Double] = fromFunction((x: Double) => x.toString)
+  implicit val stringShow: Show[String] = fromFunction((x: String) => s""""$x"""")
 
   implicit val charShow: Show[Char] = new Show[Char] {
     override def show(x: Char): String = s"'$x'"

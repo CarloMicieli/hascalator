@@ -38,7 +38,7 @@ lazy val commonSettings = Seq(
   organization := "io.hascalator",
   organizationName := "CarloMicieli",
   organizationHomepage := Some(url("http://CarloMicieli.github.io")),
-  scalaVersion := Version.Scala,
+  scalaVersion := Scalac.`2.12.2`,
   homepage := Some(url("https://github.com/CarloMicieli/hascalator")),
   licenses := Seq(("Apache License, Version 2.0", url("http://www.apache.org/licenses/LICENSE-2.0")))
 )
@@ -56,9 +56,6 @@ lazy val core = (project in file("core"))
   .enablePlugins(SbtScalariform)
   .enablePlugins(AutomateHeaderPlugin)
   .settings(libraryDependencies ++= Seq(
-    Library.scalaLogging,
-    Library.typesafeConfig,
-    Library.logback,
     Library.scalaCheck % "test",
     Library.scalaTest % "test"
   ))
