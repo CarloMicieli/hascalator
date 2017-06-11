@@ -20,6 +20,7 @@ package typeclasses
 import Prelude._
 import io.hascalator.data.NonEmpty
 
+import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
 /** A __semigroup__ is an algebraic structure consisting of a set together with an associative binary operation.
@@ -28,6 +29,7 @@ import scala.language.implicitConversions
   * @author Carlo Micieli
   * @since 0.0.1
   */
+@implicitNotFound("The type ${A} was not made instance of the Semigroup type class")
 trait Semigroup[A] extends Any {
   /** An associative operation.
     * @param x the first operand

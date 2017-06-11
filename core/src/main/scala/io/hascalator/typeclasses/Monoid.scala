@@ -18,6 +18,8 @@ package io.hascalator
 package typeclasses
 
 import Prelude._
+
+import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
 
 /** The class of monoids (types with an associative binary operation that has an identity). Instances should satisfy
@@ -28,6 +30,7 @@ import scala.language.implicitConversions
   * @author Carlo Micieli
   * @since 0.0.1
   */
+@implicitNotFound("The type ${A} was not made instance of the Monoid type class")
 trait Monoid[A] extends Semigroup[A] {
   /** The identity element
     * @return the identity element

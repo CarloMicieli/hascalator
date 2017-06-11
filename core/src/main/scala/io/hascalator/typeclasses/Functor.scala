@@ -20,6 +20,7 @@ package typeclasses
 import Prelude._
 import data.NonEmpty
 
+import scala.annotation.implicitNotFound
 import scala.language.higherKinds
 
 /** A `Functor` is a type constructor `F` that assigns a type `F[A]` to each type `A`, together with a polymorphic
@@ -36,6 +37,7 @@ import scala.language.higherKinds
   * @author Carlo Micieli
   * @since 0.0.1
   */
+@implicitNotFound("The type ${F} was not made instance of the Functor type class")
 trait Functor[F[_]] extends Any { self =>
   /** Applies the function `f` to this `Functor` instance
     * @param fa a `Functor`
@@ -75,10 +77,14 @@ object Functor {
   }
 
   object ops {
-    implicit def toFunctorOp[F[_], A](fa: F[A])(implicit ev: Functor[F]) = new FunctorOps[F, A] {
-      override def self: F[A] = fa
+    implicit class FunctorSyntax[F[_], A](fa: F[A])(implicit ev: Functor[F]) extends FunctorOps[F, A] {
       override def functorInstance: Functor[F] = ev
+      override def self: F[A] = fa
     }
+  }
+
+  implicit def eitherInstance[C]: Functor[Either[C, ?]] = new Functor[Either[C, ?]] {
+    override def map[A, B](fa: Either[C, A])(f: (A) => B): Either[C, B] = fa map f
   }
 
   implicit val listInstance: Functor[List] = new Functor[List] {
