@@ -53,6 +53,7 @@ lazy val core = (project in file("core"))
   .settings(scoverageSettings: _*)
   .settings(SbtScalariform.scalariformSettings)
   .settings(scalariformPluginSettings: _*)
+  .settings(addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4"))
   .enablePlugins(SbtScalariform)
   .enablePlugins(AutomateHeaderPlugin)
   .settings(libraryDependencies ++= Seq(

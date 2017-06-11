@@ -17,6 +17,7 @@
 package io.hascalator
 
 import scala.annotation.implicitNotFound
+import scala.language.higherKinds
 import scala.util.control.NoStackTrace
 import scala.{ Tuple2, inline }
 
@@ -102,6 +103,8 @@ object Prelude {
   val Semigroup = io.hascalator.typeclasses.Semigroup
   type Monoid[A] = io.hascalator.typeclasses.Monoid[A]
   val Monoid = io.hascalator.typeclasses.Monoid
+  type Functor[F[_]] = io.hascalator.typeclasses.Functor[F]
+  val Functor = io.hascalator.typeclasses.Functor
 
   /** The identity function
     *

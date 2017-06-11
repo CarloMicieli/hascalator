@@ -152,11 +152,14 @@ the implementation is heavy on implicit values.
 
 ## References ##
 
-* Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
-* Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
-* Larry LIU Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
+* Danielle Ashley. 2016. __Type lambdas and kind projector__. Blog post retried from [here](http://underscore.io/blog/posts/2016/12/05/type-lambdas.html) 
 * Haskell docs: `Prelude`. Retrived from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
-* Haskell docs:`Data.List`. Retrived from [here](https://hackage.haskell.org/package/base-4.9.0.0/docs/Data-List.html)
+* Larry Liu Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
+* Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
+* Nick Stanchenko. 2016. __Unzipping Immutability__. Scala By the Bay. Retrieved from [here](https://www.youtube.com/watch?v=dOj-wk5MQ3k)
+* Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
+* Ralf Hinze and Ross Paterson. 2006. __Finger trees: a simple general-purpose data structure__. J. Funct. Program. 16, 2 (March 2006), 197-217. 
+* Stephen Compall. 2016. __Higher-kinded types: the difference between giving up, and moving forward__. Blog post retried from [here](http://typelevel.org/blog/2016/08/21/hkts-moving-forward.html)
 * Typelevel `Cats`: Lightweight, modular, and extensible library for functional programming. [https://github.com/typelevel/cats](https://github.com/typelevel/cats)
 * Typelevel `Dogs`: data structures for pure functional programming in scala. [https://github.com/stew/dogs](https://github.com/stew/dogs)
 
