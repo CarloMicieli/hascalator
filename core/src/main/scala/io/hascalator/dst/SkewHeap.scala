@@ -27,26 +27,9 @@ import Prelude._
   * @since 0.0.1
   */
 private[dst] sealed trait SkewHeap[+A] {
-  def get: A
-
   def isEmpty: Boolean
 
-  def credits: Int = {
-    this match {
-      case EmptyHeap => 0
-      case h @ Fork(_, l, r) =>
-        l.credits + r.credits + (if (h.isGood) 0 else 1)
-    }
-  }
-
-  def isGood: Boolean = {
-    this match {
-      case Fork(_, l, r) => l.weight <= r.weight
-      case _             => error("SkewHeap.isGood: tree is empty")
-    }
-  }
-
-  def min: Maybe[A] = {
+  def top: Maybe[A] = {
     this match {
       case Fork(x, _, _) => Maybe.just(x)
       case _             => Maybe.none
@@ -65,18 +48,11 @@ private[dst] sealed trait SkewHeap[+A] {
       case (l, EmptyHeap) => l
       case (EmptyHeap, r) => r
       case (l, r) =>
-        if (ord.lte(l.min.get, r.min.get)) {
+        if (ord.lte(l.top.get, r.top.get)) {
           l join r
         } else {
           r join l
         }
-    }
-  }
-
-  def join[A1 >: A](that: SkewHeap[A1])(implicit ord: Ord[A1]): SkewHeap[A1] = {
-    (this, that) match {
-      case (Fork(x, l, r), h) => Fork(x, r, l merge h)
-      case _                  => error("SkewHeap.join: tree is empty")
     }
   }
 
@@ -89,23 +65,23 @@ private[dst] sealed trait SkewHeap[+A] {
     }
   }
 
-  def balanced: Boolean = {
+  def size: Int = {
+    this match {
+      case EmptyHeap     => 0
+      case Fork(_, l, r) => 1 + l.size + r.size
+    }
+  }
+
+  private def balanced: Boolean = {
     this match {
       case EmptyHeap => true
       case Fork(_, l, r) =>
-        val d = r.weight - l.weight
+        val d = r.size - l.size
         (d == 0 || d == 1) && l.balanced && r.balanced
     }
   }
 
-  def weight: Int = {
-    this match {
-      case EmptyHeap     => 0
-      case Fork(_, l, r) => 1 + l.weight + r.weight
-    }
-  }
-
-  def minMax[A1 >: A](x: A1, y: A1)(implicit ord: Ord[A1]): (A1, A1) = {
+  private def minMax[A1 >: A](x: A1, y: A1)(implicit ord: Ord[A1]): (A1, A1) = {
     import Ord.ops._
     if (x < y) {
       (x, y)
@@ -114,14 +90,14 @@ private[dst] sealed trait SkewHeap[+A] {
     }
   }
 
-  def invariant[A1 >: A](implicit ord: Ord[A1]): Boolean = {
+  private def invariant[A1 >: A](implicit ord: Ord[A1]): Boolean = {
     this match {
       case EmptyHeap     => true
       case Fork(x, l, r) => smaller[A1](x, l) && smaller[A1](x, r)
     }
   }
 
-  def smaller[A1 >: A](x: A1, t: SkewHeap[A1])(implicit ord: Ord[A1]): Boolean = {
+  private def smaller[A1 >: A](x: A1, t: SkewHeap[A1])(implicit ord: Ord[A1]): Boolean = {
     t match {
       case EmptyHeap => true
       case Fork(y, _, _) =>
@@ -130,10 +106,25 @@ private[dst] sealed trait SkewHeap[+A] {
     }
   }
 
-  override def toString: String = {
+  private def credits: Int = {
     this match {
-      case EmptyHeap     => "Null"
-      case Fork(x, l, r) => s"(Fork $x $l $r)"
+      case EmptyHeap => 0
+      case h @ Fork(_, l, r) =>
+        l.credits + r.credits + (if (h.isGood) 0 else 1)
+    }
+  }
+
+  protected def isGood: Boolean = {
+    this match {
+      case Fork(_, l, r) => l.size <= r.size
+      case _             => error("SkewHeap.isGood: tree is empty")
+    }
+  }
+
+  private def join[A1 >: A](that: SkewHeap[A1])(implicit ord: Ord[A1]): SkewHeap[A1] = {
+    (this, that) match {
+      case (Fork(x, l, r), h) => Fork(x, r, l merge h)
+      case _                  => error("SkewHeap.join: tree is empty")
     }
   }
 }
@@ -141,7 +132,7 @@ private[dst] sealed trait SkewHeap[+A] {
 private[dst] object SkewHeap {
   def empty[A: Ord]: SkewHeap[A] = EmptyHeap
 
-  def fromList[A](xs: List[A])(implicit ev: Ord[A]): SkewHeap[A] = {
+  def fromList[A: Ord](xs: List[A]): SkewHeap[A] = {
     xs.foldLeft(SkewHeap.empty[A])((tree, x) => tree insert x)
   }
 }
@@ -152,5 +143,4 @@ private[dst] case class Fork[A](get: A, left: SkewHeap[A], right: SkewHeap[A]) e
 
 private[dst] case object EmptyHeap extends SkewHeap[Nothing] {
   def isEmpty: Boolean = true
-  def get: Nothing = error("SkewHeap.get: tree is empty")
 }

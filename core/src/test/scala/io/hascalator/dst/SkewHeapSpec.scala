@@ -21,7 +21,7 @@ import Prelude._
 
 import io.hascalator.AbstractTestSpec
 
-class SkewHeapSpec extends AbstractTestSpec with SkewHeapTestFixture {
+class SkewHeapSpec extends AbstractTestSpec with SampleSkewHeaps {
   describe("A Skew Heap") {
     describe("isEmpty") {
       it("should be 'true' for the empty skew heap") {
@@ -35,23 +35,54 @@ class SkewHeapSpec extends AbstractTestSpec with SkewHeapTestFixture {
       }
     }
 
-    describe("weight") {
+    describe("top") {
+      it("should return a None for the empty SkewHeap") {
+        emptyHeap.top shouldEqual Maybe.none
+      }
+
+      it("should return a Just with the minimum value from a non empty SkewHeap") {
+        heap.top shouldEqual Maybe.just(15)
+      }
+    }
+
+    describe("insert") {
+      it("should insert a new key in a empty SkewHeap") {
+        val h = emptyHeap.insert(42)
+        h.isEmpty shouldEqual false
+        h.size shouldEqual 1
+        h.top shouldEqual Maybe.just(42)
+      }
+
+      it("should insert a new key in a non empty SkewHeap") {
+        val h = heap.insert(42)
+        h.isEmpty shouldEqual false
+        h.size shouldEqual (heap.size + 1)
+        h.top shouldEqual Maybe.just(15)
+      }
+
+      it("should insert a new minimum key in a non empty SkewHeap") {
+        val h = heap.insert(-1)
+        h.top shouldEqual Maybe.just(-1)
+      }
+    }
+
+    describe("size") {
       it("should be 0 for the empty skew heap") {
-        emptyHeap.weight shouldBe 0
+        emptyHeap.size shouldBe 0
       }
 
       it("should be the number of entries in the skew heap") {
-        heap.weight shouldBe 5
+        heap.size shouldBe 5
       }
     }
 
     describe("min") {
       it("should return None for the empty skew heap") {
-        emptyHeap.min shouldBe Maybe.none
+        emptyHeap.top shouldBe Maybe.none
       }
 
       it("should return Just with the entry for the minimum key") {
-        heap.min shouldBe Maybe.just(15)
+        heap.top shouldBe Maybe.just(15)
       }
     }
 
@@ -61,21 +92,31 @@ class SkewHeapSpec extends AbstractTestSpec with SkewHeapTestFixture {
       }
 
       it("should return a new skew heap without the minimum key entry") {
-        heap.removeMin.weight shouldBe heap.weight - 1
+        heap.removeMin.size shouldBe heap.size - 1
       }
     }
 
-    describe("insert") {
-      it("should increase the heap size by 1") {
-        val h = emptyHeap.insert(42)
-        h.isEmpty shouldBe false
-        h.weight shouldBe 1
+    describe("merge") {
+      it("should create a new SkewHeap with size the sum of the two original heaps") {
+        val h1 = emptyHeap merge heap
+        val h2 = heap merge emptyHeap
+
+        h1.size shouldEqual h2.size
+        h1.top shouldEqual h2.top
+      }
+
+      it("should create a new SkewHeap with the minimum of the two top original values") {
+        val h1 = SkewHeap.fromList(List(6, 125, 34, 76))
+        val h2 = SkewHeap.fromList(List(22, 0, 546))
+
+        (h1 merge h2).top shouldEqual Maybe.just(0)
       }
     }
   }
 }
 
-trait SkewHeapTestFixture {
+trait SampleSkewHeaps {
   val emptyHeap: SkewHeap[Int] = SkewHeap.empty[Int]
+
   val heap: SkewHeap[Int] = SkewHeap.fromList(List(42, 36, 66, 15, 99))
 }
