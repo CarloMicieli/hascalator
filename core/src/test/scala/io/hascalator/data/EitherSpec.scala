@@ -18,7 +18,6 @@ package io.hascalator
 package data
 
 import Prelude._
-import io.hascalator.{ AbstractTestSpec, ApplicationException }
 import Either._
 
 class EitherSpec extends AbstractTestSpec with EitherValues {
@@ -205,6 +204,20 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
       it("should return a list with only the right values") {
         val res = Either.rights[String, Int](List(right(1), left("one"), left("two"), right(2)))
         res shouldBe List(1, 2)
+      }
+    }
+
+    describe("equals") {
+      it("should return false when two values are different") {
+        left("one").equals(right(42)) shouldEqual false
+        right(42).equals(left("one")) shouldEqual false
+        right(42).equals(right(24)) shouldEqual false
+        left("one").equals(left("two")) shouldEqual false
+      }
+
+      it("should return true when two values are equals") {
+        left("one").equals(left("one")) shouldEqual true
+        right(42).equals(right(42)) shouldEqual true
       }
     }
 

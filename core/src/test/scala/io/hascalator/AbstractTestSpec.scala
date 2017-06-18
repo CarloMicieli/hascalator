@@ -16,7 +16,7 @@
 
 package io.hascalator
 
-import org.scalatest.{ FunSpecLike, Matchers }
+import org.scalatest.{ FunSpec, Matchers }
 
-trait AbstractTestSpec extends FunSpecLike with Matchers {
+abstract class AbstractTestSpec extends FunSpec with Matchers {
 }

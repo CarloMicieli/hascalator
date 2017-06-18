@@ -271,12 +271,12 @@ trait EitherInstances {
   }
 }
 
-private[this] case class Left[A, B] private (value: A) extends Either[A, B] {
+private[this] case class Left[A] private (value: A) extends Either[A, Nothing] {
   override def isLeft: Boolean = true
-  override def get: B = error("Left.get: this value is a Left")
+  override def get: Nothing = error("Left.get: this value is a Left")
 }
 
-private[this] case class Right[A, B] private (value: B) extends Either[A, B] {
+private[this] case class Right[B] private (value: B) extends Either[Nothing, B] {
   override def isLeft: Boolean = false
   override def get: B = value
 }
