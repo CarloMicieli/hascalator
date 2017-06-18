@@ -61,19 +61,17 @@ lazy val core = (project in file("core"))
     Library.scalaTest % "test"
   ))
 
-/*
+
 lazy val bench = (project in file("bench"))
   .settings(commonSettings)
   .settings(scalacOptions ++= ScalacOptions.BenchmarkDefault)
-  .settings(scoverageSettings: _*)
   .settings(automateHeaderPluginSettings: _*)
   .settings(SbtScalariform.scalariformSettings)
   .settings(scalariformPluginSettings: _*)
-  enablePlugins(SbtScalariform)
-  enablePlugins(AutomateHeaderPlugin)
-  enablePlugins(JmhPlugin)
-  dependsOn(core)
-*/
+  .enablePlugins(SbtScalariform)
+  .enablePlugins(AutomateHeaderPlugin)
+  .enablePlugins(JmhPlugin)
+  .dependsOn(core)
 
 lazy val docs = (project in file("docs"))
   .settings(commonSettings)
@@ -91,7 +89,7 @@ lazy val scalaProject = (project in file("."))
   .enablePlugins(GitVersioning)
   .enablePlugins(GitBranchPrompt)
   .settings(noPublishSettings)
-  .dependsOn(core, docs)
+  .dependsOn(core, docs, bench)
   .aggregate(core)
   .settings(initialCommands := """|import io.hascalator._
                                   |import Prelude._
