@@ -230,6 +230,16 @@ class MaybeSpec extends AbstractTestSpec with MaybeValues {
       }
     }
 
+    describe("toEither") {
+      it("should convert a Just to a Right value") {
+        just42.toEither("error") shouldBe Either.right(42)
+      }
+
+      it("should convert a None to a Left value") {
+        noneInt.toEither("error") shouldBe Either.left("error")
+      }
+    }
+
     describe("Eq[Maybe]") {
       it("should be instance of the typeclass") {
         val eqInstance = implicitly[Eq[Maybe[Int]]]

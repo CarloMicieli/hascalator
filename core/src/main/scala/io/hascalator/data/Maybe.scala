@@ -141,6 +141,19 @@ sealed trait Maybe[+A] {
     */
   def toList: List[A] = fold(List(_))(List.empty[A])
 
+  /** Converts this `Maybe` to an `Either`
+    *
+    * @param left the value for a _left_ when this is a none.
+    * @tparam B
+    * @return an Either value
+    */
+  def toEither[B](left: => B): Either[B, A] = {
+    this match {
+      case Just(x) => Either.right(x)
+      case None    => Either.left(left)
+    }
+  }
+
   def withFilter(p: A => Boolean): WithFilter = new WithFilter(p)
 
   class WithFilter(p: A => Boolean) {
