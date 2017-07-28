@@ -190,6 +190,22 @@ sealed trait Either[+A, +B] {
 }
 
 object Either extends EitherInstances {
+  /** Produces a right when `p` is true, a left value otherwise
+    * @param p the predicate
+    * @param left the left value
+    * @param right the right value
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def cond[A, B](p: Boolean)(left: => A, right: => B): Either[A, B] = {
+    if (p) {
+      Either.right(right)
+    } else {
+      Either.left(left)
+    }
+  }
+
   /** Build a new ''Left'' value.
     *
     * @param v the wrapped value

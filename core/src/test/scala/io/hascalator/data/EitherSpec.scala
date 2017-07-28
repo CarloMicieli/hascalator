@@ -173,6 +173,16 @@ class EitherSpec extends AbstractTestSpec with EitherValues {
       }
     }
 
+    describe("cond") {
+      it("should produce a right when the predicate is true") {
+        Either.cond(42 == 42)("left", 1) shouldBe Either.right(1)
+      }
+
+      it("should produce a left when the predicate is false") {
+        Either.cond(42 != 42)("left", 1) shouldBe Either.left("left")
+      }
+    }
+
     describe("toString") {
       it("should produce a string representation for Right values") {
         right42.toString shouldBe "Right(42)"
