@@ -28,11 +28,13 @@ package object arbitrary {
     with ArbitraryStack
     with ArbitraryStackOp
     with ArbitraryRatio
+    with ArbitraryBankersDequeue
 
   object list extends ArbitraryList
   object maybe extends ArbitraryMaybe
   object either extends ArbitraryEither
   object stack extends ArbitraryStack
+  object bankersDequeue extends ArbitraryBankersDequeue
   object stackOp extends ArbitraryStackOp
   object ratio extends ArbitraryRatio
 }
