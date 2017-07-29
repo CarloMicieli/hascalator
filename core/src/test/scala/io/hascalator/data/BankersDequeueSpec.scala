@@ -160,6 +160,16 @@ class BankersDequeueSpec extends AbstractTestSpec with BankersDequeueFixture {
       nonEmptyDequeue(1, 2, 3).takeBack(2) shouldBe List(3, 2)
     }
   }
+
+  describe("toList") {
+    it("should return the empty list from the empty dequeue") {
+      emptyDequeue.toList shouldBe List.empty[Int]
+    }
+
+    it("should produce a list with the dequeue items") {
+      nonEmptyDequeue(2, 3, 5).toList shouldBe List(2, 3, 5)
+    }
+  }
 }
 
 trait BankersDequeueFixture {

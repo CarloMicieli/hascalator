@@ -17,6 +17,8 @@
 package io.hascalator
 package data
 
+import Prelude._
+
 import org.scalacheck.Prop.forAll
 import tests.arbitrary.bankersDequeue._
 import tests.arbitrary.list._
