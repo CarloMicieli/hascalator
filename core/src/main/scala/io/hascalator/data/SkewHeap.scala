@@ -15,40 +15,48 @@
  */
 
 package io.hascalator
-package dst
+package data
 
 import Prelude._
 
-/** A "skew heap" (a representation of priority queues) based upon Chris Okasaki's implementation.
+import scala.util.control.NoStackTrace
+
+/** A ''skew heap'' (a representation of priority queues) based upon Chris Okasaki's implementation.
   * Insert operation based upon the John Hughes's implementation.
+  *
+  * Skew  heaps  are  binary  trees,  but  unlike  many heap implementations, they don’t have
+  * any other constraints. Binary heaps, for instance,  are  generally  required  to  be  completely
+  * balanced. The structure of a skew heap is just a vanilla binary tree.
   *
   * @tparam A the element data type
   * @author Carlo Micieli
   * @since 0.0.1
   */
-private[dst] sealed trait SkewHeap[+A] {
-  def isEmpty: Boolean
+private[data] sealed trait SkewHeap[+A] extends MergeableHeap[A] {
+  override type MH[B] = SkewHeap[B]
 
-  def top: Maybe[A] = {
+  override def min: Maybe[A] = {
     this match {
       case Fork(x, _, _) => Maybe.just(x)
       case _             => Maybe.none
     }
   }
 
-  def removeMin[A1 >: A](implicit ord: Ord[A1]): SkewHeap[A1] = {
+  override def extractMin[A1 >: A](implicit ord: Ord[A1]): Either[EmptyHeapException, (A1, SkewHeap[A1])] = {
     this match {
-      case EmptyHeap     => EmptyHeap
-      case Fork(_, l, r) => l.merge[A1](r)
+      case EmptyHeap => Either.left(new EmptyHeapException with NoStackTrace)
+      case Fork(v, l, r) =>
+        val res = (v, l.merge[A1](r))
+        Either.right(res)
     }
   }
 
-  def merge[A1 >: A](that: SkewHeap[A1])(implicit ord: Ord[A1]): SkewHeap[A1] = {
+  override def merge[A1 >: A](that: MH[A1])(implicit ord: Ord[A1]): MH[A1] = {
     (this, that) match {
       case (l, EmptyHeap) => l
       case (EmptyHeap, r) => r
       case (l, r) =>
-        if (ord.lte(l.top.get, r.top.get)) {
+        if (ord.lte(l.min.get, r.min.get)) {
           l join r
         } else {
           r join l
@@ -56,7 +64,7 @@ private[dst] sealed trait SkewHeap[+A] {
     }
   }
 
-  def insert[A1 >: A](x: A1)(implicit ord: Ord[A1]): SkewHeap[A1] = {
+  override def insert[A1 >: A](x: A1)(implicit ord: Ord[A1]): SkewHeap[A1] = {
     this match {
       case EmptyHeap => Fork(x, SkewHeap.empty[A1], SkewHeap.empty[A1])
       case Fork(y, l, r) =>
@@ -65,7 +73,7 @@ private[dst] sealed trait SkewHeap[+A] {
     }
   }
 
-  def size: Int = {
+  override def size: Int = {
     this match {
       case EmptyHeap     => 0
       case Fork(_, l, r) => 1 + l.size + r.size
@@ -114,22 +122,25 @@ private[dst] sealed trait SkewHeap[+A] {
     }
   }
 
-  protected def isGood: Boolean = {
+  private[SkewHeap] def isGood: Boolean = {
     this match {
       case Fork(_, l, r) => l.size <= r.size
       case _             => error("SkewHeap.isGood: tree is empty")
     }
   }
 
-  private def join[A1 >: A](that: SkewHeap[A1])(implicit ord: Ord[A1]): SkewHeap[A1] = {
+  private def join[A1 >: A](that: MH[A1])(implicit ord: Ord[A1]): MH[A1] = {
     (this, that) match {
-      case (Fork(x, l, r), h) => Fork(x, r, l merge h)
-      case _                  => error("SkewHeap.join: tree is empty")
+      case (Fork(x, l, r), h) =>
+        val r2 = l.merge[A1](h)(ord)
+        Fork[A1](x, r, l merge h)
+      case _ =>
+        error("SkewHeap.join: tree is empty")
     }
   }
 }
 
-private[dst] object SkewHeap {
+object SkewHeap {
   def empty[A: Ord]: SkewHeap[A] = EmptyHeap
 
   def fromList[A: Ord](xs: List[A]): SkewHeap[A] = {
@@ -137,10 +148,10 @@ private[dst] object SkewHeap {
   }
 }
 
-private[dst] case class Fork[A](get: A, left: SkewHeap[A], right: SkewHeap[A]) extends SkewHeap[A] {
+private[data] case class Fork[A](get: A, left: SkewHeap[A], right: SkewHeap[A]) extends SkewHeap[A] {
   def isEmpty: Boolean = false
 }
 
-private[dst] case object EmptyHeap extends SkewHeap[Nothing] {
+private[data] case object EmptyHeap extends SkewHeap[Nothing] {
   def isEmpty: Boolean = true
 }

@@ -15,11 +15,9 @@
  */
 
 package io.hascalator
-package dst
+package data
 
 import Prelude._
-
-import io.hascalator.AbstractTestSpec
 
 class SkewHeapSpec extends AbstractTestSpec with SampleSkewHeaps {
   describe("A Skew Heap") {
@@ -35,13 +33,13 @@ class SkewHeapSpec extends AbstractTestSpec with SampleSkewHeaps {
       }
     }
 
-    describe("top") {
+    describe("min") {
       it("should return a None for the empty SkewHeap") {
-        emptyHeap.top shouldEqual Maybe.none
+        emptyHeap.min shouldEqual Maybe.none
       }
 
       it("should return a Just with the minimum value from a non empty SkewHeap") {
-        heap.top shouldEqual Maybe.just(15)
+        heap.min shouldEqual Maybe.just(15)
       }
     }
 
@@ -50,19 +48,19 @@ class SkewHeapSpec extends AbstractTestSpec with SampleSkewHeaps {
         val h = emptyHeap.insert(42)
         h.isEmpty shouldEqual false
         h.size shouldEqual 1
-        h.top shouldEqual Maybe.just(42)
+        h.min shouldEqual Maybe.just(42)
       }
 
       it("should insert a new key in a non empty SkewHeap") {
         val h = heap.insert(42)
         h.isEmpty shouldEqual false
         h.size shouldEqual (heap.size + 1)
-        h.top shouldEqual Maybe.just(15)
+        h.min shouldEqual Maybe.just(15)
       }
 
       it("should insert a new minimum key in a non empty SkewHeap") {
         val h = heap.insert(-1)
-        h.top shouldEqual Maybe.just(-1)
+        h.min shouldEqual Maybe.just(-1)
       }
     }
 
@@ -78,21 +76,24 @@ class SkewHeapSpec extends AbstractTestSpec with SampleSkewHeaps {
 
     describe("min") {
       it("should return None for the empty skew heap") {
-        emptyHeap.top shouldBe Maybe.none
+        emptyHeap.min shouldBe Maybe.none
       }
 
       it("should return Just with the entry for the minimum key") {
-        heap.top shouldBe Maybe.just(15)
+        heap.min shouldBe Maybe.just(15)
       }
     }
 
-    describe("removeMin") {
-      it("should return the empty skew heap if it's empty") {
-        emptyHeap.removeMin shouldBe emptyHeap
+    describe("extractMin") {
+      it("should return a Left value when the SkewHeap is empty") {
+        val res = emptyHeap.extractMin
+        res.isLeft shouldEqual true
       }
 
       it("should return a new skew heap without the minimum key entry") {
-        heap.removeMin.size shouldBe heap.size - 1
+        val Right((m, nh)) = heap.extractMin
+        nh.size shouldEqual heap.size - 1
+        m shouldEqual 15
       }
     }
 
@@ -102,14 +103,14 @@ class SkewHeapSpec extends AbstractTestSpec with SampleSkewHeaps {
         val h2 = heap merge emptyHeap
 
         h1.size shouldEqual h2.size
-        h1.top shouldEqual h2.top
+        h1.min shouldEqual h2.min
       }
 
       it("should create a new SkewHeap with the minimum of the two top original values") {
         val h1 = SkewHeap.fromList(List(6, 125, 34, 76))
         val h2 = SkewHeap.fromList(List(22, 0, 546))
 
-        (h1 merge h2).top shouldEqual Maybe.just(0)
+        (h1 merge h2).min shouldEqual Maybe.just(0)
       }
     }
   }
