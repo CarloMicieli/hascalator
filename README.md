@@ -13,6 +13,7 @@ This library implements the following types:
 * `data.NonEmpty`
 * `data.Maybe`
 * `data.Queue`
+* `data.Dequeue`
 * `data.Ratio`
 * `data.Rational`
 * `data.Stack`
@@ -155,6 +156,7 @@ the implementation is heavy on implicit values.
 * Danielle Ashley. 2016. __Type lambdas and kind projector__. Blog post retried from [here](http://underscore.io/blog/posts/2016/12/05/type-lambdas.html) 
 * Haskell docs: `Prelude`. Retrived from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
 * Larry Liu Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
+* Louis Wasserman. 2010. __Playing with Priority Queues__. The Monad Reader, Issue 16 (pp. 37–52).
 * Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
 * Nick Stanchenko. 2016. __Unzipping Immutability__. Scala By the Bay. Retrieved from [here](https://www.youtube.com/watch?v=dOj-wk5MQ3k)
 * Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
