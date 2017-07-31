@@ -153,15 +153,17 @@ the implementation is heavy on implicit values.
 
 ## References ##
 
-* Danielle Ashley. 2016. __Type lambdas and kind projector__. Blog post retried from [here](http://underscore.io/blog/posts/2016/12/05/type-lambdas.html) 
+* A. Moors, F. Piessens, and M. Odersky. __Generics of a higher kind__. In G. E. Harris, editor, OOPSLA, pages 423–438. ACM, 2008.
+* Danielle Ashley. __Type lambdas and kind projector__. Blog post retried from [here](http://underscore.io/blog/posts/2016/12/05/type-lambdas.html), 2016.
+* Gerth S. Brodal and Chris Okasaki. Optimal purely functional priority queues. J. Functional Programming, 6(6):839–857, 1996
 * Haskell docs: `Prelude`. Retrived from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
-* Larry Liu Xinyu. 2014. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf)
-* Louis Wasserman. 2010. __Playing with Priority Queues__. The Monad Reader, Issue 16 (pp. 37–52).
+* Larry Liu Xinyu. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf), 2016.
+* Louis Wasserman. __Playing with Priority Queues__. The Monad Reader, Issue 16 (pp. 37–52), 2010.
 * Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
-* Nick Stanchenko. 2016. __Unzipping Immutability__. Scala By the Bay. Retrieved from [here](https://www.youtube.com/watch?v=dOj-wk5MQ3k)
-* Paul Chiusano, Rúnar Bjarnason. 2014. __Functional Programming in Scala__. Manning Publications
-* Ralf Hinze and Ross Paterson. 2006. __Finger trees: a simple general-purpose data structure__. J. Funct. Program. 16, 2 (March 2006), 197-217. 
-* Stephen Compall. 2016. __Higher-kinded types: the difference between giving up, and moving forward__. Blog post retried from [here](http://typelevel.org/blog/2016/08/21/hkts-moving-forward.html)
+* Nick Stanchenko. __Unzipping Immutability__. Scala By the Bay. Retrieved from [here](https://www.youtube.com/watch?v=dOj-wk5MQ3k), 2016.
+* Paul Chiusano, Rúnar Bjarnason. __Functional Programming in Scala__. Manning Publications, 2014.
+* Ralf Hinze and Ross Paterson. __Finger trees: a simple general-purpose data structure__. J. Funct. Program. 16, 2 (March 2006), 197-217. 
+* Stephen Compall. __Higher-kinded types: the difference between giving up, and moving forward__. Blog post retried from [here](http://typelevel.org/blog/2016/08/21/hkts-moving-forward.html), 2016.
 * Typelevel `Cats`: Lightweight, modular, and extensible library for functional programming. [https://github.com/typelevel/cats](https://github.com/typelevel/cats)
 * Typelevel `Dogs`: data structures for pure functional programming in scala. [https://github.com/stew/dogs](https://github.com/stew/dogs)
 
