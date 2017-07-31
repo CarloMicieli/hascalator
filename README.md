@@ -6,14 +6,15 @@
 [![Coverage Status](https://coveralls.io/repos/github/CarloMicieli/hascalator/badge.svg?branch=master)](https://coveralls.io/github/CarloMicieli/hascalator?branch=master)
 [![Dependencies](https://app.updateimpact.com/badge/763721648812724224/hascalator.svg?config=compile)](https://app.updateimpact.com/latest/763721648812724224/hascalator)
 
-This library implements the following types:
+This library implements the following data types:
 
+* `data.Dequeue`
 * `data.Either`
+* `data.Heap`
 * `data.List`
 * `data.NonEmpty`
 * `data.Maybe`
 * `data.Queue`
-* `data.Dequeue`
 * `data.Ratio`
 * `data.Rational`
 * `data.Stack`
@@ -153,13 +154,15 @@ the implementation is heavy on implicit values.
 
 ## References ##
 
-* A. Moors, F. Piessens, and M. Odersky. __Generics of a higher kind__. In G. E. Harris, editor, OOPSLA, pages 423–438. ACM, 2008.
+* Adriaan Moors, Frank Piessens, and Martin Odersky. __Generics of a higher kind.__ In Proceedings of the 23rd ACM SIGPLAN conference on Object-oriented programming systems languages and applications (OOPSLA '08). ACM, New York, NY, USA, 423-438, 2008.
+* Bruno CdS Oliveira, Adriaan Moors, and Martin Odersky. __Type classes as objects and implicits.__ ACM Sigplan Notices. Vol. 45. No. 10. ACM, 2010.
 * Danielle Ashley. __Type lambdas and kind projector__. Blog post retried from [here](http://underscore.io/blog/posts/2016/12/05/type-lambdas.html), 2016.
 * Gerth S. Brodal and Chris Okasaki. Optimal purely functional priority queues. J. Functional Programming, 6(6):839–857, 1996
 * Haskell docs: `Prelude`. Retrived from [here](http://hackage.haskell.org/package/base-4.9.0.0/docs/Prelude.html)
 * Larry Liu Xinyu. __Elementary Algorithms__. Retrived from [here](https://github.com/liuxinyu95/AlgoXY/releases/download/v0.618033/elementary-algorithms.pdf), 2016.
-* Louis Wasserman. __Playing with Priority Queues__. The Monad Reader, Issue 16 (pp. 37–52), 2010.
+* Louis Wasserman. __Playing with Priority Queues.__ The Monad Reader, Issue 16 (pp. 37–52), 2010.
 * Martin Odersky, Lex Spoon, and Bill Venners. 2016. __Programming in Scala, Third Edition__. Artima
+* Martin Odersky and Matthias Zenger. __Scalable component abstractions.__ In R. Johnson and R. P. Gabriel, editors, OOPSLA, pages 41–57. ACM, 2005.
 * Nick Stanchenko. __Unzipping Immutability__. Scala By the Bay. Retrieved from [here](https://www.youtube.com/watch?v=dOj-wk5MQ3k), 2016.
 * Paul Chiusano, Rúnar Bjarnason. __Functional Programming in Scala__. Manning Publications, 2014.
 * Ralf Hinze and Ross Paterson. __Finger trees: a simple general-purpose data structure__. J. Funct. Program. 16, 2 (March 2006), 197-217. 
