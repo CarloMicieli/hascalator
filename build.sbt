@@ -1,8 +1,7 @@
 import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-import de.heikoseeberger.sbtheader.HeaderPlugin
-import de.heikoseeberger.sbtheader.license._
+import sbt.Keys.startYear
 import scoverage.ScoverageKeys
 
 name := "hascalator"
@@ -20,15 +19,10 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
-// Header settings
-lazy val automateHeaderPluginSettings = Seq(
-  HeaderPlugin.autoImport.headers := Map("scala" -> Apache2_0("2016", "Carlo Micieli"))
-)
-
 lazy val scalariformPluginSettings = Seq(
   ScalariformKeys.preferences := ScalariformKeys.preferences.value
     .setPreference(AlignSingleLineCaseStatements, true)
-    .setPreference(DoubleIndentClassDeclaration, true)
+    .setPreference(DoubleIndentConstructorArguments, true)
     .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
     .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
     .setPreference(DanglingCloseParenthesis, Preserve)
@@ -38,9 +32,10 @@ lazy val commonSettings = Seq(
   organization := "io.hascalator",
   organizationName := "CarloMicieli",
   organizationHomepage := Some(url("http://CarloMicieli.github.io")),
-  scalaVersion := Scalac.`2.12.3`,
+  scalaVersion := Scalac.`2.12.4`,
   homepage := Some(url("https://github.com/CarloMicieli/hascalator")),
-  licenses := Seq(("Apache License, Version 2.0", url("http://www.apache.org/licenses/LICENSE-2.0")))
+  startYear := Some(2016),
+  licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt"))
 )
 
 lazy val core = (project in file("core"))
@@ -49,9 +44,7 @@ lazy val core = (project in file("core"))
     scalacOptions ++= ScalacOptions.Default,
     scalacOptions in (Compile, console) ~= ScalacOptions.ConsoleDefault,
     scalacOptions in Test ~= ScalacOptions.TestDefault)
-  .settings(automateHeaderPluginSettings: _*)
   .settings(scoverageSettings: _*)
-  .settings(SbtScalariform.scalariformSettings)
   .settings(scalariformPluginSettings: _*)
   .settings(addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4"))
   .enablePlugins(SbtScalariform)
@@ -65,8 +58,6 @@ lazy val core = (project in file("core"))
 lazy val bench = (project in file("bench"))
   .settings(commonSettings)
   .settings(scalacOptions ++= ScalacOptions.BenchmarkDefault)
-  .settings(automateHeaderPluginSettings: _*)
-  .settings(SbtScalariform.scalariformSettings)
   .settings(scalariformPluginSettings: _*)
   .enablePlugins(SbtScalariform)
   .enablePlugins(AutomateHeaderPlugin)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Carlo Micieli
+ * Copyright 2016 CarloMicieli
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -268,6 +268,6 @@ object Prelude {
   def println(x: Any) = scala.Console.println(x)
 
   implicit class ArrowAssoc[A](val a: A) extends AnyVal {
-    @inline def -> [B](b: B): Tuple2[A, B] = Tuple2(a, b)
+    @inline def ->[B](b: B): Tuple2[A, B] = Tuple2(a, b)
   }
 }

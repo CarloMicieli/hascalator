@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Carlo Micieli
+ * Copyright 2016 CarloMicieli
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ private[data] case object LEmpty extends LeftistHeap[Nothing] {
 }
 
 private[data] final case class LNode[A](rank: Int, element: A, left: LeftistHeap[A], right: LeftistHeap[A])
-    extends LeftistHeap[A] {
+  extends LeftistHeap[A] {
   override def isEmpty: Boolean = false
 }
 

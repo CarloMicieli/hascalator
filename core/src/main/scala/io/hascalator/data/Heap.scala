@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Carlo Micieli
+ * Copyright 2016 CarloMicieli
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import Prelude._
   *
   * - `min` operation always returns the minimum element;
   * - `extractMin` operation removes the top element from the heap while the heap property should
-  *    be kept, so that the new top element is still the minimum one;
+  *   be kept, so that the new top element is still the minimum one;
   * - insert a new element to heap should keep the heap property. That the new top is still
-  *   the minimum (maximum) element;
+  *  the minimum (maximum) element;
   * - other operations including merge etc should all keep the heap property.
   *
   * @tparam A the heap item type

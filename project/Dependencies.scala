@@ -12,7 +12,6 @@ object Library {
 
 object Scalac {
   final val `2.11.8`: String = "2.11.8"
-  final val `2.12.1`: String = "2.12.1"
-  final val `2.12.2`: String = "2.12.2"
   final val `2.12.3`: String = "2.12.3"
+  final val `2.12.4`: String = "2.12.4"
 }
