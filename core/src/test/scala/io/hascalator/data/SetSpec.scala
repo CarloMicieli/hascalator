@@ -60,6 +60,13 @@ class SetSpec extends AbstractTestSpec with SetsFixture {
         emptySet.insert(42).size shouldBe 1
         singletonSet(3).insert(42).size shouldBe 2
       }
+
+      it("should rebalance the set") {
+        val set = emptySet.insert(1).insert(2).insert(3).insert(4).insert(5).insert(6).insert(7)
+        set.size shouldBe 7
+        set.member(4) shouldBe true
+        set.member(9) shouldBe false
+      }
     }
 
     describe("fromList") {
