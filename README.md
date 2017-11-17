@@ -17,6 +17,7 @@ This library implements the following data types:
 * `data.Queue`
 * `data.Ratio`
 * `data.Rational`
+* `data.Set`
 * `data.Stack`
 * `data.Tuple`
 
@@ -52,6 +53,7 @@ The project has the following layout:
 ------+ io
 ---------+ hascalator
 ------------+ Prelude.scala   // the entry point
+------------+ control         // the "home" for Monad and Applicative
 ------------+ data            // basic data types (ie Maybe, Either, List...)
 ------------+ dst             // immutable, purely functional data structures
 ------------+ math            // math types
@@ -63,21 +65,23 @@ The project has the following layout:
 ### Abstract data types ###
 
 Abstract Data Types have different implementation is Scala than they have in Haskell.
-Where Haskell defines a type (`Maybe`) and two constructor (`Just` and `Nothing`); in
-Scala with the **sealed trait pattern** we basically have three different types
-(`Maybe`, `Just` and `None`).
+Where Haskell defines a type (`Maybe`) and two constructor (`Just` and `Nothing`):
 
 ```haskell
 data Maybe a = Just a | Nothing
 ```
 
+on the other hand, in Scala with the **sealed trait pattern** we basically have three different types
+(`Maybe`, `Just` and `None`).
+
 ```scala
 sealed trait Maybe[+A]
-final case class Just[A](value: A) extends Maybe[A]
-     case object None              extends Maybe[Nothing]
+
+private[data] final case class Just[A](value: A) extends Maybe[A]
+private[data]       case object None             extends Maybe[Nothing]
 ```
 
-To avoid to publish as public API all the types, the only public type is
+To avoid to publish all the types, the only public type is
 the trait one, the more specific types are kept private. New values are created
 using smart constructors defined in the companion object for the trait.
 
@@ -99,7 +103,7 @@ translation they are kept in the API.
 For instance, `(++) :: [a] -> [a] -> [a]` (the function that appends two lists) allows
 infinite lists. The `data.List` implemented in Scala is not infinite and it's strictly
 evaluated. Technically it's still possible to build an infinite list, but with the
-strict evaluation the append operation will be rather useless (ie, the `append` operation
+strict evaluation the append operation will be rather useless (ie. the `append` operation
 will never terminate).
 
 Other functions, `iterate :: (a -> a) -> a -> [a]`, are not working in a strict
@@ -151,7 +155,6 @@ practices (`hashcode`, `equals` and `toString` just to name few).
 They are a first class element in the Haskell programming language, for Scala
 the implementation is heavy on implicit values.
 
-
 ## References ##
 
 * Adriaan Moors, Frank Piessens, and Martin Odersky. __Generics of a higher kind.__ In Proceedings of the 23rd ACM SIGPLAN conference on Object-oriented programming systems languages and applications (OOPSLA '08). ACM, New York, NY, USA, 423-438, 2008.
@@ -166,6 +169,7 @@ the implementation is heavy on implicit values.
 * Nick Stanchenko. __Unzipping Immutability__. Scala By the Bay. Retrieved from [here](https://www.youtube.com/watch?v=dOj-wk5MQ3k), 2016.
 * Paul Chiusano, Rúnar Bjarnason. __Functional Programming in Scala__. Manning Publications, 2014.
 * Ralf Hinze and Ross Paterson. __Finger trees: a simple general-purpose data structure__. J. Funct. Program. 16, 2 (March 2006), 197-217. 
+* Stephen Adams. __Implementing Sets Efficiently in a Functional.__.
 * Stephen Compall. __Higher-kinded types: the difference between giving up, and moving forward__. Blog post retried from [here](http://typelevel.org/blog/2016/08/21/hkts-moving-forward.html), 2016.
 * Typelevel `Cats`: Lightweight, modular, and extensible library for functional programming. [https://github.com/typelevel/cats](https://github.com/typelevel/cats)
 * Typelevel `Dogs`: data structures for pure functional programming in scala. [https://github.com/stew/dogs](https://github.com/stew/dogs)

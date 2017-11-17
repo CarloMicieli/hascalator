@@ -15,9 +15,11 @@
  */
 
 package io.hascalator
-package tests.arbitrary
+package tests
+package arbitrary
 
 import Prelude._
+import data.Set
 import org.scalacheck.{ Arbitrary, Gen }
 import org.scalacheck.util.Buildable
 
@@ -33,7 +35,7 @@ trait ArbitrarySet {
     override def foreach[U](f: (T) => U): Unit = set.foreach(f)
   }
 
-  implicit def arbitrarySet[T](implicit a: Arbitrary[T]): Arbitrary[Set[T]] = Arbitrary {
+  implicit def arbitrarySet[T](implicit a: Arbitrary[T], ord: Ord[T]): Arbitrary[Set[T]] = Arbitrary {
     import Arbitrary._
     import Gen._
 
@@ -51,7 +53,7 @@ trait ArbitrarySet {
     Gen.sized(sz => sizedSet(sz))
   }
 
-  implicit def setBuildable[A]: Buildable[A, Set[A]] = new Buildable[A, Set[A]] {
+  implicit def setBuildable[A: Ord]: Buildable[A, Set[A]] = new Buildable[A, Set[A]] {
     override def builder = new mutable.Builder[A, Set[A]] {
       private var set = Set.empty[A]
 
