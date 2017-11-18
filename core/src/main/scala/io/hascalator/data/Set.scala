@@ -33,7 +33,7 @@ import Ordering._
   * @author Carlo Micieli
   * @since 0.0.1
   */
-sealed trait Set[+A] extends Any {
+sealed trait Set[+A] {
   /** `O(1)`. Is this the empty set?
     * @return `true` when this `Set` is empty; `false` otherwise
     */
@@ -231,8 +231,11 @@ sealed trait Set[+A] extends Any {
   /** `O(log n)`. Find largest element smaller than the given one.
     *
     * {{{
-    * Set.fromList(List(3, 5)).lookupLT(3) == Maybe.none
-    * Set.fromList(List(3, 5)).lookupLT(5) == Maybe.just(5)
+    * scala> Set.fromList(List(3, 5)).lookupLT(3)
+    * res0: Maybe[Int] = none
+    *
+    * scala> Set.fromList(List(3, 5)).lookupLT(5)
+    * res1: Maybe[Int] = Just 5
     * }}}
     *
     * @usecase def lookupLT(x: A): Maybe[A]
@@ -393,11 +396,15 @@ sealed trait Set[+A] extends Any {
 
   /** `O(log n)`. The minimal element of a set.
     */
-  def findMin: A = lookupMin.get
+  def findMin: A = {
+    lookupMin.getOrElse(error("Set.findMin: empty set has no minimal element"))
+  }
 
   /** `O(log n)`. The maximal element of a set.
     */
-  def findMax: A = lookupMax.get
+  def findMax: A = {
+    lookupMax.getOrElse(error("Set.findMax: empty set has no maximal element"))
+  }
 
   /** `O(n+m)`. Is this a subset? `s1.isSubsetOf(s2)` tells whether `s1` is a subset of `s2`.
     */
@@ -496,6 +503,11 @@ sealed trait Set[+A] extends Any {
   def toDescList: List[A] = {
     foldLeft(List.empty[A])((xs, x) => x :: xs)
   }
+
+  override def toString: String = {
+    val elements = toAscList.toString
+    s"fromList $elements"
+  }
 }
 
 private[data] case object EmptySet extends Set[Nothing] {
@@ -529,9 +541,9 @@ object Set {
 
   /** The union of a list of sets:
     */
-  //def unions[A: Ord](ssa: List[Set[A]]): Set[A] = {
-  //  ssa.foldLeft(Set.empty)(union)
-  //}
+  def unions[A: Ord](ssa: List[Set[A]]): Set[A] = {
+    ssa.foldLeft(Set.empty[A])((set, set1) => set1 union set)
+  }
 
   // Auxiliary function to build a tree containing all the elements of `left` and `right`.
   def delete[A](left: Set[A], right: Set[A]): Set[A] = {
@@ -679,3 +691,9 @@ object Set {
   }
 }
 
+trait SetInstances {
+  implicit def toShowSet[A: Show]: Show[Set[A]] = (x: Set[A]) => {
+    val elements: String = implicitly[Show[A]].showList(x.toAscList)
+    s"fromList $elements"
+  }
+}

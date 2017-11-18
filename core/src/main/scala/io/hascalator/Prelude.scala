@@ -162,7 +162,7 @@ object Prelude {
 
   /** stops execution and displays an error message.
     * @param msg the error message
-    * @tparam A the return typeù
+    * @tparam A the return type
     * @return
     */
   def error[A](msg: String): A = {
