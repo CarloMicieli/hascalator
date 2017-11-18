@@ -30,7 +30,7 @@ lazy val scalariformPluginSettings = Seq(
 
 lazy val commonSettings = Seq(
   organization := "io.hascalator",
-  organizationName := "CarloMicieli",
+  organizationName := "Carlo Micieli",
   organizationHomepage := Some(url("http://CarloMicieli.github.io")),
   scalaVersion := Scalac.`2.12.4`,
   homepage := Some(url("https://github.com/CarloMicieli/hascalator")),

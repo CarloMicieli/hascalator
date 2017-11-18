@@ -15,23 +15,27 @@
  */
 
 package io.hascalator
-package typeclasses
+package data
 
 import Prelude._
-
-import io.hascalator.AbstractPropertySpec
 import org.scalacheck.Prop.forAll
+import tests.arbitrary.set._
 
-class NumSignumProperties extends AbstractPropertySpec with SignumLaws {
-  property("sum of Ints is lawful according to signum laws") {
-    check(forAll { (x: Int) =>
-      law[Int](x)
+class SetProperties extends AbstractPropertySpec {
+  property("size and isEmpty are consistent for sets") {
+    check(forAll { (set: Set[Int]) =>
+      {
+        (set.size == 0) === set.isEmpty
+      }
     })
   }
 
-  property("sum of Longs is lawful according to signum laws") {
-    check(forAll { (x: Long) =>
-      law[Long](x)
+  property("insert element to sets") {
+    check(forAll { (set: Set[Int], x: Int) =>
+      {
+        val set2 = set.insert(x)
+        set2.member(x) === true
+      }
     })
   }
 }

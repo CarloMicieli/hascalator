@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 CarloMicieli
+ * Copyright 2016 Carlo Micieli
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ package object arbitrary {
     with ArbitraryStackOp
     with ArbitraryRatio
     with ArbitraryBankersDequeue
+    with ArbitrarySet
 
   object list extends ArbitraryList
   object maybe extends ArbitraryMaybe
@@ -37,4 +38,5 @@ package object arbitrary {
   object bankersDequeue extends ArbitraryBankersDequeue
   object stackOp extends ArbitraryStackOp
   object ratio extends ArbitraryRatio
+  object set extends ArbitrarySet
 }
