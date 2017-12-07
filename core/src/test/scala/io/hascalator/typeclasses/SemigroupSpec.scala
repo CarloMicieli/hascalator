@@ -22,13 +22,13 @@ import io.hascalator.data.NonEmpty
 
 class SemigroupSpec extends AbstractTestSpec {
   implicit val intSemigroup: Semigroup[Int] = new Semigroup[Int] {
-    override def mAppend(x: Int, y: Int): Int = x + y
+    override def mappend(x: Int, y: Int): Int = x + y
   }
 
   describe("SemiGroup") {
     describe("mAppend") {
       it("should append two values") {
-        Semigroup[Int].mAppend(1, 2) shouldBe 3
+        Semigroup[Int].mappend(1, 2) shouldBe 3
       }
     }
 

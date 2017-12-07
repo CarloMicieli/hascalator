@@ -36,14 +36,15 @@ trait Semigroup[A] extends Any {
     * @param y the second operand
     * @return the result applying the operation to x and y
     */
-  def mAppend(x: A, y: A): A
+  def mappend(x: A, y: A): A
 
-  /** Reduce a non-empty list with [[mAppend]].
+  /** Reduce a non-empty list with [[mappend]].
+    *
     * @param xs a non empty list
     * @return the result
     */
   def sConcat(xs: NonEmpty[A]): A = {
-    xs.tail.foldLeft(xs.head)(mAppend)
+    xs.tail.foldLeft(xs.head)(mappend)
   }
 
   /** Repeat a value n times.
@@ -60,7 +61,7 @@ trait Semigroup[A] extends Any {
       if (n <= 1) {
         acc
       } else {
-        go(n - 1, mAppend(acc, z))
+        go(n - 1, mappend(acc, z))
       }
     }
 
@@ -79,7 +80,7 @@ object Semigroup {
     def self: A
     def semigroupInstance: Semigroup[A]
 
-    def <>(that: A): A = semigroupInstance.mAppend(self, that)
+    def <>(that: A): A = semigroupInstance.mappend(self, that)
   }
 
   object ops {
@@ -90,6 +91,6 @@ object Semigroup {
   }
 
   implicit def listSemigroup[A]: Semigroup[List[A]] = new Semigroup[List[A]] {
-    override def mAppend(x: List[A], y: List[A]): List[A] = x append y
+    override def mappend(x: List[A], y: List[A]): List[A] = x append y
   }
 }

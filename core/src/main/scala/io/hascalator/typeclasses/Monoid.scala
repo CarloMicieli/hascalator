@@ -35,11 +35,11 @@ trait Monoid[A] extends Semigroup[A] {
   /** The identity element
     * @return the identity element
     */
-  def mIdentity: A
+  def mempty: A
 
   override def sTimes(times: Int)(z: A): A = {
     if (times == 0) {
-      mIdentity
+      mempty
     } else {
       super.sTimes(times)(z)
     }
@@ -53,7 +53,7 @@ object Monoid {
     def self: A
     def monoidInstance: Monoid[A]
 
-    def <>(that: A): A = monoidInstance.mAppend(self, that)
+    def <>(that: A): A = monoidInstance.mappend(self, that)
   }
 
   object ops {
@@ -64,7 +64,7 @@ object Monoid {
   }
 
   implicit def listMonoid[A]: Monoid[List[A]] = new Monoid[List[A]] {
-    override def mAppend(x: List[A], y: List[A]): List[A] = x append y
-    override def mIdentity: List[A] = List.empty[A]
+    override def mappend(x: List[A], y: List[A]): List[A] = x append y
+    override def mempty: List[A] = List.empty[A]
   }
 }

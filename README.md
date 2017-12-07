@@ -17,6 +17,7 @@ This library implements the following data types:
 * `data.Queue`
 * `data.Ratio`
 * `data.Rational`
+* `data.Seq`
 * `data.Set`
 * `data.Stack`
 * `data.Tuple`

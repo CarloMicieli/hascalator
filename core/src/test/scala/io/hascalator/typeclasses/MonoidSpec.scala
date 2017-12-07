@@ -22,20 +22,20 @@ import io.hascalator.data.NonEmpty
 
 class MonoidSpec extends AbstractTestSpec {
   implicit val intMonoid: Monoid[Int] = new Monoid[Int] {
-    override def mIdentity: Int = 0
-    override def mAppend(x: Int, y: Int): Int = x + y
+    override def mempty: Int = 0
+    override def mappend(x: Int, y: Int): Int = x + y
   }
 
   describe("Monoid") {
     describe("mIdentity") {
       it("should return the identity") {
-        Monoid[Int].mIdentity shouldBe 0
+        Monoid[Int].mempty shouldBe 0
       }
     }
 
     describe("mAppend") {
       it("should append two values") {
-        Monoid[Int].mAppend(1, 2) shouldBe 3
+        Monoid[Int].mappend(1, 2) shouldBe 3
       }
     }
 
