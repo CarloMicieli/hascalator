@@ -25,10 +25,16 @@ import scala.language.implicitConversions
 /** The class of monoids (types with an associative binary operation that has an identity). Instances should satisfy
   * the following laws:
   *
+  * - `mappend mempty x = x`
+  * - `mappend x mempty = x`
+  * - `mappend x (mappend y z) = mappend (mappend x y) z`
+  * - `mconcat = foldr mappend mempty`
+  *
+  * The method names refer to the monoid of lists under concatenation, but there are many other instances.
   *
   * @tparam A the instance type
   * @author Carlo Micieli
-  * @since 0.0.1
+  * @since 0.1
   */
 @implicitNotFound("The type ${A} was not made instance of the Monoid type class")
 trait Monoid[A] extends Semigroup[A] {

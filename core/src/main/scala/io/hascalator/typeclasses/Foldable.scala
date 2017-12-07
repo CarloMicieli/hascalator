@@ -18,7 +18,7 @@ package io.hascalator
 package typeclasses
 
 import Prelude._
-//import monoid.{Endo, Dual}
+import monoid.{ Endo, Dual }
 
 import scala.annotation.implicitNotFound
 
@@ -32,6 +32,7 @@ import scala.annotation.implicitNotFound
 trait Foldable[T[_]] extends Any {
 
   /** Right-associative fold of a structure.
+    *
     * @param t
     * @param z
     * @param f
@@ -50,7 +51,15 @@ trait Foldable[T[_]] extends Any {
     * @tparam B
     * @return
     */
-  def foldLeft[A, B](t: T[A])(z: B)(f: (B, A) => B): B
+  def foldLeft[A, B](t: T[A])(z: B)(f: (B, A) => B): B = {
+    //Copy&paste from Haskell implementation
+    //https://hackage.haskell.org/package/base-4.10.1.0/docs/src/Data.Foldable.html
+    val ff: A => B => B = flip(f).curried
+    val gg: A => Dual[Endo[B]] = a => {
+      Dual(Endo(ff(a)))
+    }
+    foldMap(t)(gg).getDual.appEndo(z)
+  }
 
   /** Map each element of the structure to a monoid,  and combine the results.
     *
@@ -64,5 +73,4 @@ trait Foldable[T[_]] extends Any {
     val m = implicitly[Monoid[M]]
     foldRight(t)(m.mempty)((a, b) => m.mappend(f(a), b))
   }
-
 }

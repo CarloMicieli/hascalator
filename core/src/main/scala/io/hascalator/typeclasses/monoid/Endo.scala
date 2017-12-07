@@ -27,9 +27,7 @@ import Prelude._
   * @author Carlo Micieli
   * @since 0.1
   */
-final case class Endo[A](appEndo: A => A) extends AnyVal {
-  def runEndo(x: A): A = appEndo(x)
-}
+final case class Endo[A](appEndo: A => A) extends AnyVal
 
 object Endo {
   implicit def toMonoid[A]: Monoid[Endo[A]] = new Monoid[Endo[A]] {
