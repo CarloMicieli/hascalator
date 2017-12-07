@@ -21,6 +21,7 @@ import Prelude._
 
 import scala.collection.mutable
 import scala.{ Range, inline }
+import scala.collection.immutable.{ Seq => ScalaSeq }
 
 /** A list is either empty, or a constructed list with a `head` and a `tail`.
   *
@@ -864,7 +865,7 @@ sealed trait List[+A] {
       case h :: t =>
         val builder = new ListBuilder[A1]
         builder += h
-        t.foreach(h1 => builder ++= Seq(x, h1))
+        t.foreach(h1 => builder ++= ScalaSeq(x, h1))
         builder.result()
       case _ => this
     }
@@ -1088,8 +1089,8 @@ object List extends ListInstances {
     }
   }
 
-  def unapplySeq[A](xs: List[A]): scala.Option[Seq[A]] = {
-    scala.Some(xs.foldRight(Seq.empty[A])((x, sq) => x +: sq))
+  def unapplySeq[A](xs: List[A]): scala.Option[ScalaSeq[A]] = {
+    scala.Some(xs.foldRight(ScalaSeq.empty[A])((x, sq) => x +: sq))
   }
 }
 

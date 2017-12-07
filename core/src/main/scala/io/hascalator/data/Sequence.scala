@@ -33,7 +33,7 @@ import Prelude._
   * @author Carlo Micieli
   * @since 0.1
   */
-trait Seq[A] {
+trait Sequence[A] {
 
   /** O(1). Is this the empty sequence?
     * @return
