@@ -1098,6 +1098,10 @@ trait ListInstances {
     x => Show[A].showList(x)
   }
 
+  implicit def toEqList[A: Eq]: Eq[List[A]] = (lhs: List[A], rhs: List[A]) => {
+    rhs.equals(lhs)
+  }
+
   implicit def toOrdList[A: Ord](implicit ordA: Ord[A]): Ord[List[A]] = Ord.fromFunction {
     @tailrec
     def compareLists(xs: List[A], ys: List[A]): Ordering = {

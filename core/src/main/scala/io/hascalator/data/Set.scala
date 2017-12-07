@@ -163,9 +163,12 @@ sealed trait Set[+A] {
     */
   def foldRight[B](seed: B)(f: (A, B) => B): B = {
     def fold(acc: B, set: Set[A]): B = {
-      set match {
-        case EmptySet          => acc
-        case TreeS(v, _, l, r) => fold(f(v, fold(acc, r)), l)
+      //HACK: no pattern matching here, to avoid a SO on equals()
+      if (set.isEmpty) {
+        acc
+      } else {
+        val TreeS(v, _, l, r) = set
+        fold(f(v, fold(acc, r)), l)
       }
     }
 
@@ -425,7 +428,7 @@ sealed trait Set[+A] {
   /** `O(1)`. Decompose a set into pieces based on the structure of the underlying tree.
     *
     * {{{
-    * scala> Set.fromList(List(1..6)).splitRoot
+    * scala> Set.fromList(List.fromRange(1 to 6)).splitRoot
     * res0: List[Set[Int]] = [fromList [1, 2, 3], fromList [4], fromList [5, 6]]
     *
     * scala> Set.empty[Int].splitRoot
@@ -504,6 +507,13 @@ sealed trait Set[+A] {
     foldLeft(List.empty[A])((xs, x) => x :: xs)
   }
 
+  override def equals(obj: scala.Any): Boolean = {
+    obj match {
+      case that: Set[_] => this.size == that.size && this.toAscList == that.toAscList
+      case _            => false
+    }
+  }
+
   override def toString: String = {
     val elements = toAscList.toString
     s"fromList $elements"
@@ -524,7 +534,7 @@ private[data] final case class TreeS[A](element: A, count: Int, left: Set[A], ri
   override def size: Int = count
 }
 
-object Set {
+object Set extends SetInstances {
   /** `O(1)`. The empty set.
     */
   def empty[A]: Set[A] = EmptySet
@@ -657,7 +667,8 @@ object Set {
     }
   }
 
-  private val weight: Int = 4
+  // is the maximal relative difference between the sizes of two trees, it corresponds with the [w] in Adams' paper.
+  private val weight: Int = 3
 
   private def T[A](v: A, l: Set[A], r: Set[A]): Set[A] = {
     val ln = l.size
@@ -692,6 +703,11 @@ object Set {
 }
 
 trait SetInstances {
+  implicit def toEq[A: Eq]: Eq[Set[A]] = (lhs: Set[A], rhs: Set[A]) => {
+    val eqList: Eq[List[A]] = implicitly[Eq[List[A]]]
+    lhs.size == rhs.size && eqList.eq(lhs.toAscList, rhs.toAscList)
+  }
+
   implicit def toShowSet[A: Show]: Show[Set[A]] = (x: Set[A]) => {
     val elements: String = implicitly[Show[A]].showList(x.toAscList)
     s"fromList $elements"
