@@ -18,6 +18,7 @@ package io.hascalator
 package typeclasses
 
 import Prelude._
+import simulacrum.typeclass
 
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
@@ -37,11 +38,15 @@ import scala.language.implicitConversions
   * @since 0.1
   */
 @implicitNotFound("The type ${A} was not made instance of the Monoid type class")
-trait Monoid[A] extends Semigroup[A] {
+@typeclass trait Monoid[A] extends Semigroup[A] {
   /** The identity element
     * @return the identity element
     */
   def mempty: A
+
+  def concat(xs: List[A])(implicit ma: Monoid[A]): A = {
+    xs.foldRight(ma.mempty)(ma.mappend)
+  }
 
   override def sTimes(times: Int)(z: A): A = {
     if (times == 0) {
@@ -53,22 +58,6 @@ trait Monoid[A] extends Semigroup[A] {
 }
 
 object Monoid {
-  def apply[A](implicit sg: Monoid[A]): Monoid[A] = sg
-
-  trait MonoidOps[A] {
-    def self: A
-    def monoidInstance: Monoid[A]
-
-    def <>(that: A): A = monoidInstance.mappend(self, that)
-  }
-
-  object ops {
-    implicit def toMonoidOps[A: Monoid](x: A): MonoidOps[A] = new MonoidOps[A] {
-      override def self: A = x
-      override def monoidInstance: Monoid[A] = implicitly[Monoid[A]]
-    }
-  }
-
   implicit def listMonoid[A]: Monoid[List[A]] = new Monoid[List[A]] {
     override def mappend(x: List[A], y: List[A]): List[A] = x append y
     override def mempty: List[A] = List.empty[A]

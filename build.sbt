@@ -47,11 +47,13 @@ lazy val core = (project in file("core"))
   .settings(scoverageSettings: _*)
   .settings(scalariformPluginSettings: _*)
   .settings(addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4"))
+  .settings(addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full))
   .enablePlugins(SbtScalariform)
   .enablePlugins(AutomateHeaderPlugin)
   .settings(libraryDependencies ++= Seq(
     Library.scalaCheck % "test",
-    Library.scalaTest % "test"
+    Library.scalaTest % "test",
+    Library.simulacrum
   ))
 
 

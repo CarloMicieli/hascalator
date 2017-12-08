@@ -19,6 +19,7 @@ package typeclasses
 
 import Prelude._
 import io.hascalator.data.NonEmpty
+import simulacrum.{ op, typeclass }
 
 import scala.annotation.implicitNotFound
 import scala.language.implicitConversions
@@ -30,13 +31,13 @@ import scala.language.implicitConversions
   * @since 0.0.1
   */
 @implicitNotFound("The type ${A} was not made instance of the Semigroup type class")
-trait Semigroup[A] extends Any {
+@typeclass trait Semigroup[A] extends Any {
   /** An associative operation.
     * @param x the first operand
     * @param y the second operand
     * @return the result applying the operation to x and y
     */
-  def mappend(x: A, y: A): A
+  @op("<>") def mappend(x: A, y: A): A
 
   /** Reduce a non-empty list with [[mappend]].
     *
@@ -74,22 +75,6 @@ trait Semigroup[A] extends Any {
 }
 
 object Semigroup {
-  def apply[A](implicit sg: Semigroup[A]): Semigroup[A] = sg
-
-  trait SemigroupOps[A] {
-    def self: A
-    def semigroupInstance: Semigroup[A]
-
-    def <>(that: A): A = semigroupInstance.mappend(self, that)
-  }
-
-  object ops {
-    implicit def toSemigroupOps[A: Semigroup](x: A): SemigroupOps[A] = new SemigroupOps[A] {
-      override def self: A = x
-      override def semigroupInstance: Semigroup[A] = implicitly[Semigroup[A]]
-    }
-  }
-
   implicit def listSemigroup[A]: Semigroup[List[A]] = new Semigroup[List[A]] {
     override def mappend(x: List[A], y: List[A]): List[A] = x append y
   }
