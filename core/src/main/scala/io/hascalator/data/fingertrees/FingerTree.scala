@@ -185,6 +185,10 @@ sealed trait FingerTree[+V, +A] extends Any {
 
 private[fingertrees] object FingerTree {
 
+  def empty[V, A]: FingerTree[V, A] = {
+    Empty
+  }
+
   implicit def toMeasured[A, V](implicit mav: Measured[V, A]): Measured[V, FingerTree[V, A]] = new Measured[V, FingerTree[V, A]] {
     override def measure(tree: FingerTree[V, A]): V = {
       tree match {
@@ -195,6 +199,83 @@ private[fingertrees] object FingerTree {
     }
     override def mempty: V = mav.mempty
     override def mappend(x: V, y: V): V = mav.mappend(x, y)
+  }
+
+  /** @param pred Monotonic predicate on annotations.
+    * @param start Annotation on the left end of the subsequence.
+    * @param tree Subsequence to search within.
+    * @param mva
+    * @tparam V
+    * @tparam A
+    * @return
+    */
+  private def split[V, A](pred: V => Boolean, start: V)(tree: FingerTree[V, A])(implicit mva: Measured[V, A]): Split[V, A] = {
+    def chuckToTree(as: List[A]): FingerTree[V, A] = {
+      as match {
+        case List() => Empty
+        case xs     => affixToTree(Affix.fromList(xs))
+      }
+    }
+
+    val mvaa = Measured[V, Affix[A]]
+    val mvat = Measured[V, FingerTree[V, Node[V, A]]]
+
+    tree match {
+      /*
+        An empty finger tree cannot have a split, since there
+        are no elements whose annotations we
+        can add to the monoidal value we are given.
+      */
+      case Empty => error("Split point not found")
+      /*
+        For a single element, we must check whether or not its
+        annotation makes the predicate true.
+      */
+      case Single(x) =>
+        val v = mva.mappend(start, mva.measure(x))
+        if (pred(v)) {
+          Split(Empty, x, Empty)
+        } else {
+          error("Split point not found")
+        }
+      case Deep(total, pref, deeper, suff) =>
+        //Make sure a split point exists.
+        if (!pred(mva.mappend(start, total))) {
+          error("Split point not found")
+        }
+        val prefix = pref.toList
+        val suffix = suff.toList
+
+        val startPref = mva.mappend(start, mvaa.measure(pref))
+        if (pred(startPref)) {
+          val (before, x :: after) = splitList(pred, start)(prefix)
+          Split(chuckToTree(before), x, deep[V, A](after, deeper, suffix))
+        } else if (pred(mva.mAppend3(start, mvaa.measure(pref), mvat.measure(deeper)))) {
+          val Split(before, node, after) = split[V, Node[V, A]](pred, startPref)(deeper)
+          val start1 = mva.mAppend3(start, mvaa.measure(pref), mvat.measure(before))
+          val (beforeNode, x :: afterNode) = splitList(pred, start1)(node.toList)
+
+          Split(deep(prefix, before, beforeNode), x, deep(afterNode, after, suffix))
+        } else {
+          val start1 = mva.mappend(startPref, mvat.measure(deeper))
+          val (before, x :: after) = splitList(pred, start1)(suffix)
+          Split(deep[V, A](prefix, deeper, before), x, chuckToTree(after))
+        }
+    }
+  }
+
+  private def splitList[V, A](pred: V => Boolean, start: V)(as: List[A])(implicit mva: Measured[V, A]): (List[A], List[A]) = {
+    as match {
+      case List() => error("Split point not found")
+      case x :: xs =>
+        val start1 = mva.mappend(start, mva.measure(x))
+        if (pred(start1)) {
+          (List.empty[A], as)
+        } else {
+          val (before, after) = splitList(pred, start1)(xs)
+          (x :: before, after)
+        }
+    }
   }
 
   //Convert an affix into an entire tree, doing rebalancing if necessary.
@@ -282,3 +363,4 @@ private[fingertrees] final case class Deep[V, A](
     deeper: FingerTree[V, Node[V, A]],
     suffix: Affix[A]
 ) extends FingerTree[V, A]
+

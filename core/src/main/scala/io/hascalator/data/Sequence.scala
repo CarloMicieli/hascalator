@@ -65,20 +65,20 @@ trait Sequence[A] {
     * @param x the element to add
     * @return
     */
-  def <|(x: A): Seq[A]
+  def <|(x: A): Sequence[A]
 
   /** O(1). Add an element to the right end of a sequence. Mnemonic: a triangle with the single element at the pointy end.
     *
     * @param x the element to add
     * @return
     */
-  def |>(x: A): Seq[A]
+  def |>(x: A): Sequence[A]
 
   /** O(log(min(n1,n2))). Concatenate two sequences.
     * @param that the other `Seq`
     * @return
     */
-  def ><(that: Seq[A]): Seq[A]
+  def ><(that: Sequence[A]): Sequence[A]
 
   /** O(log(min(i,n-i))). Replace the element at the specified position. If the position is out of range,
     * the original sequence is returned.
@@ -94,14 +94,14 @@ trait Sequence[A] {
     * @param i the number of elements to take
     * @return
     */
-  def take(i: Int): Seq[A]
+  def take(i: Int): Sequence[A]
 
   /** O(log(min(i,n-i))). Elements of a sequence after the first `i`. If `i` is negative, `s.drop(i)` yields the whole
     * sequence. If the sequence contains fewer than `i` elements, the empty sequence is returned.
     * @param i the number of element to drop
     * @return
     */
-  def drop(i: Int): Seq[A]
+  def drop(i: Int): Sequence[A]
 
   /** O(log(min(i,n-i))). `s.insertAt(i, x)` inserts `x` into `s` at the index `i`, shifting the rest of the sequence over.
     *
@@ -109,7 +109,7 @@ trait Sequence[A] {
     * @param x
     * @return
     */
-  def insertAt(i: Int, x: A): Seq[A]
+  def insertAt(i: Int, x: A): Sequence[A]
 
   /** O(log(min(i,n-i))). Delete the element of a sequence at a given index. Return the original sequence
     * if the index is out of range.
@@ -117,14 +117,14 @@ trait Sequence[A] {
     * @param i
     * @return
     */
-  def deleteAt(i: Int): Seq[A]
+  def deleteAt(i: Int): Sequence[A]
 
   /** O(log(min(i,n-i))). Split a sequence at a given position. `s.splitAt(i) == (s.take(i), s.drop(i))`.
     *
     * @param i
     * @return
     */
-  def splitAt(i: Int): (Seq[A], Seq[A])
+  def splitAt(i: Int): (Sequence[A], Sequence[A])
 
   /** `foldLeftWithIndex` is a version of `foldLeft` that also provides access to the index of each element.
     *
@@ -147,13 +147,13 @@ trait Sequence[A] {
   /** O(n). The reverse of a sequence.
     * @return
     */
-  def reverse: Seq[A]
+  def reverse: Sequence[A]
 
   /** Intersperse an element between the elements of a sequence.
     * @param x
     * @return
     */
-  def intersperse(x: A): Seq[A]
+  def intersperse(x: A): Sequence[A]
 
   /** O(min(n1,n2)). `zip` takes two sequences and returns a sequence of corresponding pairs. If one input is short,
     * excess elements are discarded from the right end of the longer sequence.
@@ -162,7 +162,7 @@ trait Sequence[A] {
     * @tparam B
     * @return
     */
-  def zip[B](that: Seq[B]): Seq[(A, B)]
+  def zip[B](that: Sequence[B]): Sequence[(A, B)]
 
   /** O(min(n1,n2)). `zipWith` generalizes `zip` by zipping with the function given as the first argument, instead of a
     * tupling function. For example, `seq1.zipWith(seq2)(_ + _)` is applied to two sequences to take the sequence
@@ -174,31 +174,31 @@ trait Sequence[A] {
     * @tparam C
     * @return
     */
-  def zipWith[B, C](that: Seq[B])(f: (A, B) => C): Seq[C]
+  def zipWith[B, C](that: Sequence[B])(f: (A, B) => C): Sequence[C]
 }
 
 /** General-purpose finite sequences.
   */
-object Seq {
+object Sequence {
   /** O(1). The empty sequence.
     * @tparam A
     * @return
     */
-  def empty[A]: Seq[A] = undefined
+  def empty[A]: Sequence[A] = undefined
 
   /** O(1). A singleton sequence.
     * @param x
     * @tparam A
     * @return
     */
-  def singleton[A](x: A): Seq[A] = undefined
+  def singleton[A](x: A): Sequence[A] = undefined
 
   /** O(n). Create a sequence from a finite list of elements.
     * @param xs
     * @tparam A
     * @return
     */
-  def fromList[A](xs: List[A]): Seq[A] = undefined
+  def fromList[A](xs: List[A]): Sequence[A] = undefined
 
   /** O(n). Convert a given sequence length and a function representing that sequence into a sequence.
     *
@@ -207,7 +207,7 @@ object Seq {
     * @tparam A the element type
     * @return
     */
-  def fromFunction[A](length: Int)(f: Int => A): Seq[A] = undefined
+  def fromFunction[A](length: Int)(f: Int => A): Sequence[A] = undefined
 
   /** O(log n). `replicate(n, x)` is a sequence consisting of `n` copies of `x`.
     *
@@ -216,7 +216,7 @@ object Seq {
     * @tparam A
     * @return
     */
-  def replicate[A](n: Int, x: A): Seq[A] = undefined
+  def replicate[A](n: Int, x: A): Sequence[A] = undefined
 
   /** Builds a sequence from a seed value. Takes time linear in the number of generated elements.
     *
@@ -228,7 +228,7 @@ object Seq {
     * @tparam B
     * @return
     */
-  def unfoldRight[A, B](f: B => Maybe[(A, B)])(b: B): Seq[B] = undefined
+  def unfoldRight[A, B](f: B => Maybe[(A, B)])(b: B): Sequence[B] = undefined
 
   /** Builds a sequence from a seed value. Takes time linear in the number of generated elements.
     *
@@ -238,5 +238,5 @@ object Seq {
     * @tparam B
     * @return
     */
-  def unfoldLeft[A, B](f: B => Maybe[(B, A)])(b: B): Seq[B] = undefined
+  def unfoldLeft[A, B](f: B => Maybe[(B, A)])(b: B): Sequence[B] = undefined
 }
