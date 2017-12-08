@@ -45,13 +45,15 @@ sealed trait FingerTree[+V, +A] extends Any {
   def prepend[V1 >: V, A1 >: A](x: A1)(implicit mva: Measured[V1, A1]): FingerTree[V1, A1] = {
     this match {
       case Empty     => Single(x)
-      case Single(y) => FingerTree.deep(Affix(x).toList, Empty, Affix(y).toList)
+      case Single(y) => FingerTree.deep(Digits(x).toList, Empty, Digits(y).toList)
       case Deep(_, Four(a, b, c, d), deeper, suffix) =>
         val node = Node[V1, A1](b, c, d)
         val deeper1 = deeper.prepend[V1, Node[V1, A1]](node)
-        FingerTree.deep(Affix(x, a).toList, deeper1, suffix.toList)
+        FingerTree.deep(Digits(x, a).toList, deeper1, suffix.toList)
       case tree @ Deep(_, _, _, _) =>
-        tree.copy(prefix = tree.prefix.prepend(x))
+        tree.copy(
+          annotation = mva.mappend(mva.measure(x), tree.annotation),
+          prefix = tree.prefix.prepend(x))
     }
   }
 
@@ -68,13 +70,15 @@ sealed trait FingerTree[+V, +A] extends Any {
   def append[V1 >: V, A1 >: A](y: A1)(implicit mva: Measured[V1, A1]): FingerTree[V1, A1] = {
     this match {
       case Empty     => Single(y)
-      case Single(x) => FingerTree.deep(Affix(x).toList, Empty, Affix(y).toList)
+      case Single(x) => FingerTree.deep(Digits(x).toList, Empty, Digits(y).toList)
       case Deep(_, prefix, deeper, Four(a, b, c, d)) =>
         val node = Node[V1, A1](a, b, c)
         val deeper1 = deeper.append[V1, Node[V1, A1]](node)
         FingerTree.deep(prefix.toList, deeper1, Two(d, y).toList)
       case tree @ Deep(_, _, _, _) =>
-        tree.copy(suffix = tree.suffix.append(y))
+        tree.copy(
+          annotation = mva.mappend(mva.measure(y), tree.annotation),
+          suffix = tree.suffix.append(y))
     }
   }
 
@@ -83,16 +87,16 @@ sealed trait FingerTree[+V, +A] extends Any {
   }
 
   def viewRight[V1 >: V, A1 >: A](implicit mva: Measured[V1, A1]): View[V1, A1] = {
-    val mvaa: Measured[V1, Affix[A1]] = Measured[V1, Affix[A1]]
+    val mvaa: Measured[V1, Digits[A1]] = Measured[V1, Digits[A1]]
     val mvat: Measured[V1, FingerTree[V1, Node[V1, A1]]] = Measured[V1, FingerTree[V1, Node[V1, A1]]]
 
-    def computeTreeRemainder(prefix: Affix[A1], deeper: FingerTree[V1, Node[V1, A1]]) = {
+    def computeTreeRemainder(prefix: Digits[A1], deeper: FingerTree[V1, Node[V1, A1]]) = {
       deeper.viewRight match {
         case TView(node, rest) =>
-          val suff = Affix.fromList(node.toList)
+          val suff = Digits.fromList(node.toList)
           val annot = mva.mAppend3(mvaa.measure(prefix), mvat.measure(rest), mvaa.measure(suff))
           Deep(annot, prefix, rest, suff)
-        case Nil => FingerTree.affixToTree(prefix)
+        case Nil => FingerTree.digitsToTree(prefix)
       }
     }
 
@@ -110,16 +114,16 @@ sealed trait FingerTree[+V, +A] extends Any {
   }
 
   def viewLeft[V1 >: V, A1 >: A](implicit mva: Measured[V1, A1]): View[V1, A1] = {
-    val mvaa: Measured[V1, Affix[A1]] = Measured[V1, Affix[A1]]
+    val mvaa: Measured[V1, Digits[A1]] = Measured[V1, Digits[A1]]
     val mvat: Measured[V1, FingerTree[V1, Node[V1, A1]]] = Measured[V1, FingerTree[V1, Node[V1, A1]]]
 
-    def computeTreeRemaining(deeper: FingerTree[V1, Node[V1, A1]], suffix: Affix[A1]) = {
+    def computeTreeRemaining(deeper: FingerTree[V1, Node[V1, A1]], suffix: Digits[A1]) = {
       val rest = deeper.viewLeft match {
         case TView(node, rest1) =>
-          val pref = Affix.fromList(node.toList)
+          val pref = Digits.fromList(node.toList)
           val annot = mva.mAppend3(mvaa.measure(pref), mvat.measure(rest1), mvaa.measure(suffix))
           Deep(annot, pref, rest1, suffix)
-        case Nil => FingerTree.affixToTree(suffix)
+        case Nil => FingerTree.digitsToTree(suffix)
       }
       rest
     }
@@ -132,7 +136,7 @@ sealed trait FingerTree[+V, +A] extends Any {
         TView(x, rest)
       case Deep(_, prefix, deeper, suffix) =>
         val first :: rest = prefix.toList
-        val prefix1 = Affix.fromList(rest)
+        val prefix1 = Digits.fromList(rest)
         val annot = mva.mAppend3(mvaa.measure(prefix1), mvat.measure(deeper), mvaa.measure(suffix))
         TView(first, Deep(annot, prefix1, deeper, suffix))
     }
@@ -173,6 +177,10 @@ sealed trait FingerTree[+V, +A] extends Any {
     }
   }
 
+  def split[V1 >: V, A1 >: A](pred: V1 => Boolean, start: V1)(implicit mva: Measured[V1, A1]): Split[V1, A1] = {
+    FingerTree.split(pred, start)(this)
+  }
+
   @inline def ><[V1 >: V, A1 >: A](that: FingerTree[V1, A1])(implicit mva: Measured[V1, A1]): FingerTree[V1, A1] = {
     this concat that
   }
@@ -181,9 +189,16 @@ sealed trait FingerTree[+V, +A] extends Any {
     FingerTree.concatWithMiddle(this, List.empty, that)
   }
 
+  def size[V1 >: V, A1 >: A](implicit mva: Measured[V1, A1]): V1 = {
+    this match {
+      case Empty            => mva.mempty
+      case Single(x)        => mva.measure(x)
+      case Deep(v, _, _, _) => v
+    }
+  }
 }
 
-private[fingertrees] object FingerTree {
+object FingerTree {
 
   def empty[V, A]: FingerTree[V, A] = {
     Empty
@@ -213,11 +228,11 @@ private[fingertrees] object FingerTree {
     def chuckToTree(as: List[A]): FingerTree[V, A] = {
       as match {
         case List() => Empty
-        case xs     => affixToTree(Affix.fromList(xs))
+        case xs     => digitsToTree(Digits.fromList(xs))
       }
     }
 
-    val mvaa = Measured[V, Affix[A]]
+    val mvaa = Measured[V, Digits[A]]
     val mvat = Measured[V, FingerTree[V, Node[V, A]]]
 
     tree match {
@@ -278,14 +293,14 @@ private[fingertrees] object FingerTree {
     }
   }
 
-  //Convert an affix into an entire tree, doing rebalancing if necessary.
-  private def affixToTree[A, V](affix: Affix[A])(implicit mva: Measured[V, A]): FingerTree[V, A] = {
-    val mvaa: Measured[V, Affix[A]] = Measured[V, Affix[A]]
-    affix match {
+  //Convert digits into an entire tree, doing rebalancing if necessary.
+  private def digitsToTree[A, V](digits: Digits[A])(implicit mva: Measured[V, A]): FingerTree[V, A] = {
+    val mvad: Measured[V, Digits[A]] = Measured[V, Digits[A]]
+    digits match {
       case One(x)           => Single(x)
-      case Two(x, y)        => Deep(mvaa.measure(affix), One(x), Empty, One(y))
-      case Three(x, y, z)   => Deep(mvaa.measure(affix), One(x), Empty, Two(y, z))
-      case Four(x, y, z, w) => Deep(mvaa.measure(affix), Two(x, y), Empty, Two(z, w))
+      case Two(x, y)        => Deep(mvad.measure(digits), One(x), Empty, One(y))
+      case Three(x, y, z)   => Deep(mvad.measure(digits), One(x), Empty, Two(y, z))
+      case Four(x, y, z, w) => Deep(mvad.measure(digits), Two(x, y), Empty, Two(z, w))
     }
   }
 
@@ -306,19 +321,19 @@ private[fingertrees] object FingerTree {
         }
       case (List(), _) =>
         deeper.viewRight match {
-          case Nil                  => affixToTree(Affix.fromList(suffix))
+          case Nil                  => digitsToTree(Digits.fromList(suffix))
           case TView(node, deeper1) => deep(node.toList, deeper1, suffix)
         }
       case (_, List()) =>
         deeper.viewRight match {
-          case Nil                  => affixToTree(Affix.fromList(prefix))
+          case Nil                  => digitsToTree(Digits.fromList(prefix))
           case TView(node, deeper1) => deep(prefix, deeper1, node.toList)
         }
       case _ =>
         if (prefix.length > 4 || suffix.length > 4) {
           error("Affixes cannot be longer than 4 elements")
         } else {
-          Deep(annotation, Affix.fromList(prefix), deeper, Affix.fromList(suffix))
+          Deep(annotation, Digits.fromList(prefix), deeper, Digits.fromList(suffix))
         }
     }
   }
@@ -359,8 +374,8 @@ private[fingertrees] final case class Single[V, A](x: A) extends FingerTree[V, A
 //The common case with a prefix, suffix, and link to a deeper tree.
 private[fingertrees] final case class Deep[V, A](
     annotation: V,
-    prefix: Affix[A],
+    prefix: Digits[A],
     deeper: FingerTree[V, Node[V, A]],
-    suffix: Affix[A]
+    suffix: Digits[A]
 ) extends FingerTree[V, A]
 

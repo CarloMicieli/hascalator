@@ -33,7 +33,7 @@ trait Measured[V, A] extends Monoid[V] {
   def measure(a: A): V
 
   def mConcat(xs: List[A])(implicit ma: Measured[V, A]): V = {
-    super.concat(xs.map(measure))
+    concat(xs.map(measure))
   }
 
   def mAppend3(x: V, y: V, z: V): V = {

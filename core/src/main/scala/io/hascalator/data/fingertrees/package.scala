@@ -18,5 +18,7 @@ package io.hascalator
 package data
 
 package object fingertrees {
-  type Seq[A] = FingerTree[Value[A], Size]
+  type Seq[A] = FingerTree[Size, Value[A]]
+
+  def emptySeq[A]: Seq[A] = FingerTree.empty[Size, Value[A]]
 }

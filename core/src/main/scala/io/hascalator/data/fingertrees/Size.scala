@@ -21,13 +21,14 @@ package fingertrees
 import Prelude._
 
 /** Monoidal size – all leaves have Size 1.
-  * @param size
+  * @param getSize
   */
-private[fingertrees] final case class Size(size: Int) extends AnyVal
+private[fingertrees] final case class Size(getSize: Int) extends AnyVal
 
 private[fingertrees] object Size {
+
   implicit val sizeMonoid: Monoid[Size] = new Monoid[Size] {
     override def mempty: Size = Size(0)
-    override def mappend(x: Size, y: Size): Size = Size(x.size + y.size)
+    override def mappend(x: Size, y: Size): Size = Size(x.getSize + y.getSize)
   }
 }

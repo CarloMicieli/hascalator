@@ -25,9 +25,9 @@ import Prelude._
   * @author Carlo Micieli
   * @since 0.1
   */
-private[fingertrees] sealed trait Affix[+A] extends Any {
+private[fingertrees] sealed trait Digits[+A] extends Any {
   def last: A
-  def init: Affix[A]
+  def init: Digits[A]
 
   def toList: List[A] = {
     this match {
@@ -38,7 +38,7 @@ private[fingertrees] sealed trait Affix[+A] extends Any {
     }
   }
 
-  def prepend[A1 >: A](a: A1): Affix[A1] = {
+  def prepend[A1 >: A](a: A1): Digits[A1] = {
     this match {
       case One(x)         => Two(a, x)
       case Two(x, y)      => Three(a, x, y)
@@ -47,7 +47,7 @@ private[fingertrees] sealed trait Affix[+A] extends Any {
     }
   }
 
-  def append[A1 >: A](a: A1): Affix[A1] = {
+  def append[A1 >: A](a: A1): Digits[A1] = {
     this match {
       case One(x)         => Two(x, a)
       case Two(x, y)      => Three(x, y, a)
@@ -57,22 +57,22 @@ private[fingertrees] sealed trait Affix[+A] extends Any {
   }
 }
 
-private[fingertrees] object Affix {
+private[fingertrees] object Digits {
 
-  implicit def toMeasured[V, A](implicit mva: Measured[V, A]): Measured[V, Affix[A]] = new Measured[V, Affix[A]] {
-    override def measure(affix: Affix[A]): V = {
+  implicit def toMeasured[V, A](implicit mva: Measured[V, A]): Measured[V, Digits[A]] = new Measured[V, Digits[A]] {
+    override def measure(affix: Digits[A]): V = {
       mva.mConcat(affix.toList)
     }
     override def mempty: V = mva.mempty
     override def mappend(x: V, y: V): V = mva.mappend(x, y)
   }
 
-  def apply[A](x: A): Affix[A] = One(x)
-  def apply[A](x: A, y: A): Affix[A] = Two(x, y)
-  def apply[A](x: A, y: A, w: A): Affix[A] = Three(x, y, w)
-  def apply[A](x: A, y: A, w: A, z: A): Affix[A] = Four(x, y, w, z)
+  def apply[A](x: A): Digits[A] = One(x)
+  def apply[A](x: A, y: A): Digits[A] = Two(x, y)
+  def apply[A](x: A, y: A, w: A): Digits[A] = Three(x, y, w)
+  def apply[A](x: A, y: A, w: A, z: A): Digits[A] = Four(x, y, w, z)
 
-  def fromList[A](xs: List[A]): Affix[A] = {
+  def fromList[A](xs: List[A]): Digits[A] = {
     xs match {
       case List(x)          => One(x)
       case List(x, y)       => Two(x, y)
@@ -83,22 +83,22 @@ private[fingertrees] object Affix {
   }
 }
 
-private[fingertrees] final case class One[A](x: A) extends Affix[A] {
-  override def init: Affix[A] = error("Affix must have one to four elements")
+private[fingertrees] final case class One[A](x: A) extends Digits[A] {
+  override def init: Digits[A] = error("Affix must have one to four elements")
   override def last: A = x
 }
 
-private[fingertrees] final case class Two[A](x: A, y: A) extends Affix[A] {
-  override def init: Affix[A] = One(x)
+private[fingertrees] final case class Two[A](x: A, y: A) extends Digits[A] {
+  override def init: Digits[A] = One(x)
   override def last: A = y
 }
 
-private[fingertrees] final case class Three[A](x: A, y: A, w: A) extends Affix[A] {
-  override def init: Affix[A] = Two(x, y)
+private[fingertrees] final case class Three[A](x: A, y: A, w: A) extends Digits[A] {
+  override def init: Digits[A] = Two(x, y)
   override def last: A = w
 }
 
-private[fingertrees] final case class Four[A](x: A, y: A, w: A, z: A) extends Affix[A] {
-  override def init: Affix[A] = Three(x, y, w)
+private[fingertrees] final case class Four[A](x: A, y: A, w: A, z: A) extends Digits[A] {
+  override def init: Digits[A] = Three(x, y, w)
   override def last: A = z
 }
