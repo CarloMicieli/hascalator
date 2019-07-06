@@ -17,7 +17,7 @@
 package io.hascalator
 
 import org.scalatest.{ Matchers, PropSpecLike }
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
 trait AbstractPropertySpec extends PropSpecLike with Checkers with Matchers {
 }
